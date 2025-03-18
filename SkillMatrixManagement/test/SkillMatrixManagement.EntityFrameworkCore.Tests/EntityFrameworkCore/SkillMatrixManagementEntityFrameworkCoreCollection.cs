@@ -1,0 +1,9 @@
+﻿using Xunit;
+
+namespace SkillMatrixManagement.EntityFrameworkCore;
+
+[CollectionDefinition(SkillMatrixManagementTestConsts.CollectionDefinitionName)]
+public class SkillMatrixManagementEntityFrameworkCoreCollection : ICollectionFixture<SkillMatrixManagementEntityFrameworkCoreFixture>
+{
+
+}
