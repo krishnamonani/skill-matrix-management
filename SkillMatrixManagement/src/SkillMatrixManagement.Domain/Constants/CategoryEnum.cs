@@ -8,8 +8,15 @@ namespace SkillMatrixManagement.Constants
 {
     public enum CategoryEnum
     {
-        SOFT_SKILL,
-        HARD_SKILL,
-        TECHNICAL_SKILL
+        TECHNICAL_SKILL,
+        TRANSFERABLE_SKILL,
+        COGNITIVE_SKILL,
+        INTERPERSONAL_SKILL,
+        INTRAPERSONAL_SKILL,
+        LEADERSHIP_SKILL,
+        CREATIVE_SKILL,
+        ANALYTICAL_SKILL,
+        ORGANIZATIONAL_SKILL,
+        DIGITAL_SKILL
     }
 }

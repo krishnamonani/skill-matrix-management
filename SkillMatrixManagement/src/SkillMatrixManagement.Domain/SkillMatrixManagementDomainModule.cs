@@ -17,6 +17,8 @@ using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using SkillMatrixManagement.CustomDataSeeding;
+using Volo.Abp.Data;
 
 namespace SkillMatrixManagement;
 
@@ -43,6 +45,8 @@ public class SkillMatrixManagementDomainModule : AbpModule
         {
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
         });
+
+        context.Services.AddTransient<IDataSeedContributor, CategorySeedingService>();
 
         Configure<AbpLocalizationOptions>(options =>
         {
