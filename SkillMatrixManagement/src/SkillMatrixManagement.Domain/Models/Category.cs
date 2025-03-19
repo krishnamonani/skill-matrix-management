@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkillMatrixManagement.Constants;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace SkillMatrixManagement.Models
 {
-    public class Category : AuditedAggregateRoot<Guid>
+    public class Category : FullAuditedAggregateRoot<Guid>, ISoftDelete
     {
         public CategoryEnum CategoryName { get; set; }
 
