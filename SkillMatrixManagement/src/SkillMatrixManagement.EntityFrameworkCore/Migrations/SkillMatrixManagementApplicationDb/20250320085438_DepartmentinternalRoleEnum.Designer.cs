@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkillMatrixManagement.Constants;
@@ -14,9 +15,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 {
     [DbContext(typeof(SkillMatrixManagementApplicationDbContext))]
-    partial class SkillMatrixManagementApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320085438_DepartmentinternalRoleEnum")]
+    partial class DepartmentinternalRoleEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,9 +300,8 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Position")
+                        .HasColumnType("integer");
 
                     b.Property<string>("RoleDescription")
                         .HasColumnType("text");

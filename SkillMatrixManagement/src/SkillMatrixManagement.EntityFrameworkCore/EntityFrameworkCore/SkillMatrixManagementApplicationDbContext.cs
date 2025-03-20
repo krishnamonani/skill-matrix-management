@@ -268,6 +268,12 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                        v => v.ToString(), // Convert enum to string when saving
                        v => (DepartmentRoleEnum)Enum.Parse(typeof(DepartmentRoleEnum), v) // Convert string back to enum when reading
                 );
+
+                 b.Property(r => r.Position)
+                .HasConversion(
+                       v => v.ToString(), // Convert enum to string when saving
+                       v => (RolePositionEnum)Enum.Parse(typeof(RolePositionEnum), v) // Convert string back to enum when reading
+                );
             });
 
 
