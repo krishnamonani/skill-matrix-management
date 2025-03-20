@@ -262,6 +262,12 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "DepartmentInternalRole", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                 b.Property(r => r.RoleName)
+                .HasConversion(
+                       v => v.ToString(), // Convert enum to string when saving
+                       v => (DepartmentRoleEnum)Enum.Parse(typeof(DepartmentRoleEnum), v) // Convert string back to enum when reading
+                );
             });
 
 

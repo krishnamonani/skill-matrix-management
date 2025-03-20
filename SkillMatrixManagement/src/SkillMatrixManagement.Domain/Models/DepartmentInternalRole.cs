@@ -13,7 +13,7 @@ namespace SkillMatrixManagement.Models
     public class DepartmentInternalRole : FullAuditedAggregateRoot<Guid>, ISoftDelete
     {
         [StringLength(100)]
-        public string RoleName { get; set; }
+        public DepartmentRoleEnum RoleName { get; set; }
 
         public string? RoleDescription { get; set; }
 
