@@ -47,7 +47,8 @@ public class SkillMatrixManagementDomainModule : AbpModule
         });
 
         context.Services.AddTransient<IDataSeedContributor, CategorySeedingService>();
-
+        context.Services.AddTransient<IDataSeedContributor, DepartmentSeedingService>();
+        
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Languages.Add(new LanguageInfo("ar", "ar", "العربية"));
