@@ -77,7 +77,17 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 CategoryName = CategoryEnum.DIGITAL_SKILL,
                 Description = "Proficiency in using digital tools and technologies (e.g., social media management, cybersecurity, cloud computing).\r\n"
             };
+            var managementSkill = new Category()
+            {
+                CategoryName = CategoryEnum.MANAGEMENT_SKILL,
 
+                Description = "Expertise in leading and organizing teams or projects (e.g., project management, time management, risk management).\r\n"
+            };
+            var softSkill = new Category()
+            {
+                CategoryName = CategoryEnum.SOFT_SKILL,
+                Description = "Personal traits that enhance workplace interactions (e.g., communication, teamwork, adaptability).\r\n"
+            };
             await _categoryRepository.InsertManyAsync(new List<Category>() {
             technicalSkill,
             transferableSkill,
@@ -87,7 +97,9 @@ namespace SkillMatrixManagement.CustomDataSeeding
             analyticalSkill,
             organizationalSkill,
             digitalSkill,
-            creativeSkill
+            creativeSkill,
+            managementSkill,
+            softSkill
         });
         }
     }

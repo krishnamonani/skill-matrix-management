@@ -17,6 +17,8 @@ namespace SkillMatrixManagement.Constants
         CREATIVE_SKILL,
         ANALYTICAL_SKILL,
         ORGANIZATIONAL_SKILL,
-        DIGITAL_SKILL
+        DIGITAL_SKILL,
+        MANAGEMENT_SKILL,
+        SOFT_SKILL
     }
 }
