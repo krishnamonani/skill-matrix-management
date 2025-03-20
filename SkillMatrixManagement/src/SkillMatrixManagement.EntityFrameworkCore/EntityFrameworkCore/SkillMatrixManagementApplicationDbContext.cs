@@ -61,6 +61,8 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "Role", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
+                b.HasIndex(r => r.Name).IsUnique();
+
                 b.Property(r => r.Name)
                 .HasConversion(
                     v => v.ToString(), // Convert enum to string when saving
@@ -171,6 +173,8 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "ProficiencyLevel", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
+                b.HasIndex(r => r.Level).IsUnique();
+
                 b.Property(r => r.Level)
                .HasConversion(
                    v => v.ToString(), // Convert enum to string when saving
@@ -191,6 +195,8 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "ReportAnalytics", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
+                b.HasIndex(r => r.ReportType).IsUnique();
+
                 b.Property(e => e.DataSnapshot)
                 .HasColumnType("jsonb");
 
@@ -206,6 +212,8 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "Category", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.HasIndex(r => r.CategoryName).IsUnique();
 
                 b.Property(r => r.CategoryName)
                 .HasConversion(
@@ -241,6 +249,8 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "Department", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.HasIndex(r => r.Name).IsUnique();
             });
 
             // Configure Permission entity
@@ -248,6 +258,14 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "Permission", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.HasIndex(r => r.Name).IsUnique();
+
+                b.Property(r => r.Name)
+                .HasConversion(
+                       v => v.ToString(), // Convert enum to string when saving
+                       v => (PermissionEnum)Enum.Parse(typeof(PermissionEnum), v) // Convert string back to enum when reading
+                );
             });
 
             // Configure DepartmentRole entity
@@ -263,7 +281,9 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "DepartmentInternalRole", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
-                 b.Property(r => r.RoleName)
+                b.HasIndex(r => r.RoleName).IsUnique();
+
+                b.Property(r => r.RoleName)
                 .HasConversion(
                        v => v.ToString(), // Convert enum to string when saving
                        v => (DepartmentRoleEnum)Enum.Parse(typeof(DepartmentRoleEnum), v) // Convert string back to enum when reading

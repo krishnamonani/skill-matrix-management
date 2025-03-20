@@ -8,7 +8,7 @@ namespace SkillMatrixManagement.Constants
 {
     public enum ProficiencyEnum
     {
-        BEGINER = 10,
+        BEGINNER = 10,
         INTERMEDIATE = 20,
         ADVANCED = 30,
         EXPERT = 40
