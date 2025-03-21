@@ -18,7 +18,7 @@ namespace SkillMatrixManagement.Models
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public Dictionary<string, string>? Description { get; set; }
 
         public ProficiencyEnum ReqExpertiseLevelId { get; set; }
 

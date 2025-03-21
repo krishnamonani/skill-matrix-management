@@ -103,6 +103,9 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "SkillSubtopic", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
+                b.Property(e => e.Description)
+                .HasColumnType("jsonb");
+
                 b.Property(r => r.ReqExpertiseLevelId)
                .HasConversion(
                    v => v.ToString(), // Convert enum to string when saving
