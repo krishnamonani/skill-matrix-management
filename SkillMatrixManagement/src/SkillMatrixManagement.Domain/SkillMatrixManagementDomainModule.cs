@@ -54,6 +54,7 @@ public class SkillMatrixManagementDomainModule : AbpModule
         context.Services.AddTransient<IDataSeedContributor, ProficiencySeedingService>();
         context.Services.AddTransient<IDataSeedContributor, RoleSeedingService>();
         context.Services.AddTransient<IDataSeedContributor, PermissionSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, SkillSubtopicSeedingService>();
 
         Configure<AbpLocalizationOptions>(options =>
         {

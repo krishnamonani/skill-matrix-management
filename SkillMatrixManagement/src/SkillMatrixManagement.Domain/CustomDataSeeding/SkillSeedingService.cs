@@ -50,6 +50,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
 
 
 
+
+
             var softwareEngineerTraineeId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_TRAINEE)?.Id ?? Guid.NewGuid();
             var softwareEngineerIId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_I)?.Id ?? Guid.NewGuid();
             var softwareEngineerIIId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_II)?.Id ?? Guid.NewGuid();

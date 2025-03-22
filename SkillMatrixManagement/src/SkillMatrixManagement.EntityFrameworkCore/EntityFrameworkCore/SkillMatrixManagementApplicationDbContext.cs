@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.Models;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -102,6 +104,18 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "SkillSubtopic", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.Property(e => e.Description)
+                    .HasColumnType("jsonb")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null), // Serialize to JSON
+                        v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, (JsonSerializerOptions?)null), // Deserialize from JSON
+                        new ValueComparer<Dictionary<string, string>>(
+                            (c1, c2) => c1!.SequenceEqual(c2!),
+                            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                            c => c.ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                        )
+                    );
 
                 b.Property(r => r.ReqExpertiseLevelId)
                .HasConversion(

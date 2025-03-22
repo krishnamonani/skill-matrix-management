@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkillMatrixManagement.Constants;
@@ -14,9 +15,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 {
     [DbContext(typeof(SkillMatrixManagementApplicationDbContext))]
-    partial class SkillMatrixManagementApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250321184417_UpdateDescriptionAsJsonbSkillSubtopic")]
+    partial class UpdateDescriptionAsJsonbSkillSubtopic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2106,7 +2109,7 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("DeletionTime");
 
-                    b.Property<string>("Description")
+                    b.Property<Dictionary<string, string>>("Description")
                         .HasColumnType("jsonb");
 
                     b.Property<string>("ExtraProperties")
@@ -2133,6 +2136,7 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("text");
 
                     b.Property<string>("ReqExpertiseLevelId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("SkillId")
