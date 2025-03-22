@@ -20,7 +20,7 @@ namespace SkillMatrixManagement.Models
 
         public Dictionary<string, string>? Description { get; set; }
 
-        public ProficiencyEnum ReqExpertiseLevelId { get; set; }
+        public ProficiencyEnum? ReqExpertiseLevelId { get; set; }
 
     }
 
