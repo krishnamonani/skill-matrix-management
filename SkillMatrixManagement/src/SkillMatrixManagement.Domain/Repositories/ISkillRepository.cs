@@ -12,7 +12,7 @@ namespace SkillMatrixManagement.Repositories
     {
         // CRUD Methods
         Task<Skill> CreateAsync(Skill skill);
-        Task<Skill> GetByIdAsync(Guid id);
+        Task<Skill?> GetByIdAsync(Guid id);
         Task<List<Skill>> GetAllAsync();
         Task UpdateAsync(Skill skill);
         Task DeleteAsync(Guid skillId); // Soft delete
@@ -21,5 +21,6 @@ namespace SkillMatrixManagement.Repositories
         // Soft Delete & Restore
         Task SoftDeleteAsync(Guid skillId); // Soft delete a skill
         Task RestoreSkillAsync(Guid skillId); // Restore a soft-deleted skill
+
     }
 }

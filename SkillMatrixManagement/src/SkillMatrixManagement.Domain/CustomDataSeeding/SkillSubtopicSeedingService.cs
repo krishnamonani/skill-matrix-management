@@ -456,7 +456,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
 
             };
 
-    var SOFTWARE_ENGINEER_I_BACKEND_DOTNET_SUBSKILLS = new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_BACKEND_DOTNET_SUBSKILLS = new List<SkillSubtopic>
     {
         new SkillSubtopic
         {
@@ -563,7 +563,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     };
 
-    var SOFTWARE_ENGINEER_I_COMMON_SUBSKILSS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_COMMON_SUBSKILSS = new List<SkillSubtopic>
         {
             new SkillSubtopic
             {
@@ -597,7 +597,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 }
             }
         };
-    var SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -703,7 +703,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-        var SOFTWARE_ENGINEER_I_MOBILE_IOS_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_MOBILE_IOS_SUBSKILLS = new List<SkillSubtopic>
     {
         new SkillSubtopic
         {
@@ -809,7 +809,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
             }
         }
     };
-     var SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -916,7 +916,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
     }
 };
 
-    var SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS_SUBSKILS = new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS_SUBSKILS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1022,7 +1022,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-        var SOFTWARE_ENGINEER_II_BACKEND_DOTNET_SUBSKILL= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_BACKEND_DOTNET_SUBSKILL = new List<SkillSubtopic>
     {
         new SkillSubtopic
         {
@@ -1129,7 +1129,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     };
 
-    var SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1244,7 +1244,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-    var SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1341,7 +1341,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-    var SOFTWARE_TEST_ENGINEER_FUNCTIONAL_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_TEST_ENGINEER_FUNCTIONAL_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1437,7 +1437,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-        var SOFTWARE_ENGINEER_I_BACKEND_JAVA_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_BACKEND_JAVA_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1543,8 +1543,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-   
-            var SOFTWARE_ENGINEER_I_BACKEND_NODE_SUBSKILLS= new List<SkillSubtopic>
+
+            var SOFTWARE_ENGINEER_I_BACKEND_NODE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1651,7 +1651,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-    var VP_OF_ENGINEERING_COMMON_SUBSKILLS= new List<SkillSubtopic>
+            var VP_OF_ENGINEERING_COMMON_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1686,7 +1686,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
     }
 };
 
-    var SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -1761,7 +1761,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
     }
 };
 
-    var TECH_LEAD_SUBSKILLS= new List<SkillSubtopic>
+            var TECH_LEAD_SUBSKILLS = new List<SkillSubtopic>
 {
     // Inherited Common Skills from Page 3
     new SkillSubtopic
@@ -1964,7 +1964,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-        var SOFTWARE_ENGINEER_II_MOBILE_FLUTTER_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_MOBILE_FLUTTER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2062,7 +2062,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-            var UX_DESIGNER_TRAINEE_SUBSKILLS= new List<SkillSubtopic>
+            var UX_DESIGNER_TRAINEE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2109,7 +2109,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-    var SOLUTION_ARCHITECT_COMMON_SUBSKILLS= new List<SkillSubtopic>
+            var SOLUTION_ARCHITECT_COMMON_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2143,7 +2143,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-    var UX_DESIGNER_SUBSKILLS= new List<SkillSubtopic>
+            var UX_DESIGNER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2287,7 +2287,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-        var SOFTWARE_ENGINEER_II_MOBILE_ANDROID_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_MOBILE_ANDROID_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2384,7 +2384,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-            var SOFTWARE_ENGINEER_II_BACKEND_NODE_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_BACKEND_NODE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2491,7 +2491,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     }
 };
-var SOFTWARE_ENGINEER_TRAINEE_FRONTEND_REACT_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_FRONTEND_REACT_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2568,7 +2568,7 @@ var SOFTWARE_ENGINEER_TRAINEE_FRONTEND_REACT_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2667,7 +2667,7 @@ var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL= new List<SkillSubtopic>
     }
 };
 
-            var SOFTWARE_ENGINEER_TRAINEE_COMMON_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_COMMON_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2701,7 +2701,7 @@ var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_TRAINEE_FRONTEND_ANGULAR_SUBSKILL= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_FRONTEND_ANGULAR_SUBSKILL = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2776,7 +2776,7 @@ var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_II_BACKEND_JAVA_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_BACKEND_JAVA_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2881,7 +2881,7 @@ var SOFTWARE_ENGINEER_I_MOBILE_FLUTTER_SUBSKILL= new List<SkillSubtopic>
         }
     }
 };
-var SOFTWARE_TEST_ENGINEER_AUTOMATION_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_TEST_ENGINEER_AUTOMATION_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -2975,7 +2975,7 @@ var SOFTWARE_TEST_ENGINEER_AUTOMATION_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var CONTENT_LEAD_SUBSKILLS= new List<SkillSubtopic>
+            var CONTENT_LEAD_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3108,7 +3108,7 @@ var SOFTWARE_TEST_ENGINEER_AUTOMATION_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3142,7 +3142,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var CONTENT_TRAINEE_SUBSKILLS= new List<SkillSubtopic>
+            var CONTENT_TRAINEE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3275,7 +3275,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_I_AI_ML_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_I_AI_ML_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3414,7 +3414,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_III_WEB_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_III_WEB_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3578,7 +3578,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var MARKETING_MANAGER_SUBSKILLS= new List<SkillSubtopic>
+            var MARKETING_MANAGER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3654,7 +3654,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-    var PRODUCT_DESIGNER_SUBSKILLS = new List<SkillSubtopic>
+            var PRODUCT_DESIGNER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3701,7 +3701,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_II_AI_ML_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_AI_ML_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3840,7 +3840,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SENIOR_MARKETING_EXECUTIVE_SUBSKILLS= new List<SkillSubtopic>
+            var SENIOR_MARKETING_EXECUTIVE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3916,7 +3916,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_II_FRONTEND_REACT_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_II_FRONTEND_REACT_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -3993,7 +3993,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var TECH_LEAD_COMMON_SUBSKILLS= new List<SkillSubtopic>
+            var TECH_LEAD_COMMON_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -4027,7 +4027,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var SOFTWARE_ENGINEER_TRAINEE_MOBILE_FLUTTER_SUBSKILLS= new List<SkillSubtopic>
+            var SOFTWARE_ENGINEER_TRAINEE_MOBILE_FLUTTER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -4125,7 +4125,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var DEVOPS_ENGINEER_II_SUBSKILLS= new List<SkillSubtopic>
+            var DEVOPS_ENGINEER_II_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -4249,7 +4249,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var MARKETING_TRAINEE_SUBSKILLS= new List<SkillSubtopic>
+            var MARKETING_TRAINEE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -4325,7 +4325,7 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
         }
     }
 };
-            var PROJECT_MANAGER_SUBSKILLS= new List<SkillSubtopic>
+            var PROJECT_MANAGER_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic
     {
@@ -5030,4 +5030,4 @@ var SOFTWARE_ENGINEER_III_COMMON_SUBSKILLS= new List<SkillSubtopic>
             }
         }
     }
-};        
+};
