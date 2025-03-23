@@ -26,12 +26,12 @@ namespace SkillMatrixManagement.Repositories
         {
             Check.NotNull(departmentInternalRole, nameof(departmentInternalRole));
             if (!Enum.IsDefined(typeof(DepartmentInternalRole), departmentInternalRole.RoleName))
-                throw new BusinessException("DEP_ROLE-001", "Invalid department interenalrole name specified");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.InvalidRoleName, "Invalid department interenalrole name specified");
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
             var exists = await dbContext.Set<DepartmentInternalRole>().AnyAsync(r => r.RoleName == departmentInternalRole.RoleName && !r.IsDeleted);
             if (exists)
-                throw new BusinessException("DEP_ROLE-002", "Department internal role already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleAlreadyExists, "Department internal role already exists");
 
 
             var result = await dbContext.Set<DepartmentInternalRole>().AddAsync(departmentInternalRole);
@@ -47,7 +47,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var deptRole = await dbContext.Set<DepartmentInternalRole>().FindAsync(id)
-                ?? throw new BusinessException("DEP_ROLE-003", "Role not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleNotFound, "Role not found");
             return deptRole;
         }
         // Retrieve all department internal roles
@@ -71,7 +71,7 @@ namespace SkillMatrixManagement.Repositories
             //check for duplicates
             var duplicateExists = await dbContext.Set<DepartmentInternalRole>().AnyAsync(r => r.RoleName == departmentInternalRole.RoleName && r.Id != departmentInternalRole.Id && !r.IsDeleted);
             if (duplicateExists)
-                throw new BusinessException("DEP_ROLE-006", "Department internal role already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.InvalidRoleNameForUpdate, "Department internal role already exists");
 
 
             dbContext.Set<DepartmentInternalRole>().Update(departmentInternalRole);
@@ -90,9 +90,9 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var role = await dbContext.Set<DepartmentInternalRole>().FindAsync(departmentInternalRoleId)
-                ?? throw new BusinessException("DEP_ROLE-002", "Role not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleNotFound, "Role not found");
             if (role.IsDeleted)
-                throw new BusinessException("ROLE-010", "Role is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleAlreadyDeleted, "Role is already deleted");
             role.IsDeleted = true;
             await dbContext.SaveChangesAsync();
         }
@@ -106,7 +106,7 @@ namespace SkillMatrixManagement.Repositories
             var role = await dbContext.Set<DepartmentInternalRole>().IgnoreQueryFilters().FirstOrDefaultAsync(r => r.Id == departmentInternalRoleId);
 
             if (role == null)
-                throw new BusinessException("DEP_ROLE-003", "Role not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleNotFound, "Role not found for deletion");
 
             dbContext.Set<DepartmentInternalRole>().Remove(role);
             await dbContext.SaveChangesAsync();
@@ -121,7 +121,7 @@ namespace SkillMatrixManagement.Repositories
             var role = await dbContext.Set<DepartmentInternalRole>().IgnoreQueryFilters().FirstOrDefaultAsync(r => r.Id == departmentInternalRoleId);
 
             if (role == null || !role.IsDeleted)
-                throw new BusinessException("DEP_ROLE-004", "Role not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.RoleNotFoundOrNotDeleted, "Role not found or not deleted");
 
             role.IsDeleted = false;
             await dbContext.SaveChangesAsync();
