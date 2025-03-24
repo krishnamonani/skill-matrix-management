@@ -55,14 +55,14 @@ namespace SkillMatrixManagement.Repositories
         }
 
 
-        public async Task<Skill?> GetByIdAsync(Guid id)
+        public async Task<Skill> GetByIdAsync(Guid id)
         {
             var dbContext = await  _dbContextProvider.GetDbContextAsync();
             var res=await dbContext.Skills.Include(s => s.Category)
                                          .Include(s => s.InternalRole)
                                          .Include(s => s.EmployeeSkills)
                                          .FirstOrDefaultAsync(s => s.Id == id);
-            return res;
+            return res ?? new Skill();
         }
 
         public async Task PermanentDeleteAsync(Guid skillId)
