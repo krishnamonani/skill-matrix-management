@@ -45,7 +45,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<DepartmentRole> DepartmentRoles { get; set; }
         public DbSet<DepartmentInternalRole> DepartmentInternalRoles { get; set; }
-
+        public DbSet<RolePermission> RolePermissions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -83,7 +83,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             builder.Entity<SkillRecommendationByManager>(b =>
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "SkillRecommendationByManager", SkillMatrixManagementConsts.DbSchema);
-                b.ConfigureByConvention();                
+                b.ConfigureByConvention();
             });
 
             // Configure SkillHistory entity
@@ -140,7 +140,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.HasOne(e => e.Skill)
                 .WithMany(s => s.EmployeeSkills)
                 .HasForeignKey(e => e.SkillId);
-                
+
                 b.HasOne(e => e.User)
                 .WithMany(u => u.EmployeeSkills)
                 .HasForeignKey(e => e.UserId);
@@ -150,7 +150,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                     v => v.ToString(), // Convert enum to string when saving
                     v => (ProficiencyEnum)Enum.Parse(typeof(ProficiencyEnum), v) // Convert string back to enum when reading
                 );
-                
+
                 b.Property(r => r.ManagerAssignedProficiency)
                 .HasConversion(
                     v => v.ToString(), // Convert enum to string when saving
@@ -303,11 +303,18 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                        v => (DepartmentRoleEnum)Enum.Parse(typeof(DepartmentRoleEnum), v) // Convert string back to enum when reading
                 );
 
-                 b.Property(r => r.Position)
-                .HasConversion(
-                       v => v.ToString(), // Convert enum to string when saving
-                       v => (RolePositionEnum)Enum.Parse(typeof(RolePositionEnum), v) // Convert string back to enum when reading
-                );
+                b.Property(r => r.Position)
+               .HasConversion(
+                      v => v.ToString(), // Convert enum to string when saving
+                      v => (RolePositionEnum)Enum.Parse(typeof(RolePositionEnum), v) // Convert string back to enum when reading
+               );
+            });
+
+            // Configure RolePermission entity
+            builder.Entity<RolePermission>(b =>
+            {
+                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "RolePermission", SkillMatrixManagementConsts.DbSchema);
+                b.ConfigureByConvention();
             });
 
 
@@ -345,7 +352,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 builder.Entity<TEntity>()
                     .HasIndex(property.Name)
-                    .HasMethod("HASH");  
+                    .HasMethod("HASH");
             }
         }
 
