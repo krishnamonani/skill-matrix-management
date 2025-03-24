@@ -27,9 +27,9 @@ namespace SkillMatrixManagement.Repositories
             // Input validation
             Check.NotNull(skillMatrix, nameof(skillMatrix));
             if (skillMatrix.DepartmentId == Guid.Empty)
-                throw new BusinessException("SM-001", "DepartmentId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.DepartmentIdCannotBeEmpty, "DepartmentId cannot be empty");
             if (skillMatrix.SkillId == Guid.Empty)
-                throw new BusinessException("SM-002", "SkillId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillIdCannotBeEmpty, "SkillId cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
@@ -39,7 +39,7 @@ namespace SkillMatrixManagement.Repositories
                               sm.SkillId == skillMatrix.SkillId &&
                               !sm.IsDeleted);
             if (exists)
-                throw new BusinessException("SM-003", "This skill matrix combination already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixCombinationAlreadyExists, "This skill matrix combination already exists");
 
             var result = await dbContext.Set<SkillMatrix>().AddAsync(skillMatrix);
             await dbContext.SaveChangesAsync();
@@ -57,7 +57,7 @@ namespace SkillMatrixManagement.Repositories
                 .Include(sm => sm.Department)
                 .Include(sm => sm.Skill)
                 .FirstOrDefaultAsync(sm => sm.Id == id && !sm.IsDeleted)
-                ?? throw new BusinessException("SM-005", "SkillMatrix not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotFound, "SkillMatrix not found");
 
             return skillMatrix;
         }
@@ -79,16 +79,16 @@ namespace SkillMatrixManagement.Repositories
             if (skillMatrix.Id == Guid.Empty)
                 throw new ArgumentException("SkillMatrix ID cannot be empty", nameof(skillMatrix));
             if (skillMatrix.DepartmentId == Guid.Empty)
-                throw new BusinessException("SM-011", "DepartmentId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.DepartmentIdCannotBeEmptyForUpdate, "DepartmentId cannot be empty");
             if (skillMatrix.SkillId == Guid.Empty)
-                throw new BusinessException("SM-012", "SkillId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillIdCannotBeEmptyForUpdate, "SkillId cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
             // Check existence
             var existing = await dbContext.Set<SkillMatrix>()
                 .FirstOrDefaultAsync(sm => sm.Id == skillMatrix.Id && !sm.IsDeleted)
-                ?? throw new BusinessException("SM-013", "SkillMatrix not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotFoundForUpdate, "SkillMatrix not found for update");
 
             // Check for duplicate combination
             var duplicateExists = await dbContext.Set<SkillMatrix>()
@@ -97,7 +97,7 @@ namespace SkillMatrixManagement.Repositories
                               sm.Id != skillMatrix.Id &&
                               !sm.IsDeleted);
             if (duplicateExists)
-                throw new BusinessException("SM-014", "Another skill matrix with this combination already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.DuplicateSkillMatrixCombination, "Another skill matrix with this combination already exists");
 
             dbContext.Set<SkillMatrix>().Update(skillMatrix);
             await dbContext.SaveChangesAsync();
@@ -118,10 +118,10 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skillMatrix = await dbContext.Set<SkillMatrix>()
                 .FirstOrDefaultAsync(sm => sm.Id == skillMatrixId && !sm.IsDeleted)
-                ?? throw new BusinessException("SM-009", "SkillMatrix not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotFoundForSoftDeletion, "SkillMatrix not found for soft deletion");
 
             if (skillMatrix.IsDeleted)
-                throw new BusinessException("SM-010", "SkillMatrix is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixAlreadyDeleted, "SkillMatrix is already deleted");
 
             skillMatrix.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -139,7 +139,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(sm => sm.Id == skillMatrixId);
 
             if (skillMatrix == null)
-                throw new BusinessException("SM-006", "SkillMatrix not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotFoundForPermanentDeletion, "SkillMatrix not found for permanent deletion");
 
             dbContext.Set<SkillMatrix>().Remove(skillMatrix);
             await dbContext.SaveChangesAsync();
@@ -155,10 +155,10 @@ namespace SkillMatrixManagement.Repositories
             var skillMatrix = await dbContext.Set<SkillMatrix>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(sm => sm.Id == skillMatrixId)
-                ?? throw new BusinessException("SM-007", "SkillMatrix not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotFoundForRestoration, "SkillMatrix not found for restoration");
 
             if (!skillMatrix.IsDeleted)
-                throw new BusinessException("SM-008", "SkillMatrix is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.SkillMatrixNotDeleted, "SkillMatrix is not deleted, cannot be restored");
 
             // Check for duplicate combination
             var exists = await dbContext.Set<SkillMatrix>()
@@ -166,7 +166,7 @@ namespace SkillMatrixManagement.Repositories
                               sm.SkillId == skillMatrix.SkillId &&
                               !sm.IsDeleted);
             if (exists)
-                throw new BusinessException("SM-015", "Cannot restore: This skill matrix combination already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillMatrix.DuplicateSkillMatrixCombinationOnRestore, "Cannot restore: This skill matrix combination already exists");
 
             skillMatrix.IsDeleted = false;
             await dbContext.SaveChangesAsync();

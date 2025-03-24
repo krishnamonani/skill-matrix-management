@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace SkillMatrixManagement.Repositories
 {
-    public interface ICategoryRepsitory: IBasicRepository<Category, Guid>
+    public interface ICategoryRepository: IBasicRepository<Category, Guid>
     {
         // CRUD Methods
         Task<Category> CreateAsync(Category category);
