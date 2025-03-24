@@ -13,7 +13,7 @@ namespace SkillMatrixManagement.DTOs.Shared
         public string? ErrorMessage { get; set; }
         public List<string> Errors { get; set; }
 
-        private ServiceResponse()
+        protected ServiceResponse()
         {
             Errors = new List<string>();
         }
@@ -63,6 +63,58 @@ namespace SkillMatrixManagement.DTOs.Shared
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
 
             return new ServiceResponse<T>
+            {
+                Success = false,
+                ErrorMessage = errorMessage,
+                Errors = errors
+            };
+        }
+    }
+
+    public class ServiceResponse : ServiceResponse<object>
+    {
+        public static ServiceResponse SuccessResult()
+        {
+            return new ServiceResponse
+            {
+                Success = true,
+                Data = null
+            };
+        }
+
+        public static ServiceResponse Failure(string errorMessage)
+        {
+            if (string.IsNullOrEmpty(errorMessage))
+                throw new ArgumentNullException(nameof(errorMessage));
+
+            return new ServiceResponse
+            {
+                Success = false,
+                ErrorMessage = errorMessage,
+                Errors = new List<string> { errorMessage }
+            };
+        }
+
+        public static ServiceResponse Failure(List<string> errors)
+        {
+            errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
+
+            return new ServiceResponse
+            {
+                Success = false,
+                ErrorMessage = errors.Any() ? "Multiple errors occurred" : null,
+                Errors = errors
+            };
+        }
+
+        public static ServiceResponse Failure(string errorMessage, List<string> errors)
+        {
+            if (string.IsNullOrEmpty(errorMessage))
+                throw new ArgumentNullException(nameof(errorMessage));
+
+            errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
+
+            return new ServiceResponse
             {
                 Success = false,
                 ErrorMessage = errorMessage,

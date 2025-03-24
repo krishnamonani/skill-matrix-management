@@ -16,11 +16,12 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse<CategoryDto>> GetByIdAsync(Guid id);
         Task<ServiceResponse<CategoryDto>> GetByCategoryNameAsync(CategoryEnum categoryName);
         Task<ServiceResponse<List<CategoryDto>>> GetAllAsync(bool includeDeleted = false);
-        Task<ServiceResponse<List<CategoryDto>>> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false);
-        Task<ServiceResponse<object>> UpdateAsync(Guid id, UpdateCategoryDto input);
-        Task<ServiceResponse<object>> DeleteAsync(Guid id);
-        Task<ServiceResponse<object>> PermanentDeleteAsync(Guid id);
-        Task<ServiceResponse<object>> RestoreCategoryAsync(Guid id);
+        Task<ServiceResponse<CategoryPagedResultDto>> GetPagedListAsync(CategoryFilterDto input);
+        Task<ServiceResponse> UpdateAsync(Guid id, UpdateCategoryDto input);
+        Task<ServiceResponse> DeleteAsync(Guid id);
+        Task<ServiceResponse> PermanentDeleteAsync(Guid id);
+        Task<ServiceResponse> RestoreCategoryAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
+        Task<ServiceResponse<List<CategoryLookupDto>>> GetLookupAsync();
     }
 }

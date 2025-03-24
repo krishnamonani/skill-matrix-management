@@ -13,7 +13,7 @@ namespace SkillMatrixManagement.DTOs.CategoryDTO
     {
         public CategoryEnum? CategoryName { get; set; }
         public string? Description { get; set; }
-        public bool? IsUpdated { get; set; }
+        public bool? IsDeleted { get; set; }
         public DateTime? CreationTimeStart { get; set; }
         public DateTime? CreationTimeEnd { get; set; }
         public DateTime? LastModificationTimeStart { get; set; }
