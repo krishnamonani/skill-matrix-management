@@ -24,7 +24,7 @@ class SkillRequest(BaseModel):
 
 # Skill recommendation logic using Gemini
 def generate_skill_recommendation(role: str, n: int ,current_skills: List[str]) -> List[str]:
-    # ✅ Handle Empty Skill List Case
+    #  Handle Empty Skill List Case
     if not current_skills:
         prompt = (
             f"Suggest most important technical or professional skills required for a {role}. "
@@ -41,9 +41,9 @@ def generate_skill_recommendation(role: str, n: int ,current_skills: List[str]) 
 
     try:
         generated_text = response.text.strip()
-        print("🔍 Gemini Response:\n", generated_text)
+        print(" Gemini Response:\n", generated_text)
     except Exception as e:
-        print("❌ Failed to parse Gemini response:", e)
+        print(" Failed to parse Gemini response:", e)
         return []
 
     # Parse and clean skills
