@@ -13,11 +13,11 @@ using SkillMatrixManagement.Constants;
 
 namespace SkillMatrixManagement.Repositories
 {
-    class NotficationRepository : EfCoreRepository<SkillMatrixManagementApplicationDbContext, Notification, Guid>, INotificationRepository
+    class NotificationRepository : EfCoreRepository<SkillMatrixManagementApplicationDbContext, Notification, Guid>, INotificationRepository
     {
         private readonly IDbContextProvider<SkillMatrixManagementApplicationDbContext> _dbContextProvider;
 
-        public NotficationRepository(IDbContextProvider<SkillMatrixManagementApplicationDbContext> dbContextProvider)
+        public NotificationRepository(IDbContextProvider<SkillMatrixManagementApplicationDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
