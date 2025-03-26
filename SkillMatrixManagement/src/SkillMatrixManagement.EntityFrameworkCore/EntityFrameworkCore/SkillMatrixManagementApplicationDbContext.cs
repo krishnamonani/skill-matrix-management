@@ -138,10 +138,6 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "EmployeeSkill", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
-                b.HasOne(e => e.Skill)
-                .WithMany(s => s.EmployeeSkills)
-                .HasForeignKey(e => e.SkillId);
-
                 b.HasOne(e => e.User)
                 .WithMany(u => u.EmployeeSkills)
                 .HasForeignKey(e => e.UserId);

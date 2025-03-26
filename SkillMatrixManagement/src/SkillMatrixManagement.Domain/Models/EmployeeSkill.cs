@@ -17,9 +17,7 @@ namespace SkillMatrixManagement.Models
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
 
-        [ForeignKey("SkillId")]
-        public Guid SkillId { get; set; }
-        public virtual Skill Skill { get; set; }
+        public string CoreSkillName { get; set; }
 
         public ProficiencyEnum SelfAssessedProficiency { get; set; }
         public ProficiencyEnum? ManagerAssignedProficiency { get; set; }
@@ -31,7 +29,7 @@ namespace SkillMatrixManagement.Models
         public DateTime? EndorsedAt { get; set; }
 
 
-        public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
+        public Dictionary<string, ProficiencyEnum>? SkillDescription { get; set; }
 
     }
 
