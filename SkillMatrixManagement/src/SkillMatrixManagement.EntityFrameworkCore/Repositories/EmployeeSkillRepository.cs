@@ -29,7 +29,7 @@ namespace SkillMatrixManagement.Repositories
 
             // Check for duplicates
             var exists = await dbContext.Set<EmployeeSkill>()
-                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.SkillId == employeeSkill.SkillId && !es.IsDeleted);
+                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
             if (exists)
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
 
@@ -133,11 +133,11 @@ namespace SkillMatrixManagement.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<EmployeeSkill>> GetSkillsBySkillAsync(Guid skillId)
+        public async Task<List<EmployeeSkill>> GetSkillsBySkillAsync(string coreSkillName)
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             return await dbContext.Set<EmployeeSkill>()
-                .Where(es => es.SkillId == skillId && !es.IsDeleted)
+                .Where(es => es.CoreSkillName.ToLower() == coreSkillName.ToLower() && !es.IsDeleted)
                 .ToListAsync();
         }
 
