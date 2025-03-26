@@ -1,10 +1,10 @@
-import SlotPropsSignIn from "./components/SignIn"
+import SignInPage from "./components/SingInRegister"
 
 function App() {
 
   return (
     <>
-      <SlotPropsSignIn/>
+      <SignInPage/>
     </>
   )
 }
