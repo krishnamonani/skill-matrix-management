@@ -14,12 +14,12 @@ using Volo.Abp.Application.Services;
 
 namespace SkillMatrixManagement.Services
 {
-    public class SkillSubtopicService:ApplicationService, ISkillSubtopicService
+    public class AppSkillSubtopicService:ApplicationService, ISkillSubtopicService
     {
         private readonly ISkillSubtopicRepository _skillSubtopicRepository;
         private readonly IMapper _mapper;
 
-        public SkillSubtopicService(ISkillSubtopicRepository skillSubtopicRepository, IMapper mapper)
+        public AppSkillSubtopicService(ISkillSubtopicRepository skillSubtopicRepository, IMapper mapper)
         {
             _skillSubtopicRepository = skillSubtopicRepository;
             _mapper = mapper;
