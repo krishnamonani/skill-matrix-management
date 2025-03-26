@@ -20,5 +20,7 @@ namespace SkillMatrixManagement.Repositories
         // Soft Delete & Restore
         Task SoftDeleteAsync(Guid userId); // Soft delete a user
         Task RestoreUserAsync(Guid userId); // Restore a soft-deleted user
+
+        Task<IQueryable<User>> WithDetailsAsync();
     }
 }
