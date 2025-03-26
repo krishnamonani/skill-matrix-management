@@ -30,7 +30,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<DepartmentRole>()
                 .AnyAsync(dr => dr.DepartmentId == departmentRole.DepartmentId && dr.InternalRoleId == departmentRole.InternalRoleId && !dr.IsDeleted);
             if (exists)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_ALREADY_EXISTS);
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_ALREADY_EXISTS);
 
             var result = await dbContext.Set<DepartmentRole>().AddAsync(departmentRole);
             await dbContext.SaveChangesAsync();
@@ -40,12 +40,12 @@ namespace SkillMatrixManagement.Repositories
         public async Task<DepartmentRole> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.INVALID_DEPARTMENT_ROLE_ID);
+                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.INVALID_DEPARTMENT_ROLE_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var departmentRole = await dbContext.Set<DepartmentRole>()
                 .FirstOrDefaultAsync(dr => dr.Id == id && !dr.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_FOUND);
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_FOUND);
 
             return departmentRole;
         }
@@ -60,12 +60,12 @@ namespace SkillMatrixManagement.Repositories
         {
             Check.NotNull(departmentRole, nameof(departmentRole));
             if (departmentRole.Id == Guid.Empty)
-                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.INVALID_DEPARTMENT_ROLE_ID);
+                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.INVALID_DEPARTMENT_ROLE_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<DepartmentRole>()
                 .FirstOrDefaultAsync(dr => dr.Id == departmentRole.Id && !dr.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_FOUND);
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_FOUND);
 
             dbContext.Set<DepartmentRole>().Update(departmentRole);
             await dbContext.SaveChangesAsync();
@@ -79,12 +79,12 @@ namespace SkillMatrixManagement.Repositories
         public async Task SoftDeleteAsync(Guid departmentRoleId)
         {
             if (departmentRoleId == Guid.Empty)
-                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.INVALID_DEPARTMENT_ROLE_ID);
+                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.INVALID_DEPARTMENT_ROLE_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var departmentRole = await dbContext.Set<DepartmentRole>()
                 .FirstOrDefaultAsync(dr => dr.Id == departmentRoleId && !dr.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_FOUND);
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_FOUND);
 
             departmentRole.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -93,7 +93,7 @@ namespace SkillMatrixManagement.Repositories
         public async Task PermanentDeleteAsync(Guid departmentRoleId)
         {
             if (departmentRoleId == Guid.Empty)
-                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.INVALID_DEPARTMENT_ROLE_ID);
+                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.INVALID_DEPARTMENT_ROLE_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var departmentRole = await dbContext.Set<DepartmentRole>()
@@ -101,7 +101,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(dr => dr.Id == departmentRoleId);
 
             if (departmentRole == null)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_FOUND);
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_FOUND);
 
             dbContext.Set<DepartmentRole>().Remove(departmentRole);
             await dbContext.SaveChangesAsync();
@@ -110,16 +110,16 @@ namespace SkillMatrixManagement.Repositories
         public async Task RestoreDepartmentRoleAsync(Guid departmentRoleId)
         {
             if (departmentRoleId == Guid.Empty)
-                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.INVALID_DEPARTMENT_ROLE_ID);
+                throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.INVALID_DEPARTMENT_ROLE_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var departmentRole = await dbContext.Set<DepartmentRole>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(dr => dr.Id == departmentRoleId)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_FOUND);
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_FOUND);
 
             if (!departmentRole.IsDeleted)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DEPARTMENT_ROLE_NOT_DELETED);
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentRole.DEPARTMENT_ROLE_NOT_DELETED);
 
             departmentRole.IsDeleted = false;
             await dbContext.SaveChangesAsync();

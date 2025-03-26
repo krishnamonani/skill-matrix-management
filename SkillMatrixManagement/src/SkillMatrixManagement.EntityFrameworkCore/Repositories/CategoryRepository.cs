@@ -29,7 +29,7 @@ namespace SkillMatrixManagement.Repositories
 
             var exists = await dbContext.Set<Category>().AnyAsync(c => c.CategoryName == category.CategoryName && !c.IsDeleted);
             if (exists)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryAlreadyExists, "Category already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_ALREADY_EXIST, "Category already exists");
 
             var result = await dbContext.Set<Category>().AddAsync(category);
             await dbContext.SaveChangesAsync();
@@ -43,7 +43,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var category = await dbContext.Set<Category>().FindAsync(id)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFound, "Category not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND, "Category not found");
             return category;
         }
 
@@ -59,11 +59,11 @@ namespace SkillMatrixManagement.Repositories
             Check.NotNull(category, nameof(category));
 
             var existing = await dbContext.Set<Category>().FirstOrDefaultAsync(c => c.Id == category.Id && !c.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFoundForUpdate, "Category not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND_FOR_UPDATE, "Category not found for update");
 
             var duplicateExists = await dbContext.Set<Category>().AnyAsync(c => c.CategoryName == category.CategoryName && c.Id != category.Id && !c.IsDeleted);
             if (duplicateExists)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryDuplicateName, "Category with the same name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_DUPLICATE_NAME, "Category with the same name already exists");
 
             dbContext.Set<Category>().Update(category);
             await dbContext.SaveChangesAsync();
@@ -78,7 +78,7 @@ namespace SkillMatrixManagement.Repositories
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var category = await dbContext.Set<Category>().FindAsync(categoryId)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFoundForSoftDelete, "Category not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND_FOR_SOFT_DELETE, "Category not found");
 
             category.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -90,7 +90,7 @@ namespace SkillMatrixManagement.Repositories
             var category = await dbContext.Set<Category>().IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == categoryId);
 
             if (category == null)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFoundForPermanentDelete, "Category not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND_FOR_PERMANENT_DELETE, "Category not found for deletion");
 
             dbContext.Set<Category>().Remove(category);
             await dbContext.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace SkillMatrixManagement.Repositories
             var category = await dbContext.Set<Category>().IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == categoryId);
 
             if (category == null || !category.IsDeleted)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFoundOrNotDeleted, "Category not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND_OR_DELETED, "Category not found or not deleted");
 
             category.IsDeleted = false;
             await dbContext.SaveChangesAsync();
@@ -112,7 +112,7 @@ namespace SkillMatrixManagement.Repositories
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             return await dbContext.Set<Category>().FirstOrDefaultAsync(c => c.CategoryName == categoryName)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CategoryNotFoundByName, "Category not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Category.CATEGORY_NOT_FOUND_BY_NAME, "Category not found");
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync(bool includeDeleted = false)
