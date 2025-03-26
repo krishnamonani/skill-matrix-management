@@ -29,7 +29,7 @@ namespace SkillMatrixManagement.Models
         public DateTime? EndorsedAt { get; set; }
 
 
-        public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
+        public Dictionary<string, ProficiencyEnum>? SkillDescription { get; set; }
 
     }
 
