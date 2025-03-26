@@ -11,6 +11,7 @@ namespace SkillMatrixManagement.DTOs.RoleDTO
     public class RoleDto : FullAuditedEntityDto<Guid>
     {
         public RoleEnum Name { get; set; }
+        public string RoleNameString { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             return await dbContext.Set<DepartmentManager>().FirstOrDefaultAsync(dm => dm.Id == id && !dm.IsDeleted)
-                   ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DepartmentManagerNotFound, "Department Manager not found");
+                   ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DEPARTMENT_MANAGER_NOT_FOUND, "Department Manager not found");
         }
 
         public async Task<List<DepartmentManager>> GetAllAsync()
@@ -83,7 +83,7 @@ namespace SkillMatrixManagement.Repositories
             var departmentManager = await dbContext.Set<DepartmentManager>().IgnoreQueryFilters().FirstOrDefaultAsync(dm => dm.Id == departmentManagerId);
 
             if (departmentManager == null)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DepartmentManagerNotFoundForPermanentDelete, "Department Manager not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DEPARTMENT_MANAGER_NOT_FOUND_FOR_PERMANENT_DELETE, "Department Manager not found for permanent deletion");
 
             dbContext.Set<DepartmentManager>().Remove(departmentManager);
             await dbContext.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace SkillMatrixManagement.Repositories
             var departmentManager = await dbContext.Set<DepartmentManager>().IgnoreQueryFilters().FirstOrDefaultAsync(dm => dm.Id == departmentManagerId) ?? throw new BusinessException("DM-005", "Department Manager not found for restoration");
 
             if (!departmentManager.IsDeleted)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DepartmentManagerNotDeleted, "Department Manager is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentManager.DEPARTMENT_MANAGER_NOT_DELETED, "Department Manager is not deleted, cannot be restored");
 
             departmentManager.IsDeleted = false;
             await dbContext.SaveChangesAsync();

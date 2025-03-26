@@ -29,11 +29,11 @@ namespace SkillMatrixManagement.Repositories
             // Input validation
             Check.NotNull(skillHistory, nameof(skillHistory));
             if (skillHistory.UserId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.UserIdCannotBeEmpty, "UserId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.USER_ID_CAN_NOT_BE_EMPTY, "UserId cannot be empty");
             if (skillHistory.SkillId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillIdCannotBeEmpty, "SkillId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY, "SkillId cannot be empty");
             if (!Enum.IsDefined(typeof(ProficiencyEnum), skillHistory.ChangedProficiencyLevel))
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.InvalidProficiencyLevel, "Invalid proficiency level specified");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.INVALID_PROFICIENCY_LEVEL, "Invalid proficiency level specified");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var entity = await dbContext.Set<SkillHistory>().AddAsync(skillHistory);
@@ -45,12 +45,12 @@ namespace SkillMatrixManagement.Repositories
         {
             // Input validation
             if (id == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryIdCannotBeEmptyForGet, "SkillHistory ID cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_GET, "SkillHistory ID cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skillHistory = await dbContext.Set<SkillHistory>()
                 .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotFound, "SkillHistory not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_FOUND, "SkillHistory not found");
 
             return skillHistory;
         }
@@ -68,20 +68,20 @@ namespace SkillMatrixManagement.Repositories
             // Input validation
             Check.NotNull(skillHistory, nameof(skillHistory));
             if (skillHistory.Id == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryIdCannotBeEmptyForUpdate, "SkillHistory ID cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "SkillHistory ID cannot be empty");
             if (skillHistory.UserId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.UserIdCannotBeEmptyForUpdate, "UserId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.USER_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "UserId cannot be empty");
             if (skillHistory.SkillId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillIdCannotBeEmptyForUpdate, "SkillId cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "SkillId cannot be empty");
             if (!Enum.IsDefined(typeof(ProficiencyEnum), skillHistory.ChangedProficiencyLevel))
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.InvalidProficiencyLevelForUpdate, "Invalid proficiency level specified");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.INVALID_PROFICIENCY_LEVEL_FOR_UPDATE, "Invalid proficiency level specified");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
             // Check existence
             var existing = await dbContext.Set<SkillHistory>()
                 .FirstOrDefaultAsync(x => x.Id == skillHistory.Id && !x.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotFoundForUpdate, "SkillHistory not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_FOUND_FOR_UPDATE, "SkillHistory not found for update");
 
             // Update specific fields
             existing.ChangedProficiencyLevel = skillHistory.ChangedProficiencyLevel;
@@ -101,15 +101,15 @@ namespace SkillMatrixManagement.Repositories
         {
             // Input validation
             if (skillHistoryId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryIdCannotBeEmptyForSoftDelete, "SkillHistory ID cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_SOFT_DELETE, "SkillHistory ID cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var entity = await dbContext.Set<SkillHistory>()
                 .FirstOrDefaultAsync(x => x.Id == skillHistoryId && !x.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotFoundForSoftDeletion, "SkillHistory not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_FOUND_FOR_SOFT_DELETE, "SkillHistory not found for soft deletion");
 
             if (entity.IsDeleted)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryAlreadyDeleted, "SkillHistory is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ALREADY_DELETED, "SkillHistory is already deleted");
 
             entity.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -119,7 +119,7 @@ namespace SkillMatrixManagement.Repositories
         {
             // Input validation
             if (skillHistoryId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryIdCannotBeEmptyForPermanentDelete, "SkillHistory ID cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_PERMANENT_DELETE, "SkillHistory ID cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var entity = await dbContext.Set<SkillHistory>()
@@ -127,7 +127,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(x => x.Id == skillHistoryId);
 
             if (entity == null)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotFoundForPermanentDeletion, "SkillHistory not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_FOUND_FOR_PERMANENT_DELETION, "SkillHistory not found for permanent deletion");
 
             dbContext.Set<SkillHistory>().Remove(entity);
             await dbContext.SaveChangesAsync();
@@ -137,16 +137,16 @@ namespace SkillMatrixManagement.Repositories
         {
             // Input validation
             if (skillHistoryId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryIdCannotBeEmptyForRestoration, "SkillHistory ID cannot be empty");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_RESTORATION, "SkillHistory ID cannot be empty");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var entity = await dbContext.Set<SkillHistory>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == skillHistoryId)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotFoundForRestoration, "SkillHistory not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_FOUND_FOR_RESTORATION, "SkillHistory not found for restoration");
 
             if (!entity.IsDeleted)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SkillHistoryNotDeleted, "SkillHistory is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_NOT_DELETED, "SkillHistory is not deleted, cannot be restored");
 
             entity.IsDeleted = false;
             await dbContext.SaveChangesAsync();

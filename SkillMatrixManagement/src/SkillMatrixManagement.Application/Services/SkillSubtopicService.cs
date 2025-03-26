@@ -39,15 +39,16 @@ namespace SkillMatrixManagement.Services
                 var createdEntity = await _skillSubtopicRepository.CreateAsync(skillSubtopic);
                 var dto = _mapper.Map<SkillSubtopicDto>(createdEntity);
 
-                return ServiceResponse<SkillSubtopicDto>.SuccessResult(dto);
+                return ServiceResponse<SkillSubtopicDto>.SuccessResult(dto, 201);
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code);
+
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code, 400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message);
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message,500);
             }
 
         }
@@ -57,15 +58,15 @@ namespace SkillMatrixManagement.Services
             try
             {
                 await _skillSubtopicRepository.SoftDeleteAsync(id);
-                return ServiceResponse.SuccessResult();
+                return ServiceResponse.SuccessResult(200);
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse.Failure(ex.Code);
+                return ServiceResponse.Failure(ex.Code, 400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse.Failure(ex.Message);
+                return ServiceResponse.Failure(ex.Message,500);
 
             }
             
@@ -81,7 +82,7 @@ namespace SkillMatrixManagement.Services
                 var entities = await _skillSubtopicRepository.GetAllAsync();
                 var dtoList = _mapper.Map<List<SkillSubtopicDto>>(entities);
 
-                return ServiceResponse<List<SkillSubtopicDto>>.SuccessResult(dtoList);
+                return ServiceResponse<List<SkillSubtopicDto>>.SuccessResult(dtoList, 201);
                 }
 
                 else
@@ -90,17 +91,17 @@ namespace SkillMatrixManagement.Services
                     entities = entities.Where(e => e.IsDeleted == false).ToList();
                     var dtoList = _mapper.Map<List<SkillSubtopicDto>>(entities);
 
-                    return ServiceResponse<List<SkillSubtopicDto>>.SuccessResult(dtoList);
+                    return ServiceResponse<List<SkillSubtopicDto>>.SuccessResult(dtoList,200);
                 }
 
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse<List<SkillSubtopicDto>>.Failure(ex.Code);
+                return ServiceResponse<List<SkillSubtopicDto>>.Failure(ex.Code,400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<List<SkillSubtopicDto>>.Failure(ex.Message);
+                return ServiceResponse<List<SkillSubtopicDto>>.Failure(ex.Message,500);
             }
         }
 
@@ -111,15 +112,15 @@ namespace SkillMatrixManagement.Services
                 var entity = await _skillSubtopicRepository.GetByIdAsync(id);
                 var dto = _mapper.Map<SkillSubtopicDto>(entity);
 
-                return ServiceResponse<SkillSubtopicDto>.SuccessResult(dto);
+                return ServiceResponse<SkillSubtopicDto>.SuccessResult(dto,201);
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code);
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code, 400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message);
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message, 500);
             }
         }
 
@@ -130,16 +131,16 @@ namespace SkillMatrixManagement.Services
                 var entities = await _skillSubtopicRepository.GetAllAsync();
                 var filteredEntities = entities.Where(e => !e.IsDeleted).ToList();
                 var lookupDtos = ObjectMapper.Map<List<SkillSubtopic>, List<SkillSubtopicLookupDto>>(filteredEntities);
-                return ServiceResponse<List<SkillSubtopicLookupDto>>.SuccessResult(lookupDtos);
+                return ServiceResponse<List<SkillSubtopicLookupDto>>.SuccessResult(lookupDtos,200);
             }
             catch(BusinessException ex)
             {
-                return ServiceResponse<List<SkillSubtopicLookupDto>>.Failure(ex.Code);
+                return ServiceResponse<List<SkillSubtopicLookupDto>>.Failure(ex.Code,400);
             }
 
             catch (Exception ex)
             {
-                return ServiceResponse<List<SkillSubtopicLookupDto>>.Failure(ex.Message);
+                return ServiceResponse<List<SkillSubtopicLookupDto>>.Failure(ex.Message, 500);
             }
         }
 
@@ -153,15 +154,15 @@ namespace SkillMatrixManagement.Services
             try
             {
                 await _skillSubtopicRepository.PermanentDeleteAsync(id);
-                return ServiceResponse.SuccessResult();
+                return ServiceResponse.SuccessResult(200);
             }
             catch(BusinessException ex)
             {
-                return ServiceResponse.Failure(ex.Code);
+                return ServiceResponse.Failure(ex.Code,400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse.Failure(ex.Message);
+                return ServiceResponse.Failure(ex.Message, 500);
             }
         }
 
@@ -171,11 +172,11 @@ namespace SkillMatrixManagement.Services
             try
             {
                 await _skillSubtopicRepository.RestoreSkillSubtopicAsync(id);
-                return ServiceResponse.SuccessResult();
+                return ServiceResponse.SuccessResult(200);
             }
             catch (Exception ex)
             {
-                return ServiceResponse.Failure(ex.Message);
+                return ServiceResponse.Failure(ex.Message,500);
             }
         }
 
@@ -185,11 +186,11 @@ namespace SkillMatrixManagement.Services
             {
                 var skillSubtopic = ObjectMapper.Map<UpdateSkillSubtopicDto, SkillSubtopic>(input);
                 await _skillSubtopicRepository.UpdateAsync(skillSubtopic);
-                return ServiceResponse.SuccessResult();
+                return ServiceResponse.SuccessResult(200);
             }
             catch(Exception ex)
             {
-                return ServiceResponse.Failure(ex.Message);
+                return ServiceResponse.Failure(ex.Message, 500);
             }
         }
     }
