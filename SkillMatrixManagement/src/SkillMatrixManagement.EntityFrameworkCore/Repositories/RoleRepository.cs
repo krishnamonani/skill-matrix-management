@@ -28,7 +28,7 @@ namespace SkillMatrixManagement.Repositories
             // Input validation
             Check.NotNull(role, nameof(role));
             if (!Enum.IsDefined(typeof(RoleEnum), role.Name))
-                throw new BusinessException("ROLE-001", "Invalid role name specified");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.InvalidRoleName, "Invalid role name specified");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
@@ -36,7 +36,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<Role>()
                 .AnyAsync(r => r.Name == role.Name && !r.IsDeleted);
             if (exists)
-                throw new BusinessException("ROLE-002", "A role with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleAlreadyExists, "A role with this name already exists");
 
             var result = await dbContext.Set<Role>().AddAsync(role);
             await dbContext.SaveChangesAsync();
@@ -52,7 +52,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var role = await dbContext.Set<Role>()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted)
-                ?? throw new BusinessException("ROLE-004", "Role not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotFound, "Role not found");
 
             return role;
         }
@@ -72,20 +72,20 @@ namespace SkillMatrixManagement.Repositories
             if (role.Id == Guid.Empty)
                 throw new ArgumentException("Role ID cannot be empty", nameof(role));
             if (!Enum.IsDefined(typeof(RoleEnum), role.Name))
-                throw new BusinessException("ROLE-011", "Invalid role name specified");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.InvalidRoleNameForUpdate, "Invalid role name specified");
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
 
             // Check existence
             var existing = await dbContext.Set<Role>()
                 .FirstOrDefaultAsync(r => r.Id == role.Id && !r.IsDeleted)
-                ?? throw new BusinessException("ROLE-012", "Role not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotFoundForUpdate, "Role not found for update");
 
             // Check for duplicate names
             var duplicateExists = await dbContext.Set<Role>()
                 .AnyAsync(r => r.Name == role.Name && r.Id != role.Id && !r.IsDeleted);
             if (duplicateExists)
-                throw new BusinessException("ROLE-013", "Another role with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.DuplicateRoleName, "Another role with this name already exists");
 
             dbContext.Set<Role>().Update(role);
             await dbContext.SaveChangesAsync();
@@ -105,10 +105,10 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var role = await dbContext.Set<Role>()
                 .FirstOrDefaultAsync(r => r.Id == roleId && !r.IsDeleted)
-                ?? throw new BusinessException("ROLE-009", "Role not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotFoundForSoftDeletion, "Role not found for soft deletion");
 
             if (role.IsDeleted)
-                throw new BusinessException("ROLE-010", "Role is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleAlreadyDeleted, "Role is already deleted");
 
             role.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -126,7 +126,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(r => r.Id == roleId);
 
             if (role == null)
-                throw new BusinessException("ROLE-005", "Role not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotFoundForPermanentDeletion, "Role not found for permanent deletion");
 
             dbContext.Set<Role>().Remove(role);
             await dbContext.SaveChangesAsync();
@@ -142,16 +142,16 @@ namespace SkillMatrixManagement.Repositories
             var role = await dbContext.Set<Role>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(r => r.Id == roleId)
-                ?? throw new BusinessException("ROLE-006", "Role not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotFoundForRestoration, "Role not found for restoration");
 
             if (!role.IsDeleted)
-                throw new BusinessException("ROLE-007", "Role is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.RoleNotDeleted, "Role is not deleted, cannot be restored");
 
             // Check for duplicates
             var exists = await dbContext.Set<Role>()
                 .AnyAsync(r => r.Name == role.Name && !r.IsDeleted);
             if (exists)
-                throw new BusinessException("ROLE-008", "Cannot restore: A role with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Role.DuplicateRoleNameOnRestore, "Cannot restore: A role with this name already exists");
 
             role.IsDeleted = false;
             await dbContext.SaveChangesAsync();

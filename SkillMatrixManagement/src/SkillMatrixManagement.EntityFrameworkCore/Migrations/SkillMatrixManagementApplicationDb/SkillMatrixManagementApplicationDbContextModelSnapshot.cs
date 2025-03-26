@@ -1464,6 +1464,112 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.ToTable("AppRole", (string)null);
                 });
 
+            modelBuilder.Entity("SkillMatrixManagement.Models.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConcurrencyStamp");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ConcurrencyStamp"), "HASH");
+
+                    b.HasIndex("CreationTime");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("CreationTime"), "HASH");
+
+                    b.HasIndex("CreatorId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("CreatorId"), "HASH");
+
+                    b.HasIndex("DeleterId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("DeleterId"), "HASH");
+
+                    b.HasIndex("DeletionTime");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("DeletionTime"), "HASH");
+
+                    b.HasIndex("ExtraProperties");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ExtraProperties"), "HASH");
+
+                    b.HasIndex("Id");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Id"), "HASH");
+
+                    b.HasIndex("IsDeleted");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("IsDeleted"), "HASH");
+
+                    b.HasIndex("LastModificationTime");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("LastModificationTime"), "HASH");
+
+                    b.HasIndex("LastModifierId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("LastModifierId"), "HASH");
+
+                    b.HasIndex("PermissionId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("PermissionId"), "HASH");
+
+                    b.HasIndex("RoleId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("RoleId"), "HASH");
+
+                    b.ToTable("AppRolePermission", (string)null);
+                });
+
             modelBuilder.Entity("SkillMatrixManagement.Models.Skill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2475,6 +2581,25 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .IsRequired();
 
                     b.Navigation("GeneratedByUser");
+                });
+
+            modelBuilder.Entity("SkillMatrixManagement.Models.RolePermission", b =>
+                {
+                    b.HasOne("SkillMatrixManagement.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkillMatrixManagement.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("SkillMatrixManagement.Models.Skill", b =>

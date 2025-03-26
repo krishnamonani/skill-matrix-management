@@ -1796,116 +1796,116 @@ namespace SkillMatrixManagement.CustomDataSeeding
         }
     },
 
-    // Tech Lead-specific Skills from Page 1
-    new SkillSubtopic
-    {
-        Name = "Programming Languages",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "TypeScript", ProficiencyEnum.EXPERT.ToString() },
-            { "C#", ProficiencyEnum.EXPERT.ToString() },
-            { "Java", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Backend Frameworks",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "ASP.NET", ProficiencyEnum.EXPERT.ToString() },
-            { "ExpressJS + Nest JS", ProficiencyEnum.EXPERT.ToString() },
-            { "Spring Boot", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Beyonded Frameworks", // Note: Likely a typo in the document, assuming "Frontend Frameworks"
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "Angular", ProficiencyEnum.EXPERT.ToString() },
-            { "ReactJS + Next JS", ProficiencyEnum.EXPERT.ToString() },
-            { "HTML", ProficiencyEnum.EXPERT.ToString() },
-            { "CSS", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Relational Database Fundamentals",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "Normalization", ProficiencyEnum.EXPERT.ToString() },
-            { "Indexing", ProficiencyEnum.EXPERT.ToString() },
-            { "Performance", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Relational Database",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "SQL Queries", ProficiencyEnum.EXPERT.ToString() },
-            { "PostgreSQL", ProficiencyEnum.EXPERT.ToString() },
-            { "MySQL", ProficiencyEnum.EXPERT.ToString() },
-            { "Microsoft SQL Server", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "NoSQL Database",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "DynamoDB", ProficiencyEnum.EXPERT.ToString() },
-            { "MongoDB", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "ORM",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "Entity Framework", ProficiencyEnum.EXPERT.ToString() },
-            { "Sequelize", ProficiencyEnum.EXPERT.ToString() },
-            { "Hibernate/JPA", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Version Control System",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "Git", ProficiencyEnum.EXPERT.ToString() },
-            { "TFVC", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "IDE",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "Visual Studio", ProficiencyEnum.EXPERT.ToString() },
-            { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() },
-            { "Eclipse", ProficiencyEnum.EXPERT.ToString() },
-            { "IntelliJ IDEA", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
-    new SkillSubtopic
-    {
-        Name = "Testing Frameworks (Backend)",
-        SkillId = TECH_LEAD.Id,
-        Description = new Dictionary<string, string>
-        {
-            { "NUnit/XUnit/MSTest", ProficiencyEnum.EXPERT.ToString() }
-        }
-    },
+                // Tech Lead-specific Skills from Page 1
+                new SkillSubtopic
+                {
+                    Name = "Programming Languages",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "TypeScript", ProficiencyEnum.EXPERT.ToString() },
+                        { "C#", ProficiencyEnum.EXPERT.ToString() },
+                        { "Java", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Backend Frameworks",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "ASP.NET", ProficiencyEnum.EXPERT.ToString() },
+                        { "ExpressJS + Nest JS", ProficiencyEnum.EXPERT.ToString() },
+                        { "Spring Boot", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Beyonded Frameworks", // Note: Likely a typo in the document, assuming "Frontend Frameworks"
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "Angular", ProficiencyEnum.EXPERT.ToString() },
+                        { "ReactJS + Next JS", ProficiencyEnum.EXPERT.ToString() },
+                        { "HTML", ProficiencyEnum.EXPERT.ToString() },
+                        { "CSS", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Relational Database Fundamentals",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "Normalization", ProficiencyEnum.EXPERT.ToString() },
+                        { "Indexing", ProficiencyEnum.EXPERT.ToString() },
+                        { "Performance", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Relational Database",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "SQL Queries", ProficiencyEnum.EXPERT.ToString() },
+                        { "PostgreSQL", ProficiencyEnum.EXPERT.ToString() },
+                        { "MySQL", ProficiencyEnum.EXPERT.ToString() },
+                        { "Microsoft SQL Server", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "NoSQL Database",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "DynamoDB", ProficiencyEnum.EXPERT.ToString() },
+                        { "MongoDB", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "ORM",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "Entity Framework", ProficiencyEnum.EXPERT.ToString() },
+                        { "Sequelize", ProficiencyEnum.EXPERT.ToString() },
+                        { "Hibernate/JPA", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Version Control System",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "Git", ProficiencyEnum.EXPERT.ToString() },
+                        { "TFVC", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "IDE",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "Visual Studio", ProficiencyEnum.EXPERT.ToString() },
+                        { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() },
+                        { "Eclipse", ProficiencyEnum.EXPERT.ToString() },
+                        { "IntelliJ IDEA", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
+                new SkillSubtopic
+                {
+                    Name = "Testing Frameworks (Backend)",
+                    SkillId = TECH_LEAD.Id,
+                    Description = new Dictionary<string, string>
+                    {
+                        { "NUnit/XUnit/MSTest", ProficiencyEnum.EXPERT.ToString() }
+                    }
+                },
 
     // Tech Lead-specific Skills from Page 2
     new SkillSubtopic

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SkillMatrixManagement.Application\SkillMatrixManagement.Application.csproj" />
     <ProjectReference Include="..\SkillMatrixManagement.Domain\SkillMatrixManagement.Domain.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,5 @@ namespace SkillMatrixManagement.Models
     {
         public ProficiencyEnum Level { get; set; }
         public string Description { get; set; }
-
     }
-
 }
