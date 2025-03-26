@@ -70,7 +70,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             dbContext.Set<Skill>().Update(skill);
             await dbContext.SaveChangesAsync();
         }
-        }
+        
 
         public async Task DeleteAsync(Guid skillId)
         {
@@ -86,7 +86,8 @@ namespace SkillMatrixManagement.Repositories.Implementations
             skill.IsDeleted = true;
             await dbContext.SaveChangesAsync();
         }
-        }
+
+        
 
         public async Task PermanentDeleteAsync(Guid skillId)
         {

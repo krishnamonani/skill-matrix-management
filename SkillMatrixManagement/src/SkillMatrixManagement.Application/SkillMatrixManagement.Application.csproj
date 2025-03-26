@@ -9,12 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <None Remove="Services\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SkillMatrixManagement.Domain\SkillMatrixManagement.Domain.csproj" />
     <ProjectReference Include="..\SkillMatrixManagement.Application.Contracts\SkillMatrixManagement.Application.Contracts.csproj" />
   </ItemGroup>

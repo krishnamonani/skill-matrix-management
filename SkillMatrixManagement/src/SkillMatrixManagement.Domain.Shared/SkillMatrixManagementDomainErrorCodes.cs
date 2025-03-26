@@ -92,4 +92,13 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string DuplicateSkillMatrixCombination = "SM-014";
         public const string DuplicateSkillMatrixCombinationOnRestore = "SM-015";
     }
+    public static class SkillSubtopicErrorCodes
+    {
+        public const string SkillSubtopicInvalid = "SKILLSUBTOPIC-001"; // When input is null in CreateAsync
+        public const string SkillSubtopicNotFound = "SKILLSUBTOPIC-002"; // When entity is not found in GetByIdAsync
+        public const string SkillSubtopicAlreadyDeleted = "SKILLSUBTOPIC-003"; // When trying to restore an already active entity
+        public const string SkillSubtopicNotFoundForUpdate = "SKILLSUBTOPIC-004"; // When trying to update a non-existent entity
+        public const string SkillSubtopicNotFoundForDelete = "SKILLSUBTOPIC-005"; // When trying to delete a non-existent entity
+        public const string SkillSubtopicNotFoundForPermanentDelete = "SKILLSUBTOPIC-006"; // When trying to permanently delete a non-existent entity
+    }
 }
