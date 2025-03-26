@@ -11,5 +11,6 @@ namespace SkillMatrixManagement.DTOs.RoleDTO
     {
         public Guid Id { get; set; }
         public RoleEnum Name { get; set; }
+        public string RoleNameString { get; set; }
     }
 }
