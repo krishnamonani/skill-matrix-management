@@ -9,17 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <None Remove="Services\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SkillMatrixManagement.Domain\SkillMatrixManagement.Domain.csproj" />
     <ProjectReference Include="..\SkillMatrixManagement.Application.Contracts\SkillMatrixManagement.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="9.1.0" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="9.1.0" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="9.1.0" />

@@ -21,5 +21,6 @@ namespace SkillMatrixManagement.Repositories
         // Soft Delete & Restore
         Task SoftDeleteAsync(Guid roleId); // Soft delete a role
         Task RestoreRoleAsync(Guid roleId); // Restore a soft-deleted role
+        Task<IQueryable<Role>> WithDetailsAsync();
     }
 }
