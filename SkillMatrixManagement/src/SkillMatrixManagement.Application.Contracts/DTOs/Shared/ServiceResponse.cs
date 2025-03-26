@@ -10,6 +10,7 @@ namespace SkillMatrixManagement.DTOs.Shared
     {
         public bool Success { get; set; }
         public T? Data { get; set; }
+        public int StatusCode { get; set; }
         public string? ErrorMessage { get; set; }
         public List<string> Errors { get; set; }
 
@@ -18,7 +19,7 @@ namespace SkillMatrixManagement.DTOs.Shared
             Errors = new List<string>();
         }
 
-        public static ServiceResponse<T> SuccessResult(T data)
+        public static ServiceResponse<T> SuccessResult(T data, int statusCode)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
@@ -26,11 +27,12 @@ namespace SkillMatrixManagement.DTOs.Shared
             {
                 Success = true,
                 Data = data,
+                StatusCode = statusCode,
                 Errors = new List<string>()
             };
         }
 
-        public static ServiceResponse<T> Failure(string errorMessage)
+        public static ServiceResponse<T> Failure(string errorMessage, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
@@ -39,11 +41,12 @@ namespace SkillMatrixManagement.DTOs.Shared
             {
                 Success = false,
                 ErrorMessage = errorMessage,
+                StatusCode = statusCode,
                 Errors = new List<string> { errorMessage }
             };
         }
 
-        public static ServiceResponse<T> Failure(List<string> errors)
+        public static ServiceResponse<T> Failure(List<string> errors, int statusCode)
         {
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
 
@@ -51,11 +54,12 @@ namespace SkillMatrixManagement.DTOs.Shared
             {
                 Success = false,
                 ErrorMessage = errors.Any() ? "Multiple errors occurred" : null,
-                Errors = errors
+                Errors = errors,
+                StatusCode = statusCode
             };
         }
 
-        public static ServiceResponse<T> Failure(string errorMessage, List<string> errors)
+        public static ServiceResponse<T> Failure(string errorMessage, List<string> errors, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
@@ -66,23 +70,25 @@ namespace SkillMatrixManagement.DTOs.Shared
             {
                 Success = false,
                 ErrorMessage = errorMessage,
-                Errors = errors
+                Errors = errors,
+                StatusCode = statusCode
             };
         }
     }
 
     public class ServiceResponse : ServiceResponse<object>
     {
-        public static ServiceResponse SuccessResult()
+        public static ServiceResponse SuccessResult(int statusCode)
         {
             return new ServiceResponse
             {
                 Success = true,
+                StatusCode = statusCode,
                 Data = null
             };
         }
 
-        public static ServiceResponse Failure(string errorMessage)
+        public static ServiceResponse Failure(string errorMessage, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
@@ -90,24 +96,26 @@ namespace SkillMatrixManagement.DTOs.Shared
             return new ServiceResponse
             {
                 Success = false,
+                StatusCode = statusCode,
                 ErrorMessage = errorMessage,
                 Errors = new List<string> { errorMessage }
             };
         }
 
-        public static ServiceResponse Failure(List<string> errors)
+        public static ServiceResponse Failure(List<string> errors, int statusCode)
         {
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
 
             return new ServiceResponse
             {
                 Success = false,
+                StatusCode = statusCode,
                 ErrorMessage = errors.Any() ? "Multiple errors occurred" : null,
                 Errors = errors
             };
         }
 
-        public static ServiceResponse Failure(string errorMessage, List<string> errors)
+        public static ServiceResponse Failure(string errorMessage, List<string> errors, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
@@ -117,6 +125,7 @@ namespace SkillMatrixManagement.DTOs.Shared
             return new ServiceResponse
             {
                 Success = false,
+                StatusCode = statusCode,
                 ErrorMessage = errorMessage,
                 Errors = errors
             };
