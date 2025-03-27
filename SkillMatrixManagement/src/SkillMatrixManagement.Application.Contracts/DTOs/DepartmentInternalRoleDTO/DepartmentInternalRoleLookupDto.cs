@@ -11,5 +11,6 @@ namespace SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO
     {
         public Guid Id { get; set; }
         public DepartmentRoleEnum RoleName { get; set; }
+        public string DepartmentRole { get; set; }
     }
 }

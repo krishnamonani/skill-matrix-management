@@ -12,6 +12,7 @@ namespace SkillMatrixManagement.DTOs.CategoryDTO
     public class CategoryDto : FullAuditedEntityDto<Guid>
     {
         public CategoryEnum CategoryName { get; set; }
+        public string CategoryNameString {get; set; }
         public string Description { get; set; }
         public bool IsUpdated { get; set; }
     }
