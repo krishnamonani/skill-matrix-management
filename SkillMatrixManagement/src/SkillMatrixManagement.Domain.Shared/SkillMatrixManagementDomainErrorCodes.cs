@@ -122,4 +122,38 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string EMPLOYEE_SKILL_ALREADY_DELETED = "EMPLOYEE_SKILL-004";
         public const string EMPLOYEE_SKILL_NOT_DELETED = "EMPLOYEE_SKILL-005";
     }
+    public static class Notification
+    {
+        public const string NOTIFICATION_NOT_FOUND = "NOTIF-001";
+        public const string NOTIFICATION_NOT_FOUND_FOR_UPDATE = "NOTIF-002";
+        public const string NOTIFICATION_NOT_FOUND_FOR_SOFT_DELETE = "NOTIF-003";
+        public const string NOTIFICATION_ALREADY_DELETED = "NOTIF-004";
+        public const string NOTIFICATION_NOT_FOUND_FOR_PERMANENT_DELETE  = "NOTIF-005";
+        public const string NOTIFICATION_NOT_FOUND_FOR_RESTORATION  = "NOTIF-006";
+        public const string NOTIFICATION_NOT_DELETED_CANNOT_RESTORE = "NOTIF-007";
+    }
+
+    public static class Permission
+    {
+        public const string PERMISSION_WITH_THIS_NAME_ALREADY_EXISTS = "PERM-001";
+        public const string PERMISSION_NOT_FOUND = "PERM-002";
+        public const string PERMISSION_NOT_FOUND_FOR_UPDATE = "PERM-003";
+        public const string PERMISSION_NOT_FOUND_FOR_SOFT_DELETE = "PERM-004";
+        public const string PERMISSION_ALREADY_DELETED = "PERM-005";
+        public const string PERMISSION_NOT_FOUND_FOR_PERMANENT_DELETE = "PERM-006";
+        public const string PERMISSION_NOT_FOUND_FOR_RESTORATION = "PERM-007";
+        public const string PERMISSION_NOT_DELETED_CANNOT_RESTORE = "PERM-008";
+    }
+
+    public static class ProficiencyLevel
+    {
+        public const string PERMISSION_PROFICIENCY_LEVEL_WITH_THIS_NAME_ALREADY_EXISTS = "PROF-001";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND = "PROF-002";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_UPDATE = "PROF-003";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_SOFT_DELETE = "PROF-004";
+        public const string PERMISSION_PROFICIENCY_LEVEL_ALREADY_DELETED = "PROF-005";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_PERMANENT_DELETE = "PROF-006";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_RESTORATION = "PROF-007";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_DELETED_CANNOT_RESTORE = "PROF-008";
+    }
 }
