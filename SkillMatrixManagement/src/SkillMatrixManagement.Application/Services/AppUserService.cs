@@ -93,7 +93,7 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException("User ID cannot be empty.");
                 }
 
-                await _userRepository.SoftDeleteAsync(id); // Use SoftDeleteAsync instead of DeleteAsync
+                await _userRepository.SoftDeleteAsync(id); 
                 return ServiceResponse.SuccessResult(200, "User deleted successfully.");
             }
             catch (Exception ex)

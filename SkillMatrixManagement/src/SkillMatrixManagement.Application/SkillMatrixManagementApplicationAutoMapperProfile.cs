@@ -1,4 +1,5 @@
 using AutoMapper;
+using SkillMatrixManagement.DTOs.DepartmentDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
@@ -20,6 +21,10 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
             .ForMember(e => e.RoleNameString, x => x.MapFrom(r => r.Name.ToString()));
 
         CreateMap<User, UserDto>();
+        CreateMap<User, UserLookupDto>();
+
+        CreateMap<Department, DepartmentDto>();
+        CreateMap<Department, DepartmentLookupDto>();
 
         CreateMap<SkillSubtopic, SkillSubtopicDto>();
 

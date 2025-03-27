@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SkillMatrixManagement.Constants;
 
 namespace SkillMatrixManagement.DTOs.UserDTO
 {
@@ -33,7 +34,7 @@ namespace SkillMatrixManagement.DTOs.UserDTO
 
         public Guid? InternalRoleId { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public ProjectStatusEnum IsAvailable { get; set; }
 
         [StringLength(500)]
         public string? ProfilePhoto { get; set; }
