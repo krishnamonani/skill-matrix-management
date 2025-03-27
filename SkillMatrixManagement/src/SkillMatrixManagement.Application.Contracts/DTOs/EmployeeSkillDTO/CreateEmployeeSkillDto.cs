@@ -14,7 +14,7 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
         public Guid UserId { get; set; }
 
         [Required]
-        public Guid SkillId { get; set; }
+        public string CoreSkillName { get; set; }
 
         [Required]
         public ProficiencyEnum SelfAssessedProficiency { get; set; }
