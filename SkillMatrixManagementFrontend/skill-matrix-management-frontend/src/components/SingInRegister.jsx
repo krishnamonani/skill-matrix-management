@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, AlertCircle, User, Mail, Lock } from 'lucide-react';
+import axios from 'axios'
 
 const SignInPage = () => {
     const [email, setEmail] = useState('');
@@ -32,9 +33,12 @@ const SignInPage = () => {
         return username.length >= 3;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+
+        const APP_NAME = "SkillMatrixManagement"
         e.preventDefault();
         const newErrors = {};
+        setErrors('');
 
         if (isRegistering) {
             if (!username) {
@@ -59,12 +63,40 @@ const SignInPage = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            console.log('Form submitted', {
-                username: isRegistering ? username : undefined,
-                email,
-                password,
-                rememberMe
-            });
+            try {
+                if (isRegistering) {
+                    // Registration API call
+                    const response = await axios.post('https://localhost:44302/api/account/register', {
+                        userName: username,
+                        emailAddress: email,
+                        password: password,
+                        appName: APP_NAME
+                    });
+
+                    // Handle successful registration
+                    console.log('Registration successful', response.data);
+                    alert('Registration successful! Please sign in.');
+                    toggleRegistration(); // Switch back to sign-in form
+                } else {
+                    
+                    console.log('Sign in', { email, password, rememberMe });
+
+                    // Registration API call
+                    const response = await axios.post('https://localhost:44302/api/account/login', {
+                        userNameOrEmailAddress: email,
+                        password: password,
+                        rememberMe: rememberMe
+                    });
+
+                    // Handle successful registration
+                    console.log('Login successful', response.data);
+                    alert('Login successful!');
+                }
+            } catch (error) {
+                // Handle API errors
+                console.error('Registration error', error);
+                setErrors(error.response?.data?.message || 'Registration failed. Please try again.');
+            }
         }
     };
 
