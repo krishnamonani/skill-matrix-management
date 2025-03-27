@@ -1,0 +1,33 @@
+.skill-table {
+    padding: 20px;
+  }
+  button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .recommend-btn {
+    background: blue;
+    color: white;
+  }
+  .add-btn {
+    background: darkblue;
+    color: white;
+  }
+  .edit-btn {
+    color: blue;
+  }
+  .delete-btn {
+    color: red;
+    border: none;
+    background: none;
+    font-size: 18px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }

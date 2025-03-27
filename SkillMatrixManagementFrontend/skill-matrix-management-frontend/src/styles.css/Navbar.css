@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #333;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .left-side h1 {
+    color: white;
+    margin: 0;
+    font-size: 18px;
+  }
+  .right-side {
+    display: flex;
+    align-items: center;
+  }
+  .profile-img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  .profile-name {
+    color: white;
+    font-size: 16px;
+  }
