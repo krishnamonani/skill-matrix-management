@@ -34,7 +34,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<Permission>()
                 .AnyAsync(p => p.Name == permission.Name && !p.IsDeleted);
             if (exists)
-                throw new BusinessException("PERM-001", "A permission with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_WITH_THIS_NAME_ALREADY_EXISTS, "A permission with this name already exists");
 
             var result = await dbContext.Set<Permission>().AddAsync(permission);
             await dbContext.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var permission = await dbContext.Set<Permission>()
                 .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted)
-                ?? throw new BusinessException("PERM-002", "Permission not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_FOUND, "Permission not found");
 
             return permission;
         }
@@ -76,7 +76,7 @@ namespace SkillMatrixManagement.Repositories
 
             var existingPermission = await dbContext.Set<Permission>()
                 .FirstOrDefaultAsync(p => p.Id == permission.Id && !p.IsDeleted)
-                ?? throw new BusinessException("PERM-003", "Permission not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_FOUND_FOR_UPDATE, "Permission not found for update");
 
             dbContext.Entry(existingPermission).CurrentValues.SetValues(permission);
             await dbContext.SaveChangesAsync();
@@ -96,10 +96,10 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var permission = await dbContext.Set<Permission>()
                 .FirstOrDefaultAsync(p => p.Id == permissionId && !p.IsDeleted)
-                ?? throw new BusinessException("PERM-004", "Permission not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_FOUND_FOR_SOFT_DELETE, "Permission not found for soft deletion");
 
             if (permission.IsDeleted)
-                throw new BusinessException("PERM-005", "Permission is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_ALREADY_DELETED, "Permission is already deleted");
 
             permission.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -117,7 +117,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(p => p.Id == permissionId);
 
             if (permission == null)
-                throw new BusinessException("PERM-006", "Permission not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_FOUND_FOR_PERMANENT_DELETE, "Permission not found for permanent deletion");
 
             dbContext.Set<Permission>().Remove(permission);
             await dbContext.SaveChangesAsync();
@@ -133,10 +133,10 @@ namespace SkillMatrixManagement.Repositories
             var permission = await dbContext.Set<Permission>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(p => p.Id == permissionId)
-                ?? throw new BusinessException("PERM-007", "Permission not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_FOUND_FOR_RESTORATION, "Permission not found for restoration");
 
             if (!permission.IsDeleted)
-                throw new BusinessException("PERM-008", "Permission is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Permission.PERMISSION_NOT_DELETED_CANNOT_RESTORE, "Permission is not deleted, cannot be restored");
 
             permission.IsDeleted = false;
             await dbContext.SaveChangesAsync();

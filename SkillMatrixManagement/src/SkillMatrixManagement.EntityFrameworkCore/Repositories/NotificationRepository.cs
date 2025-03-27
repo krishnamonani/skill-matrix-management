@@ -45,7 +45,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var notification = await dbContext.Set<Notification>()
                 .FirstOrDefaultAsync(n => n.Id == id && !n.IsDeleted)
-                ?? throw new BusinessException("NOTIF-001", "Notification not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_FOUND, "Notification not found");
 
             return notification;
         }
@@ -71,7 +71,7 @@ namespace SkillMatrixManagement.Repositories
 
             var existingNotification = await dbContext.Set<Notification>()
                 .FirstOrDefaultAsync(n => n.Id == notification.Id && !n.IsDeleted)
-                ?? throw new BusinessException("NOTIF-002", "Notification not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_FOUND_FOR_UPDATE, "Notification not found for update");
 
             dbContext.Entry(existingNotification).CurrentValues.SetValues(notification);
             await dbContext.SaveChangesAsync();
@@ -92,10 +92,10 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var notification = await dbContext.Set<Notification>()
                 .FirstOrDefaultAsync(n => n.Id == notificationId && !n.IsDeleted)
-                ?? throw new BusinessException("NOTIF-003", "Notification not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_FOUND_FOR_SOFT_DELETE, "Notification not found for soft deletion");
 
             if (notification.IsDeleted)
-                throw new BusinessException("NOTIF-004", "Notification is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_ALREADY_DELETED, "Notification is already deleted");
 
             notification.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -113,7 +113,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(n => n.Id == notificationId);
 
             if (notification == null)
-                throw new BusinessException("NOTIF-005", "Notification not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_FOUND_FOR_PERMANENT_DELETE, "Notification not found for permanent deletion");
 
             dbContext.Set<Notification>().Remove(notification);
             await dbContext.SaveChangesAsync();
@@ -129,10 +129,10 @@ namespace SkillMatrixManagement.Repositories
             var notification = await dbContext.Set<Notification>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(n => n.Id == notificationId)
-                ?? throw new BusinessException("NOTIF-006", "Notification not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_FOUND_FOR_RESTORATION, "Notification not found for restoration");
 
             if (!notification.IsDeleted)
-                throw new BusinessException("NOTIF-007", "Notification is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Notification.NOTIFICATION_NOT_DELETED_CANNOT_RESTORE, "Notification is not deleted, cannot be restored");
 
             notification.IsDeleted = false;
             await dbContext.SaveChangesAsync();

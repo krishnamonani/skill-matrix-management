@@ -34,7 +34,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<ProficiencyLevel>()
                 .AnyAsync(p => p.Level == proficiencyLevel.Level && !p.IsDeleted);
             if (exists)
-                throw new BusinessException("PROF-001", "A proficiency level with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_WITH_THIS_NAME_ALREADY_EXISTS, "A proficiency level with this name already exists");
 
             var result = await dbContext.Set<ProficiencyLevel>().AddAsync(proficiencyLevel);
             await dbContext.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var proficiencyLevel = await dbContext.Set<ProficiencyLevel>()
                 .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted)
-                ?? throw new BusinessException("PROF-002", "Proficiency level not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND, "Proficiency level not found");
 
             return proficiencyLevel;
         }
@@ -76,7 +76,7 @@ namespace SkillMatrixManagement.Repositories
 
             var existingProficiencyLevel = await dbContext.Set<ProficiencyLevel>()
                 .FirstOrDefaultAsync(p => p.Id == proficiencyLevel.Id && !p.IsDeleted)
-                ?? throw new BusinessException("PROF-003", "Proficiency level not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_UPDATE, "Proficiency level not found for update");
 
             dbContext.Entry(existingProficiencyLevel).CurrentValues.SetValues(proficiencyLevel);
             await dbContext.SaveChangesAsync();
@@ -96,10 +96,10 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var proficiencyLevel = await dbContext.Set<ProficiencyLevel>()
                 .FirstOrDefaultAsync(p => p.Id == proficiencyLevelId && !p.IsDeleted)
-                ?? throw new BusinessException("PROF-004", "Proficiency level not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_SOFT_DELETE, "Proficiency level not found for soft deletion");
 
             if (proficiencyLevel.IsDeleted)
-                throw new BusinessException("PROF-005", "Proficiency level is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_ALREADY_DELETED, "Proficiency level is already deleted");
 
             proficiencyLevel.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -117,7 +117,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(p => p.Id == proficiencyLevelId);
 
             if (proficiencyLevel == null)
-                throw new BusinessException("PROF-006", "Proficiency level not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_PERMANENT_DELETE, "Proficiency level not found for permanent deletion");
 
             dbContext.Set<ProficiencyLevel>().Remove(proficiencyLevel);
             await dbContext.SaveChangesAsync();
@@ -133,10 +133,10 @@ namespace SkillMatrixManagement.Repositories
             var proficiencyLevel = await dbContext.Set<ProficiencyLevel>()
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(p => p.Id == proficiencyLevelId)
-                ?? throw new BusinessException("PROF-007", "Proficiency level not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_RESTORATION, "Proficiency level not found for restoration");
 
             if (!proficiencyLevel.IsDeleted)
-                throw new BusinessException("PROF-008", "Proficiency level is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProficiencyLevel.PERMISSION_PROFICIENCY_LEVEL_NOT_DELETED_CANNOT_RESTORE, "Proficiency level is not deleted, cannot be restored");
 
             proficiencyLevel.IsDeleted = false;
             await dbContext.SaveChangesAsync();
