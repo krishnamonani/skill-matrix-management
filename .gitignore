@@ -300,7 +300,6 @@ Thumbs.db
 # Python dependencies
 Pipfile
 Pipfile.lock
-requirements.txt
 
 # FastAPI specific
 instance/
@@ -334,3 +333,4 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+myenv/
