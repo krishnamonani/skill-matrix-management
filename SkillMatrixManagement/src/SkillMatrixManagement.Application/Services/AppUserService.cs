@@ -73,7 +73,21 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                var user = _mapper.Map<User>(input);
+                //var user = _mapper.Map<User>(input);
+
+                var user = new User()
+                {
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
+                };
+
                 var createdUser = await _userRepository.CreateAsync(user);
                 var userDto = _mapper.Map<UserDto>(createdUser);
                 return ServiceResponse<UserDto>.SuccessResult(userDto, 201, "User created successfully.");
@@ -364,7 +378,19 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                _mapper.Map(input, user);
+                user.FirstName = input.FirstName;
+                user.LastName = input.LastName;
+                user.Email = input.Email;
+                user.PhoneNumber = input.PhoneNumber;
+                user.RoleId = input.RoleId;
+
+                // optional fields
+                user.DepartmentId = input.DepartmentId;
+                user.InternalRoleId = input.InternalRoleId;
+                user.ProfilePhoto = input.ProfilePhoto;
+
+                user.IsAvailable = input.IsAvailable; // default false
+
                 await _userRepository.UpdateAsync(user);
                 return ServiceResponse.SuccessResult(200, "User updated successfully.");
             }

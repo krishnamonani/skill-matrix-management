@@ -12,7 +12,7 @@ namespace SkillMatrixManagement.DTOs.AiSkillRecommendationDTO
         [Required]
         public string Role { get; set; }
         [Required]
-        public int NumberOfRecommendations { get; set; } = 3;
+        public int NumberOfRecommendations { get; set; } = 5;
         [Required]
         public string[] Skills { get; set; }
     }

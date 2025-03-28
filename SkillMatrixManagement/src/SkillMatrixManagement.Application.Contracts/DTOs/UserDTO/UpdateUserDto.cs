@@ -34,7 +34,7 @@ namespace SkillMatrixManagement.DTOs.UserDTO
 
         public Guid? InternalRoleId { get; set; }
 
-        public ProjectStatusEnum IsAvailable { get; set; }
+        public ProjectStatusEnum IsAvailable { get; set; } = ProjectStatusEnum.AVAILABLE;   
 
         [StringLength(500)]
         public string? ProfilePhoto { get; set; }
