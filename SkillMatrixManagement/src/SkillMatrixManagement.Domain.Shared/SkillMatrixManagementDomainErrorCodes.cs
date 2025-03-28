@@ -166,4 +166,15 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_RESTORATION = "PROF-007";
         public const string PERMISSION_PROFICIENCY_LEVEL_NOT_DELETED_CANNOT_RESTORE = "PROF-008";
     }
+
+    public static class ProjectEmployee
+    {
+        public const string PERMISSION_EMPLOYEE_ALREADY_ASSIGNED = "PRJ_EMP-001";
+        public const string PERMISSION_PROJECT_EMPLOYEE_NOT_FOUND = "PRJ_EMP-002";
+        public const string PERMISSION_PROJECT_EMPLOYEE_NOT_FOUND_FOR_UPDATE = "PRJ_EMP-003";
+        public const string PERMISSION_PROJECT_EMPLOYEE_ALREADY_DELETED = "PRJ_EMP-004";
+        public const string PERMISSION_PROJECT_EMPLOYEE_NOT_FOUND_FOR_DELETE = "PRJ_EMP-005";
+        public const string PERMISSION_PROJECT_EMPLOYEE_NOT_FOUND_OR_NOT_DELETE = "PRJ_EMP-006";
+        
+    }
 }
