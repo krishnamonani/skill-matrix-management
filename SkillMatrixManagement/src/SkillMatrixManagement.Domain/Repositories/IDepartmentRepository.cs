@@ -15,6 +15,7 @@ namespace SkillMatrixManagement.Repositories
         Task<Department> GetByIdAsync(Guid id);
         Task<List<Department>> GetAllAsync();
         Task UpdateAsync(Department department);
+
         Task DeleteAsync(Guid departmentId); // Soft delete
         Task PermanentDeleteAsync(Guid departmentId); // Hard delete
 
@@ -28,5 +29,7 @@ namespace SkillMatrixManagement.Repositories
         // Pagination and Filtering
         Task<List<Department>> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false);
         Task<int> CountAsync(bool includeDeleted = false); // Count all departments, optionally including deleted ones
+
+        Task<IQueryable<Department>> WithDetailsAsync();
     }
 }
