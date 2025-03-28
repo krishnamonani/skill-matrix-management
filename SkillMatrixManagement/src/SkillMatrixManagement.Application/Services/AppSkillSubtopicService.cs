@@ -184,7 +184,8 @@ namespace SkillMatrixManagement.Services
         {
             try
             {
-                var skillSubtopic = ObjectMapper.Map<UpdateSkillSubtopicDto, SkillSubtopic>(input);
+
+                var skillSubtopic = _mapper.Map<SkillSubtopic>(input);
                 await _skillSubtopicRepository.UpdateAsync(skillSubtopic);
                 return ServiceResponse.SuccessResult(200);
             }

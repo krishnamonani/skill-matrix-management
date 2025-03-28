@@ -36,6 +36,12 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         CreateMap<SkillSubtopic, SkillSubtopicDto>();
 
         CreateMap<CreateSkillSubtopicDto, SkillSubtopic>()
+            .ForMember(dest => dest.SkillId, opt => opt.MapFrom(src => src.SkillId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.ReqExpertiseLevelId, opt => opt.MapFrom(src => src.ReqExpertiseLevelId))
+
+
            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is auto-generated
            .ForMember(dest => dest.Skill, opt => opt.Ignore()); // Skill entity is loaded separately
         CreateMap<SkillSubtopic, SkillSubtopicDto>();
