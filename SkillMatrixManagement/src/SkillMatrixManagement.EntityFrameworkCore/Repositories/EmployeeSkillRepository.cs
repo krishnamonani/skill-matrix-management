@@ -76,11 +76,11 @@ namespace SkillMatrixManagement.Repositories
                 throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.INVALID_EMPLOYEE_SKILL_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            var existing = await dbContext.Set<EmployeeSkill>()
+            var existing = await dbContext.EmployeeSkills
                 .FirstOrDefaultAsync(es => es.Id == employeeSkill.Id && !es.IsDeleted)
                 ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NOT_FOUND);
 
-            dbContext.Set<EmployeeSkill>().Update(employeeSkill);
+            dbContext.EmployeeSkills.Update(employeeSkill);
             await dbContext.SaveChangesAsync();
         }
 

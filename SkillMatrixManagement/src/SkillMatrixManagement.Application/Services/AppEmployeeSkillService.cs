@@ -19,6 +19,7 @@ namespace SkillMatrixManagement.Services
 {
     public class AppEmployeeSkillService:ApplicationService, IEmployeeSkillService
     {
+
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IMapper _mapper;
 
@@ -106,9 +107,9 @@ namespace SkillMatrixManagement.Services
             var skills = await _employeeSkillRepository.GetListAsync();
             if (skills == null)
             {
-                return ServiceResponse<List<EmployeeSkillDto>>.Failure("No Employee Skill Exist!", 201);
+                return ServiceResponse<List<EmployeeSkillDto>>.Failure("No Employee Skill Exist!", 400);
             }
-            return ServiceResponse<List<EmployeeSkillDto>>.SuccessResult( _mapper.Map<List<EmployeeSkillDto>>(skills), 201);
+            return ServiceResponse<List<EmployeeSkillDto>>.SuccessResult( _mapper.Map<List<EmployeeSkillDto>>(skills), 200);
             
             }
             catch(BusinessException ex)
@@ -256,18 +257,29 @@ namespace SkillMatrixManagement.Services
         {
             try
             {
-                var employeeSkill=_mapper.Map<EmployeeSkill>(input);
-                await _employeeSkillRepository.UpdateAsync(employeeSkill);
-                return ServiceResponse.SuccessResult(201);
+                var existingEmployeeSkill = await _employeeSkillRepository.GetAsync(id);
+                if (existingEmployeeSkill == null)
+                {
+                    return ServiceResponse.Failure("EmployeeSkill not found", 404);
+                }
+
+
+                _mapper.Map(input, existingEmployeeSkill);
+
+                // Save changes
+                await _employeeSkillRepository.UpdateAsync(existingEmployeeSkill);
+
+                return ServiceResponse.SuccessResult(200);
             }
-            catch(BusinessException ex)
+            catch (BusinessException ex)
             {
                 return ServiceResponse.Failure(ex.Message, 400);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ServiceResponse.Failure(ex.Message, 500);
             }
+           
         }
     }
 }

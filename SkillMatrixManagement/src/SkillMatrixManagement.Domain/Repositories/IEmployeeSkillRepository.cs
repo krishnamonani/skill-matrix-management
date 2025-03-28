@@ -14,7 +14,7 @@ namespace SkillMatrixManagement.Repositories
         Task<EmployeeSkill> CreateAsync(EmployeeSkill employeeSkill);
         Task<EmployeeSkill> GetByIdAsync(Guid id);
         Task<List<EmployeeSkill>> GetAllAsync();
-        Task UpdateAsync(EmployeeSkill employeeSkill);
+        Task UpdateAsync(EmployeeSkill employeeSkilld);
         Task DeleteAsync(Guid employeeSkillId); // Soft delete
         Task PermanentDeleteAsync(Guid employeeSkillId); // Hard delete
 
