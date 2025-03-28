@@ -1,5 +1,6 @@
 using AutoMapper;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
+using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
@@ -43,6 +44,18 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is auto-generated
            .ForMember(dest => dest.Skill, opt => opt.Ignore()); // Skill entity is loaded separately
 
+
+        CreateMap<CreateProjectEmployeeDto, ProjectEmployee>()
+        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+        .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+        .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+
+
+
+        CreateMap<ProjectEmployee, ProjectEmployeeDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+            .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
 
     }
 }
