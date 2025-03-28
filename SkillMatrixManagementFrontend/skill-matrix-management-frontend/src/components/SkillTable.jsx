@@ -17,7 +17,7 @@ const SkillTable = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-3x mx-auto">
       {/* Input & Buttons */}
       <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
         <input

@@ -7,23 +7,20 @@ import SkillTable from "./components/SkillTable";
 function App() {
   return (
     <Router>
-      <div className="flex h-screen">
+      <div>
+        <Header />
         {/* Sidebar */}
-        <Sidebar />
+        <div className="flex">
+          <Sidebar className="flex-1" />
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col bg-gray-100">
-          <Header />
-          <main className="flex-1 p-6 overflow-auto">
-            <Routes>
-              <Route
-                path="/"
-                element={<h2 className="text-2xl font-semibold">🏠 Welcome to the Home Page</h2>}
-              />
-              <Route path="/skills" element={<SkillTable />} />
-              
-            </Routes>
-          </main>
+          {/* Main Content */}
+          <div className="flex-1  bg-gray-100">
+            <main className="flex-1 p-6 overflow-auto">
+              <Routes>
+                <Route path="/skills" element={<SkillTable />} />
+              </Routes>
+            </main>
+          </div>
         </div>
       </div>
     </Router>
