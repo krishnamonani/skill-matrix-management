@@ -22,7 +22,7 @@ namespace SkillMatrixManagement.AiServices
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ServiceResponse<string>> GetSkillRecommendation()
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation()
         {
             try
             {
@@ -44,12 +44,13 @@ namespace SkillMatrixManagement.AiServices
 
                 // Return response as string
                 var responseBody = await response.Content.ReadAsStringAsync();
-             
-                return ServiceResponse<string>.SuccessResult(responseBody, 200);
+                var recommendationData = JsonSerializer.Deserialize<SkillRecommendationResponseDto>(responseBody);
+
+                return ServiceResponse<SkillRecommendationResponseDto>.SuccessResult(recommendationData ?? new SkillRecommendationResponseDto(), 200);
             }
             catch (Exception)
             {
-                return ServiceResponse<string>.Failure("Failed to get recommendation", 500);
+                return ServiceResponse<SkillRecommendationResponseDto>.Failure("Failed to get recommendation", 500);
             }
         }
     }
