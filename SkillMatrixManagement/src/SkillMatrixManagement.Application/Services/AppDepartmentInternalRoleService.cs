@@ -14,12 +14,12 @@ using Volo.Abp.Application.Services;
 
 namespace SkillMatrixManagement.Services
 {
-    public class DepartmentInternalRoleService : ApplicationService, IDepartmentInternalRoleService
+    public class AppDepartmentInternalRoleService : ApplicationService, IDepartmentInternalRoleService
     {
         private readonly IDepartmentInternalRoleRepository _departmentInternalRoleRepository;
         private readonly IMapper _mapper;
 
-        public DepartmentInternalRoleService(IDepartmentInternalRoleRepository departmentInternalRoleRepository, IMapper mapper)
+        public AppDepartmentInternalRoleService(IDepartmentInternalRoleRepository departmentInternalRoleRepository, IMapper mapper)
         {
             _departmentInternalRoleRepository = departmentInternalRoleRepository;
             _mapper = mapper;
