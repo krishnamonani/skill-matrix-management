@@ -30,9 +30,17 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
            .ForMember(dest => dest.Skill, opt => opt.Ignore()); // Skill entity is loaded separately
 
 
-        CreateMap<EmployeeSkill, EmployeeSkillDto>().ReverseMap();
+        CreateMap<EmployeeSkill, EmployeeSkillDto>();
         CreateMap<CreateEmployeeSkillDto, EmployeeSkill>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()); // ID is auto-generated
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.CoreSkillName, opt => opt.MapFrom(src => src.CoreSkillName))
+            .ForMember(dest => dest.SelfAssessedProficiency, opt => opt.MapFrom(src => src.SelfAssessedProficiency))
+            .ForMember(dest => dest.ManagerAssignedProficiency, opt => opt.MapFrom(src => src.ManagerAssignedProficiency))
+            .ForMember(dest => dest.EndorsedBy, opt => opt.MapFrom(src => src.EndorsedBy))
+            .ForMember(dest => dest.EndorsedAt, opt => opt.MapFrom(src => src.EndorsedAt));
+            //.ForMember(dest => dest.SkillDescription, opt => opt.MapFrom(src => src.SkillDescription));
+
+
         CreateMap<UpdateEmployeeSkillDto, EmployeeSkill>();
 
 

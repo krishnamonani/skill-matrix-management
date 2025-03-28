@@ -121,6 +121,8 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string INVALID_EMPLOYEE_SKILL_ID = "EMPLOYEE_SKILL-003";
         public const string EMPLOYEE_SKILL_ALREADY_DELETED = "EMPLOYEE_SKILL-004";
         public const string EMPLOYEE_SKILL_NOT_DELETED = "EMPLOYEE_SKILL-005";
+        public const string EMPLOYEE_SKILL_CAN_NOT_BE_NULL = "EMPLOYEE_SKILL-006";
+
     }
     public static class SkillSubtopicErrorCodes
     {

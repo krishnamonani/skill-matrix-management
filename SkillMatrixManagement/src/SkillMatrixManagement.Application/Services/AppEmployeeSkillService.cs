@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Uow;
 
 namespace SkillMatrixManagement.Services
 {
@@ -50,7 +51,16 @@ namespace SkillMatrixManagement.Services
             try
             {
 
-            var EmployeeSkill = _mapper.Map<EmployeeSkill>(input);
+                var EmployeeSkill = new EmployeeSkill()
+                {
+                    UserId = input.UserId,
+                    CoreSkillName = input.CoreSkillName,
+                    SelfAssessedProficiency = input.SelfAssessedProficiency,
+                    ManagerAssignedProficiency = input.ManagerAssignedProficiency,
+                    EndorsedAt = input.EndorsedAt,
+                    EndorsedBy = input.EndorsedBy,
+                    //SkillDescription = input.SkillDescription
+                };
             EmployeeSkill= await _employeeSkillRepository.CreateAsync(EmployeeSkill);
             var res= _mapper.Map<EmployeeSkillDto>(EmployeeSkill);
             return ServiceResponse<EmployeeSkillDto>.SuccessResult(res, 201);

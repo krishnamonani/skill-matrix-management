@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -619,9 +618,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid?>("EndorsedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EndorserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("text")
@@ -647,9 +643,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<string>("SelfAssessedProficiency")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Dictionary<string, ProficiencyEnum>>("SkillDescription")
-                        .HasColumnType("jsonb");
 
                     b.Property<Guid?>("SkillId")
                         .HasColumnType("uuid");
@@ -691,10 +684,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("EndorsedBy"), "HASH");
 
-                    b.HasIndex("EndorserId");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("EndorserId"), "HASH");
-
                     b.HasIndex("ExtraProperties");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ExtraProperties"), "HASH");
@@ -722,10 +711,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("SelfAssessedProficiency");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SelfAssessedProficiency"), "HASH");
-
-                    b.HasIndex("SkillDescription");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SkillDescription"), "HASH");
 
                     b.HasIndex("SkillId");
 
@@ -2514,9 +2499,8 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                 {
                     b.HasOne("SkillMatrixManagement.Models.User", "Endorser")
                         .WithMany()
-                        .HasForeignKey("EndorserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EndorsedBy")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SkillMatrixManagement.Models.Skill", null)
                         .WithMany("EmployeeSkills")

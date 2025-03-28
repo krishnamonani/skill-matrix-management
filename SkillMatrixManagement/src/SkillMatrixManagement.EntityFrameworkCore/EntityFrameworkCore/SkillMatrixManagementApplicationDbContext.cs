@@ -153,9 +153,17 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                     v => v.ToString(), // Convert enum to string when saving
                     v => (ProficiencyEnum)Enum.Parse(typeof(ProficiencyEnum), v) // Convert string back to enum when reading
                 );
+                b.HasOne(e => e.Endorser) // Define relationship with User
+                .WithMany() // No navigation property required on User side
+                .HasForeignKey(e => e.EndorsedBy) // Set foreign key
+                .OnDelete(DeleteBehavior.SetNull); // Allow NULL values on delete
 
-                b.Property(e => e.SkillDescription)
-                .HasColumnType("jsonb");
+                b.Property(e => e.EndorsedBy)
+                .IsRequired(false); // Explicitly make it nullable
+
+
+                //b.Property(e => e.SkillDescription)
+                //.HasColumnType("jsonb");
             });
 
             // Configure SkillMatrix entity
