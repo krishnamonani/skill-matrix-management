@@ -1,5 +1,6 @@
 using AutoMapper;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
+using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
