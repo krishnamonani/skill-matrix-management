@@ -65,8 +65,8 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         CreateMap<UpdateEmployeeSkillDto, EmployeeSkill>();
 
 
-        CreateMap<EmployeeSkill,EmployeeSkillLookupDto>()
-        .ForMember(dest => dest.Id, opt => opt.Ignore()); // ID is auto-generated
+        CreateMap<EmployeeSkill, EmployeeSkillLookupDto>();
+        
         CreateMap<UpdateEmployeeSkillDto, EmployeeSkill>();
     }
 }
