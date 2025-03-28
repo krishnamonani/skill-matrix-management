@@ -26,5 +26,7 @@ namespace SkillMatrixManagement.Repositories
         Task<List<EmployeeSkill>> GetSkillsByUserAsync(Guid userId);
         Task<List<EmployeeSkill>> GetSkillsBySkillAsync(string coreSkillName);
         Task<List<EmployeeSkill>> GetSkillsByEndorserAsync(Guid endorserId);
+
+        Task<IQueryable<EmployeeSkill>> WithDetailsAsync();
     }
 }

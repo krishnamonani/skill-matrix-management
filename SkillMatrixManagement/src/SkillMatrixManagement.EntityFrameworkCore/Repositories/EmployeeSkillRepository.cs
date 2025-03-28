@@ -23,19 +23,29 @@ namespace SkillMatrixManagement.Repositories
 
         public async Task<EmployeeSkill> CreateAsync(EmployeeSkill employeeSkill)
         {
-            Check.NotNull(employeeSkill, nameof(employeeSkill));
+            //Check.NotNull(employeeSkill, nameof(employeeSkill));
 
+            //var dbContext = await _dbContextProvider.GetDbContextAsync();
+
+            //// Check for duplicates
+            //var exists = await dbContext.Set<EmployeeSkill>()
+            //    .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
+            //if (exists)
+            //    throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
+
+            //var result = await dbContext.Set<EmployeeSkill>().AddAsync(employeeSkill);
+            ////var result = await dbContext.EmployeeSkills.AddAsync(employeeSkill);
+            //var isChanged = await dbContext.SaveChangesAsync() > 0;
+            //return result.Entity;
+            if (employeeSkill == null)
+            {
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_CAN_NOT_BE_NULL);
+            }
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-
-            // Check for duplicates
-            var exists = await dbContext.Set<EmployeeSkill>()
-                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
-            if (exists)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
-
-            var result = await dbContext.Set<EmployeeSkill>().AddAsync(employeeSkill);
+            var entity =await dbContext.EmployeeSkills.AddAsync(employeeSkill);
             await dbContext.SaveChangesAsync();
-            return result.Entity;
+            return entity.Entity;
+
         }
 
         public async Task<EmployeeSkill> GetByIdAsync(Guid id)

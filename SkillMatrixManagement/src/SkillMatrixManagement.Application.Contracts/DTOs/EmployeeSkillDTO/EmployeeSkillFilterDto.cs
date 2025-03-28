@@ -11,7 +11,8 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
     public class EmployeeSkillFilterDto : PagedAndSortedResultRequestDto
     {
         public Guid? UserId { get; set; }
-        public Guid? SkillId { get; set; }
+       
+
         public ProficiencyEnum? SelfAssessedProficiency { get; set; }
         public ProficiencyEnum? ManagerAssignedProficiency { get; set; }
         public Guid? EndorsedBy { get; set; }
