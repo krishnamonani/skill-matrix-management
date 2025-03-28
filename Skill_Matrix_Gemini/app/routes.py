@@ -6,5 +6,5 @@ router = APIRouter()
 
 @router.post("/recommend-skills")
 def recommend_skills(request: SkillRequest):
-    recommended = generate_skill_recommendation(request.role, request.n, request.current_skills)
+    recommended = generate_skill_recommendation(request.Role, request.NumberOfRecommendations, request.Skills)
     return {"recommended_skills": recommended}
