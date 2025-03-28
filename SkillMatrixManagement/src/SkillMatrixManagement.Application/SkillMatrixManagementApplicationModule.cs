@@ -6,6 +6,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SkillMatrixManagement;
 
@@ -23,6 +24,7 @@ public class SkillMatrixManagementApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddAutoMapperObjectMapper<SkillMatrixManagementApplicationModule>();
         Configure<AbpAutoMapperOptions>(options =>
         {
             options.AddMaps<SkillMatrixManagementApplicationModule>();

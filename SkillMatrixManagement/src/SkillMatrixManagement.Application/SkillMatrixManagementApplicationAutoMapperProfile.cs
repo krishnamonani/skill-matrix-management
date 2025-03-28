@@ -1,4 +1,5 @@
 using AutoMapper;
+using SkillMatrixManagement.DTOs.DepartmentDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
@@ -31,6 +32,11 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         CreateMap<CreateSkillSubtopicDto, SkillSubtopic>()
            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is auto-generated
            .ForMember(dest => dest.Skill, opt => opt.Ignore()); // Skill entity is loaded separately
+
+        CreateMap<Department, DepartmentDto>();
+        CreateMap<CreateDepartmentDto, Department>();
+        CreateMap<UpdateDepartmentDto, Department>();
+        CreateMap<Department, DepartmentLookupDto>();
 
 
     }
