@@ -78,6 +78,12 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "User", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.Property(r => r.IsAvailable)
+                .HasConversion(
+                    v => v.ToString(), // Convert enum to string when saving
+                    v => (ProjectStatusEnum)Enum.Parse(typeof(ProjectStatusEnum), v) // Convert string back to enum when reading
+                );
             });
 
             // Configure SkillRecommendationByManager entity
