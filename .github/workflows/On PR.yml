@@ -1,4 +1,3 @@
-
 name: ABP.IO Build Test
 
 on:
@@ -21,22 +20,22 @@ jobs:
 
       - name: Install ABP CLI
         run: dotnet tool install -g Volo.Abp.Cli
-        
+
       - name: Restore project dependencies
         run: |
           cd SkillMatrixManagement
           dotnet restore
           abp install-libs
 
+      - name: Build solution
+        run: dotnet build SkillMatrixManagement/SkillMatrixManagement.sln --configuration Release --no-restore
+
       - name: Build DbMigrator
         run: |
           cd SkillMatrixManagement/src/SkillMatrixManagement.DbMigrator
           dotnet build
-          
+
       - name: Build HttpApi.Host
         run: |
           cd SkillMatrixManagement/src/SkillMatrixManagement.HttpApi.Host
           dotnet build
-
-      - name: Build solution
-        run: dotnet build --configuration Release --no-restore
