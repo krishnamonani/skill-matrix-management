@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, AlertCircle, User, Mail, Lock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignInPage = () => {
     const [email, setEmail] = useState('');
@@ -8,8 +11,17 @@ const SignInPage = () => {
     const [username, setUsername] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState([]);
     const [isRegistering, setIsRegistering] = useState(false);
+    const navigate = useNavigate()
+
+    // Display errors as toasts whenever they change
+    useEffect(() => {
+        errors.forEach(error => {
+            toast.error(error);
+        });
+        console.log(errors)
+    }, [errors]);
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,36 +48,37 @@ const SignInPage = () => {
     const handleSubmit = async (e) => {
         const APP_NAME = "SkillMatrixManagement";
         e.preventDefault();
-        const newErrors = {};
-        setErrors({});
+        const newErrors = [];
 
+        // Validate form based on whether registering or signing in
+        if (isRegistering) {
+            if (!username) {
+                newErrors.push('Username is required');
+            } else if (!validateUsername(username)) {
+                newErrors.push('Username must be at least 3 characters long');
+            }
+        }
 
+        
 
-        if (Object.keys(newErrors).length === 0) {
+        if (!password) {
+            newErrors.push('Password is required');
+        } else if (isRegistering && !validatePassword(password)) {
+            newErrors.push('Password must be at least 6 characters long and contain uppercase, lowercase, number, and special character');
+        }
+
+        setErrors(newErrors);
+
+        // Only proceed if no validation errors
+        if (newErrors.length === 0) {
             try {
                 if (isRegistering) {
 
-                    if (isRegistering) {
-                        if (!username) {
-                            newErrors.username = 'Username is required';
-                        } else if (!validateUsername(username)) {
-                            newErrors.username = 'Username must be at least 3 characters long';
-                        }
-                    }
-
                     if (!email) {
-                        newErrors.email = 'Email is required';
+                        newErrors.push('Email is required');
                     } else if (!validateEmail(email)) {
-                        newErrors.email = 'Invalid email format';
+                        newErrors.push('Invalid email format');
                     }
-
-                    if (!password) {
-                        newErrors.password = 'Password is required';
-                    } else if (!validatePassword(password)) {
-                        newErrors.password = 'Password must be at least 6 characters long and contain uppercase, lowercase, number, and special character';
-                    }
-
-                    setErrors(newErrors);
 
                     const response = await axios.post('https://localhost:44302/api/account/register', {
                         userName: username,
@@ -73,8 +86,9 @@ const SignInPage = () => {
                         password: password,
                         appName: APP_NAME
                     });
+
                     console.log('Registration successful', response.data);
-                    alert('Registration successful! Please sign in.');
+                    toast.success('Registration successful! Please sign in.');
                     toggleRegistration();
                 } else {
                     const response = await axios.post('https://localhost:44302/api/account/login', {
@@ -82,12 +96,28 @@ const SignInPage = () => {
                         password: password,
                         rememberMe: rememberMe
                     });
-                    console.log('Login successful', response.data);
-                    alert('Login successful!');
+                    if(response.data.result === 1){
+                        toast.success(response.data.description);
+                        setTimeout(()=>{
+                            navigate('/skillDashboard')
+                        },[2000])
+                       
+
+                    } else {
+                        toast.error(response.data.description);
+                    }
                 }
             } catch (error) {
                 console.error('Authentication error', error);
-                setErrors({ general: error.response?.data?.message || 'Authentication failed. Please try again.' });
+                // Handle API error response
+                if (error.response && error.response.data && error.response.data.error) {
+                    newErrors.push(error.response.data.error.message);
+                } else {
+                    newErrors.push('An unexpected error occurred. Please try again.');
+                }
+                setErrors(newErrors);
+                toast.error(errors[0]);
+                // console.log(errors);
             }
         }
     };
@@ -97,11 +127,14 @@ const SignInPage = () => {
         setEmail('');
         setPassword('');
         setUsername('');
-        setErrors({});
+        setErrors([]);
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4 overflow-hidden">
+            {/* Toast Container for notifications */}
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover draggable />
+            
             <div className="relative w-full max-w-4xl h-[600px] flex shadow-2xl rounded-2xl overflow-hidden">
                 {/* Sliding Container */}
                 <div className={`
@@ -126,21 +159,14 @@ const SignInPage = () => {
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" size={20} />
                                     <input
-                                        type="email"
+                                        type="text"
                                         id="signin-email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className={`w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 
-                                            ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                                        className="w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
                                         placeholder="Enter your username or email"
                                     />
                                 </div>
-                                {errors.email && (
-                                    <div className="text-red-500 text-sm mt-1 flex items-center">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        {errors.email}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Password Input */}
@@ -155,8 +181,7 @@ const SignInPage = () => {
                                         id="signin-password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className={`w-full px-3 py-2 pl-10 pr-10 border rounded-md focus:outline-none focus:ring-2
-                                            ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                                        className="w-full px-3 py-2 pl-10 pr-10 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
                                         placeholder="Enter your password"
                                     />
                                     <button
@@ -167,12 +192,6 @@ const SignInPage = () => {
                                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
-                                {errors.password && (
-                                    <div className="text-red-500 text-sm mt-1 flex items-center">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        {errors.password}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Remember Me & Forgot Password */}
@@ -189,9 +208,6 @@ const SignInPage = () => {
                                         Remember me
                                     </label>
                                 </div>
-                                {/* <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
-                                    Forgot password?
-                                </a> */}
                             </div>
 
                             {/* Submit Button */}
@@ -267,17 +283,10 @@ const SignInPage = () => {
                                         id="username"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        className={`w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 
-                                            ${errors.username ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                                        className="w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
                                         placeholder="Choose a username"
                                     />
                                 </div>
-                                {errors.username && (
-                                    <div className="text-red-500 text-sm mt-1 flex items-center">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        {errors.username}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Email Input */}
@@ -292,17 +301,10 @@ const SignInPage = () => {
                                         id="register-email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className={`w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 
-                                            ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                                        className="w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
                                         placeholder="Enter your email"
                                     />
                                 </div>
-                                {errors.email && (
-                                    <div className="text-red-500 text-sm mt-1 flex items-center">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        {errors.email}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Password Input */}
@@ -317,8 +319,7 @@ const SignInPage = () => {
                                         id="register-password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className={`w-full px-3 py-2 pl-10 pr-10 border rounded-md focus:outline-none focus:ring-2
-                                            ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                                        className="w-full px-3 py-2 pl-10 pr-10 border rounded-md focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-500"
                                         placeholder="Enter your password"
                                     />
                                     <button
@@ -329,12 +330,6 @@ const SignInPage = () => {
                                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
-                                {errors.password && (
-                                    <div className="text-red-500 text-sm mt-1 flex items-center">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        {errors.password}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Submit Button */}

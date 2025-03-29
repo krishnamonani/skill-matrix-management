@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Home, BookOpen, Settings, LogOut, Edit2, Trash2, PlusCircle, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SkillDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,6 +16,7 @@ const SkillDashboard = () => {
     const [editingId, setEditingId] = useState(null);
     const [editSkill, setEditSkill] = useState('');
     const [editLevel, setEditLevel] = useState('');
+    const navigate = useNavigate()
 
     const skillSuggestions = ['JavaScript', 'HTML', 'CSS', 'Node.js', 'Next.js', 'Vue.js', 'Angular', 'Python', 'Java'];
 
@@ -113,7 +115,10 @@ const SkillDashboard = () => {
                         {profileOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-slate-200">
                                 <div className="py-1">
-                                    <button className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 w-full text-left transition-colors">
+                                    <button
+                                        onClick={() => {navigate("/profile")}}
+                                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 w-full text-left transition-colors"
+                                    >
                                         <Settings size={16} className="mr-2" />
                                         Profile Settings
                                     </button>
