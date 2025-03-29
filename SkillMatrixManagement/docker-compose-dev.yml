@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-dev
+    env_file:
+      - db.env
+    ports:
+      - "54322:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - skill-matrix-app
+
+  ##############################################
+
+  dbmigrator:
+    build:
+      context: .
+      dockerfile: src/SkillMatrixManagement.DbMigrator/migrator.Dockerfile
+    env_file:
+      - dbmigrator.env
+    container_name: dbmigrator-be-dev
+    restart: no
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skill-matrix-app
+
+  ############################################
+
+  apihost:
+    build:
+      context: .
+      dockerfile: src/SkillMatrixManagement.HttpApi.Host/apihost.Dockerfile
+    env_file:
+      - apihost.env
+    container_name: apihost-be-dev
+    restart: always
+    depends_on:
+      dbmigrator:
+        condition: service_completed_successfully
+    ports:
+      - "44302:44302"
+    networks:
+      - skill-matrix-app
+
+volumes:
+  postgres_data:
+
+networks:
+  skill-matrix-app:
+    external: true

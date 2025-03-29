@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SkillMatrixManagement.DTOs.DepartmentRoleDTO
+{
+    public class UpdateDepartmentRoleDto
+    {
+        [Required]
+        public Guid DepartmentId { get; set; }
+
+        [Required]
+        public Guid InternalRoleId { get; set; }
+    }
+}

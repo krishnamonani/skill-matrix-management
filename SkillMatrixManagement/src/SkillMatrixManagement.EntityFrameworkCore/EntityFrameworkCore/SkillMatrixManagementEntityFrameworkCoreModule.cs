@@ -14,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
+using Npgsql;
 
 namespace SkillMatrixManagement.EntityFrameworkCore;
 
@@ -48,6 +49,11 @@ public class SkillMatrixManagementEntityFrameworkCoreModule : AbpModule
                  * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
         });
+
+        // configuring the additional db context for managing diff db
+        context.Services.AddAbpDbContext<SkillMatrixManagementApplicationDbContext>(options =>
+            options.AddDefaultRepositories(includeAllEntities: true)
+        );
 
         if (AbpStudioAnalyzeHelper.IsInAnalyzeMode)
         {

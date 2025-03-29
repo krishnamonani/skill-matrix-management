@@ -17,6 +17,9 @@ using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using SkillMatrixManagement.CustomDataSeeding;
+using Volo.Abp.Data;
+using System.ComponentModel.Design.Serialization;
 
 namespace SkillMatrixManagement;
 
@@ -44,6 +47,16 @@ public class SkillMatrixManagementDomainModule : AbpModule
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
         });
 
+        context.Services.AddTransient<IDataSeedContributor, CategorySeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, DepartmentSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, ProjectSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, DepartmentInternalRolesSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, SkillSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, ProficiencySeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, RoleSeedingService>();
+        context.Services.AddTransient<IDataSeedContributor, PermissionSeedingService>();
+        //context.Services.AddTransient<IDataSeedContributor, SkillSubtopicSeedingService>();
+
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Languages.Add(new LanguageInfo("ar", "ar", "العربية"));
@@ -65,7 +78,7 @@ public class SkillMatrixManagementDomainModule : AbpModule
             options.Languages.Add(new LanguageInfo("es", "es", "Español"));
             options.Languages.Add(new LanguageInfo("sv", "sv", "Svenska"));
         });
-        
+
 
 #if DEBUG
         context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
