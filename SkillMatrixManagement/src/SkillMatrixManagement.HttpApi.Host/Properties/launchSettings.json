@@ -18,7 +18,7 @@
     "SkillMatrixManagement.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44302",
+      "applicationUrl": "http://localhost:44302",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
