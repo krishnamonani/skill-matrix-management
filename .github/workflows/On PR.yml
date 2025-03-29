@@ -30,10 +30,10 @@ jobs:
 
       - name: Build DbMigrator
         run: |
-          cd SkillMatrixManagement\src\SkillMatrixManagement.DbMigrator
+          cd SkillMatrixManagement/src/SkillMatrixManagement.DbMigrator
           dotnet build
           
       - name: Build HttpApi.Host
         run: |
-          cd SkillMatrixManagement\src\SkillMatrixManagement.HttpApi.Host
+          cd SkillMatrixManagement/src/SkillMatrixManagement.HttpApi.Host
           dotnet build
