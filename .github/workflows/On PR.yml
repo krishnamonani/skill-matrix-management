@@ -1,0 +1,39 @@
+
+name: ABP.IO Build Test
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install ABP CLI
+        run: dotnet tool install -g Volo.Abp.Cli
+        
+      - name: Restore project dependencies
+        run: |
+          cd SkillMatrixManagement
+          dotnet restore
+          abp install-libs
+
+      - name: Build DbMigrator
+        run: |
+          cd SkillMatrixManagement\src\SkillMatrixManagement.DbMigrator
+          dotnet build
+          
+      - name: Build HttpApi.Host
+        run: |
+          cd SkillMatrixManagement\src\SkillMatrixManagement.HttpApi.Host
+          dotnet build
