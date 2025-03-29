@@ -4,21 +4,37 @@ from fastapi import HTTPException
 from typing import List
 
 # Configure Gemini API
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise RuntimeError("GEMINI_API_KEY is missing! Set it in the environment variables.")
+
+genai.configure(api_key=GEMINI_API_KEY)
 
 
 def validate_input(Role: str, NumberOfRecommendations: int, Skills: List[str]):
     """Validates input before passing to Gemini API."""
     if not isinstance(Role, str) or not Role.strip():
         raise HTTPException(status_code=422, detail="Invalid Role: Must be a non-empty string.")
+    
     if not isinstance(NumberOfRecommendations, int) or NumberOfRecommendations <= 0:
         raise HTTPException(status_code=422, detail="Invalid NumberOfRecommendations: Must be a positive integer.")
+    
     if not isinstance(Skills, list) or not all(isinstance(skill, str) for skill in Skills):
         raise HTTPException(status_code=422, detail="Invalid Skills: Must be a list of strings.")
+    
+    # Remove duplicates from Skills
+    Skills[:] = list(set(skill.strip() for skill in Skills if skill.strip()))
 
 
 def generate_skill_recommendation(Role: str, NumberOfRecommendations: int, Skills: List[str]) -> List[str]:
+    """Generates skill recommendations using Gemini AI."""
+    
     validate_input(Role, NumberOfRecommendations, Skills)
+
+    # Ensure Role is not empty
+    
+    
 
     # Create the prompt dynamically
     if Skills:
@@ -28,7 +44,7 @@ def generate_skill_recommendation(Role: str, NumberOfRecommendations: int, Skill
         )
     else:
         prompt = (
-            f"Suggest the most important technical skills for a {Role}. "
+            f"Suggest {NumberOfRecommendations} most important technical skills for a {Role}. "
             "Respond with skill names only, one per line."
         )
 
@@ -40,10 +56,20 @@ def generate_skill_recommendation(Role: str, NumberOfRecommendations: int, Skill
         )
 
         if not response.text:
-            return []
+            raise HTTPException(status_code=500, detail="Received an empty response from Gemini API.")
 
+        # Process skills
         SkillsList = response.text.strip().split("\n")
         return list(dict.fromkeys(skill.strip() for skill in SkillsList if skill))
 
+    except google.generativeai.types.ApiException as api_error:
+        raise HTTPException(status_code=500, detail=f"API Error: {str(api_error)}")
+    
+    except google.generativeai.types.RateLimitExceededException:
+        raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
+
+    except google.generativeai.types.TimeoutException:
+        raise HTTPException(status_code=504, detail="Request timed out. Please try again.")
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating skills: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
