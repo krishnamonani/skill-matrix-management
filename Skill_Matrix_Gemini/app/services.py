@@ -33,8 +33,8 @@ def generate_skill_recommendation(Role: str, NumberOfRecommendations: int, Skill
     validate_input(Role, NumberOfRecommendations, Skills)
 
     # Ensure Role is not empty
-    
-    
+    if not Role.strip():
+        raise HTTPException(status_code=400, detail="Role cannot be empty.")
 
     # Create the prompt dynamically
     if Skills:
