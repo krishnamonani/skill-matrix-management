@@ -23,15 +23,15 @@ jobs:
           target: "Internship-2025/Skill-Matrix-Management-App/"
           #rm: true  # Removes old files before copying
 
-      # - name: Deploy Using SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SERVER_IP }}
-      #     username: ${{ secrets.USERNAME }}
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     script: |
-      #       cd Internship-2025/Skill-Matrix-Management-App/SkillMatrixManagement
-      #       docker compose -f docker-compose-dev.yml up -d --build dbmigrator
-      #       sleep 30
-      #       docker compose -f docker-compose-dev.yml up -d --build apihost
-      #       docker system prune -af
+      - name: Deploy Using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd Internship-2025/Skill-Matrix-Management-App/SkillMatrixManagement
+            docker compose -f docker-compose-dev.yml up -d --build dbmigrator
+            sleep 30
+            docker compose -f docker-compose-dev.yml up -d --build apihost
+            docker system prune -af
