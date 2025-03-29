@@ -239,30 +239,35 @@ namespace SkillMatrixManagement.Services
             }
         }
 
-        public async Task<ServiceResponse> UpdateAsync(Guid id, UpdateDepartmentInternalRoleDto input)
+        public Task<ServiceResponse> UpdateAsync(Guid id, UpdateDepartmentInternalRoleDto input)
         {
-            try
-            {
-                if (input == null)
-                    throw new UserFriendlyException("Invalid input");
-
-                if (id == Guid.Empty)
-                    throw new UserFriendlyException("Role id cannot be empty");
-
-                if (!Enum.IsDefined(typeof(DepartmentRoleEnum), input.RoleName))
-                    throw new UserFriendlyException("Invalid role name specified");
-
-                var role = await _departmentInternalRoleRepository.GetByIdAsync(id);
-                _mapper.Map(input, role);
-                await _departmentInternalRoleRepository.UpdateAsync(role);
-                var updatedRoleDto = _mapper.Map<DepartmentInternalRoleDto>(role);
-                return ServiceResponse.SuccessResult(200, "Role updated successfully");
-
-            }
-            catch (Exception ex)
-            {
-                return ServiceResponse.Failure($"Failed to update role: {ex.Message}", 400);
-            }
+            throw new NotImplementedException();
         }
+
+        // public async Task<ServiceResponse> UpdateAsync(Guid id, UpdateDepartmentInternalRoleDto input)
+        // {
+        //     try
+        //     {
+        //         if (input == null)
+        //             throw new UserFriendlyException("Invalid input");
+
+        //         if (id == Guid.Empty)
+        //             throw new UserFriendlyException("Role id cannot be empty");
+
+        //         if (!Enum.IsDefined(typeof(DepartmentRoleEnum), input.RoleName))
+        //             throw new UserFriendlyException("Invalid role name specified");
+
+        //         var role = await _departmentInternalRoleRepository.GetByIdAsync(id);
+        //         _mapper.Map(input, role);
+        //         await _departmentInternalRoleRepository.UpdateAsync(role);
+        //         var updatedRoleDto = _mapper.Map<DepartmentInternalRoleDto>(role);
+        //         return ServiceResponse.SuccessResult(200, "Role updated successfully");
+
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return ServiceResponse.Failure($"Failed to update role: {ex.Message}", 400);
+        //     }
+        // }
     }
 }
