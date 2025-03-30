@@ -31,7 +31,7 @@ namespace SkillMatrixManagement.Repositories
                 .AnyAsync(rp => rp.RoleId == rolePermission.RoleId && rp.Permission == rolePermission.Permission && !rp.IsDeleted);
 
             if (exists)
-                throw new BusinessException("ROLE_PERM-001", "Permission already assigned to this role");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.PERMISSION_ALREADY_ASSIGNED_TO_THIS_ROLE, "Permission already assigned to this role");
 
             var result = await dbContext.Set<RolePermission>().AddAsync(rolePermission);
             await dbContext.SaveChangesAsync();
@@ -46,7 +46,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var rolePermission = await dbContext.Set<RolePermission>().FindAsync(id)
-                ?? throw new BusinessException("ROLE_PERM-002", "Role Permission not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_NOT_FOUND, "Role Permission not found");
 
             return rolePermission;
         }
@@ -66,7 +66,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<RolePermission>()
                 .FirstOrDefaultAsync(rp => rp.Id == rolePermission.Id && !rp.IsDeleted)
-                ?? throw new BusinessException("ROLE_PERM-003", "Role Permission not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_NOT_FOUND_FOR_UPDATE, "Role Permission not found for update");
 
             dbContext.Set<RolePermission>().Update(rolePermission);
             await dbContext.SaveChangesAsync();
@@ -86,10 +86,10 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var rolePermission = await dbContext.Set<RolePermission>().FindAsync(rolePermissionId)
-                ?? throw new BusinessException("ROLE_PERM-004", "Role Permission not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_NOT_FOUND, "Role Permission not found");
 
             if (rolePermission.IsDeleted)
-                throw new BusinessException("ROLE_PERM-005", "Role Permission is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_ALREADY_DELETED, "Role Permission is already deleted");
 
             rolePermission.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -106,7 +106,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(rp => rp.Id == rolePermissionId);
 
             if (rolePermission == null)
-                throw new BusinessException("ROLE_PERM-006", "Role Permission not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_NOT_FOUND_FOR_DELETION, "Role Permission not found for deletion");
 
             dbContext.Set<RolePermission>().Remove(rolePermission);
             await dbContext.SaveChangesAsync();
@@ -123,7 +123,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(rp => rp.Id == rolePermissionId);
 
             if (rolePermission == null || !rolePermission.IsDeleted)
-                throw new BusinessException("ROLE_PERM-007", "Role Permission not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.RolePermission.ROLE_PERMISSION_NOT_FOUND_OR_NOT_DELETED, "Role Permission not found or not deleted");
 
             rolePermission.IsDeleted = false;
             await dbContext.SaveChangesAsync();

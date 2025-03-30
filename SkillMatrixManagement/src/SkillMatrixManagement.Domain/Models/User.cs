@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SkillMatrixManagement.Constants;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.TenantManagement;
@@ -36,7 +37,7 @@ namespace SkillMatrixManagement.Models
         public Guid? InternalRoleId { get; set; }
         public virtual DepartmentInternalRole InternalRole { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public ProjectStatusEnum IsAvailable { get; set; }
         public string? ProfilePhoto { get; set; }
 
 
