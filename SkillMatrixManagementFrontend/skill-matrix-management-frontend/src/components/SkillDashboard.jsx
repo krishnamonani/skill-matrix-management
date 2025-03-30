@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { User, Home, BookOpen, Settings, LogOut, Edit2, Trash2, PlusCircle, ChevronDown, Upload, Camera, AlertTriangle } from 'lucide-react';
+import { User, Home, BookOpen, Settings, LogOut, Edit2, Trash2, PlusCircle, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ProfileSettings from './ProfileSettings';
 
 const SkillDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
     const [skills, setSkills] = useState([
         { id: 1, name: 'React', level: 'Advanced' },
         { id: 2, name: 'TypeScript', level: 'Intermediate' },
@@ -17,48 +19,27 @@ const SkillDashboard = () => {
     const [editSkill, setEditSkill] = useState('');
     const [editLevel, setEditLevel] = useState('');
     const [profileComplete, setProfileComplete] = useState(false);
-    const [showProfileAlert, setShowProfileAlert] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     // User profile state
     const [userProfile, setUserProfile] = useState({
-        userName: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        profilePhoto: null,
-        department: '',
-        departmentRole: '',
-        role: '',
-        projectStatus: 'Available'
+        profilePhoto: null
     });
 
-    // Autocomplete data
-    const departmentOptions = ['Engineering', 'Design', 'Product', 'Marketing', 'Sales', 'HR', 'Finance'];
-    const roleOptions = ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'UX Designer', 'Product Manager', 'QA Engineer', 'DevOps Engineer'];
-    const projectStatusOptions = ['Available', 'Busy', 'Stable'];
-
+    // Skill options
     const skillSuggestions = ['JavaScript', 'HTML', 'CSS', 'Node.js', 'Next.js', 'Vue.js', 'Angular', 'Python', 'Java'];
 
-     // Check if all required profile fields are filled
-     useEffect(() => {
-        const requiredFields = ['userName', 'email', 'firstName', 'lastName', 'department', 'role', 'phoneNumber', 'departmentRole'];
-        const allFieldsFilled = requiredFields.every(field => userProfile[field].trim() !== '');
-        setProfileComplete(allFieldsFilled);
-    }, [userProfile]);
+    // Check if profile is complete (this would be updated by the ProfileSettings component)
+    useEffect(() => {
+        // This would be updated by the ProfileSettings component
+        // For now, we'll assume it's always complete to enable navigation
+        setProfileComplete(true);
+    }, []);
 
-    // Function to handle page navigation with profile check
+    // Function to handle page navigation
     const handlePageNavigation = (page) => {
-        if (page !== 'Profile' && !profileComplete) {
-            setShowProfileAlert(true);
-            // Force profile page to be active
-            setCurrentPage('Profile');
-        } else {
-            setCurrentPage(page);
-            setSidebarOpen(false);
-        }
+        setCurrentPage(page);
+        setSidebarOpen(false);
     };
 
     const handleAddSkill = () => {
@@ -92,102 +73,29 @@ const SkillDashboard = () => {
         }
     };
 
-    const handleProfileChange = (e) => {
-        const { name, value } = e.target;
-        setUserProfile({
-            ...userProfile,
-            [name]: value
-        });
-        // Hide alert when user is editing profile
-        setShowProfileAlert(false);
+    // Function to handle sign out
+    const handleSignOut = () => {
+        setShowSignOutConfirm(true);
+        setProfileOpen(false); // Close profile dropdown
     };
 
-    const handleProfilePhotoUpload = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            // In a real application, you would handle the file upload to your backend
-            // For now, we'll just store the file object
-            setUserProfile({
-                ...userProfile,
-                profilePhoto: URL.createObjectURL(e.target.files[0])
-            });
-        }
+    // Function to confirm sign out
+    const confirmSignOut = () => {
+        // Clear session data
+        sessionStorage.clear();
+        
+        // Clear local storage data related to user profile
+        localStorage.removeItem('userProfileData');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        
+        // Redirect to login page
+        navigate('/');
     };
 
-    const handleProfileSubmit = async(e) => {
-        e.preventDefault();
-        
-        if (!profileComplete) {
-            setShowProfileAlert(true);
-            return;
-        }
-        
-        try {
-            setIsSubmitting(true);
-            
-            // Convert profilePhoto to base64 string if it exists
-            let photoData = userProfile.profilePhoto || 'string';
-            if (userProfile.profilePhoto && userProfile.profilePhoto instanceof File) {
-                photoData = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(userProfile.profilePhoto);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                });
-            }
-            
-            // Prepare the request payload
-            const profileData = {
-                firstName: userProfile.firstName,
-                lastName: userProfile.lastName,
-                email: userProfile.email,
-                phoneNumber: userProfile.phoneNumber,
-                roleId: userProfile.role, // Map role to roleId if needed
-                departmentId: userProfile.department, // Map department to departmentId if needed
-                internalRoleId: userProfile.departmentRole, // Internal role within department
-                isAvailable: userProfile.projectStatus === 'Available' ? 1 : 0,
-                profilePhoto: photoData,
-                userName: userProfile.userName
-            };
-            
-            // Save skills along with profile if your API supports it
-            const skillsData = skills.map(skill => ({
-                name: skill.name,
-                level: skill.level
-            }));
-            
-            // Make the API request
-            const response = await fetch('https://localhost:44302/api/app/app-user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...profileData,
-                    skills: skillsData
-                }),
-            });
-            
-            if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            if (data && data.id) {
-                localStorage.setItem('ProfileId', data.id);
-                alert('Profile saved successfully!');
-                
-                // Optionally navigate to home page after successful save
-                setCurrentPage('Home');
-            } else {
-                throw new Error('No ID returned from server');
-            }
-        } catch (error) {
-            console.error('Error saving profile:', error);
-            alert(`An error occurred while saving the profile: ${error.message}`);
-        } finally {
-            setIsSubmitting(false);
-        }
+    // Function to cancel sign out
+    const cancelSignOut = () => {
+        setShowSignOutConfirm(false);
     };
 
     return (
@@ -215,7 +123,7 @@ const SkillDashboard = () => {
                             <li>
                                 <button
                                     onClick={() => handlePageNavigation('Home')}
-                                    className={`flex items-center p-3 w-full text-left rounded-lg hover:bg-gray-800 transition-colors ${currentPage === 'Home' ? 'bg-gray-800' : ''} ${!profileComplete ? 'opacity-50' : ''}`}
+                                    className={`flex items-center p-3 w-full text-left rounded-lg hover:bg-gray-800 transition-colors ${currentPage === 'Home' ? 'bg-gray-800' : ''}`}
                                 >
                                     <Home className="mr-3" size={20} />
                                     <span>Home</span>
@@ -224,7 +132,7 @@ const SkillDashboard = () => {
                             <li>
                                 <button
                                     onClick={() => handlePageNavigation('Skills')}
-                                    className={`flex items-center p-3 w-full text-left rounded-lg hover:bg-gray-800 transition-colors ${currentPage === 'Skills' ? 'bg-gray-800' : ''} ${!profileComplete ? 'opacity-50' : ''}`}
+                                    className={`flex items-center p-3 w-full text-left rounded-lg hover:bg-gray-800 transition-colors ${currentPage === 'Skills' ? 'bg-gray-800' : ''}`}
                                 >
                                     <BookOpen className="mr-3" size={20} />
                                     <span>Skills</span>
@@ -237,9 +145,6 @@ const SkillDashboard = () => {
                                 >
                                     <Settings className="mr-3" size={20} />
                                     <span>Profile</span>
-                                    {!profileComplete && (
-                                        <span className="ml-auto bg-rose-500 text-white text-xs px-2 py-1 rounded-full">Required</span>
-                                    )}
                                 </button>
                             </li>
                         </ul>
@@ -277,11 +182,11 @@ const SkillDashboard = () => {
                                     >
                                         <Settings size={16} className="mr-2" />
                                         Profile Settings
-                                        {!profileComplete && (
-                                            <span className="ml-auto bg-rose-500 text-white text-xs px-1 py-px rounded-full">!</span>
-                                        )}
                                     </button>
-                                    <button className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 w-full text-left transition-colors">
+                                    <button 
+                                        onClick={handleSignOut}
+                                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 w-full text-left transition-colors"
+                                    >
                                         <LogOut size={16} className="mr-2" />
                                         Sign Out
                                     </button>
@@ -430,203 +335,35 @@ const SkillDashboard = () => {
                         </div>
                     )}
 
-                    {/* Profile Settings Section */}
-                    {currentPage === 'Profile' && (
-                        <div className="bg-white rounded-lg shadow-md border border-slate-200">
-                            <div className="p-6 border-b border-slate-200">
-                                <h3 className="text-xl font-semibold text-indigo-800">Profile Settings</h3>
-                                <p className="text-sm text-slate-500 mt-1">Complete your profile to access other dashboard features</p>
-                            </div>
-
-                            {/* Profile completion alert */}
-                            {showProfileAlert && (
-                                <div className="mx-6 mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start">
-                                    <AlertTriangle className="text-amber-500 mr-3 flex-shrink-0 mt-0.5" size={20} />
-                                    <div>
-                                        <h4 className="font-medium text-amber-800">Profile Incomplete</h4>
-                                        <p className="text-sm text-amber-700">Please complete all required fields in your profile before accessing other sections of the dashboard.</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            <form onSubmit={handleProfileSubmit} className="p-6">
-                                {/* Profile Photo Upload */}
-                                <div className="mb-8 flex flex-col items-center">
-                                    <div className="relative mb-4">
-                                        <div className="h-32 w-32 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden border-4 border-indigo-100">
-                                            {userProfile.profilePhoto ? (
-                                                <img
-                                                    src={userProfile.profilePhoto}
-                                                    alt="Profile"
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            ) : (
-                                                <User size={64} className="text-indigo-300" />
-                                            )}
-                                        </div>
-                                        <label 
-                                            htmlFor="profile-photo" 
-                                            className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer hover:bg-indigo-700 transition-colors"
-                                        >
-                                            <Camera size={16} />
-                                        </label>
-                                        <input
-                                            type="file"
-                                            id="profile-photo"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={handleProfilePhotoUpload}
-                                        />
-                                    </div>
-                                    <p className="text-sm text-slate-500">Click the camera icon to upload a profile photo</p>
-                                </div>
-
-                                {/* Profile Form */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {/* Username */}
-                                    <div>
-                                        <label htmlFor="userName" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Username <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="userName"
-                                            name="userName"
-                                            value={userProfile.userName}
-                                            onChange={handleProfileChange}
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                    </div>
-
-                                    {/* Email */}
-                                    <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Email <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            name="email"
-                                            value={userProfile.email}
-                                            onChange={handleProfileChange}
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                    </div>
-
-                                    {/* First Name */}
-                                    <div>
-                                        <label htmlFor="firstName" className="block text-sm font-medium text-slate-700 mb-1">
-                                            First Name <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="firstName"
-                                            name="firstName"
-                                            value={userProfile.firstName}
-                                            onChange={handleProfileChange}
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                    </div>
-
-                                    {/* Last Name */}
-                                    <div>
-                                        <label htmlFor="lastName" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Last Name <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="lastName"
-                                            name="lastName"
-                                            value={userProfile.lastName}
-                                            onChange={handleProfileChange}
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                    </div>
-
-                                    {/* Department - Autocomplete */}
-                                    <div>
-                                        <label htmlFor="department" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Department <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="department"
-                                            name="department"
-                                            value={userProfile.department}
-                                            onChange={handleProfileChange}
-                                            list="department-options"
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                        <datalist id="department-options">
-                                            {departmentOptions.map(option => (
-                                                <option key={option} value={option} />
-                                            ))}
-                                        </datalist>
-                                    </div>
-
-                                    {/* Role - Autocomplete */}
-                                    <div>
-                                        <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Role <span className="text-rose-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="role"
-                                            name="role"
-                                            value={userProfile.role}
-                                            onChange={handleProfileChange}
-                                            list="role-options"
-                                            required
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        />
-                                        <datalist id="role-options">
-                                            {roleOptions.map(option => (
-                                                <option key={option} value={option} />
-                                            ))}
-                                        </datalist>
-                                    </div>
-
-                                    {/* Project Status */}
-                                    <div>
-                                        <label htmlFor="projectStatus" className="block text-sm font-medium text-slate-700 mb-1">
-                                            Project Status
-                                        </label>
-                                        <select
-                                            id="projectStatus"
-                                            name="projectStatus"
-                                            value={userProfile.projectStatus}
-                                            onChange={handleProfileChange}
-                                            className="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        >
-                                            {projectStatusOptions.map(option => (
-                                                <option key={option} value={option}>{option}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {/* Save Button */}
-                                <div className="mt-8">
-                                    <button 
-                                        type="submit"
-                                        className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-                                    >
-                                        Save Profile
-                                    </button>
-                                    {!profileComplete && (
-                                        <p className="mt-2 text-sm text-rose-600">* Required fields must be completed</p>
-                                    )}
-                                </div>
-                            </form>
-                        </div>
-                    )}
+                    {currentPage === 'Profile' && <ProfileSettings />}
                 </main>
             </div>
+
+            {/* Sign Out Confirmation Modal */}
+            {showSignOutConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                    <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+                        <h3 className="text-lg font-medium text-slate-900 mb-4">Sign Out</h3>
+                        <p className="text-slate-600 mb-6">
+                            Are you sure you want to sign out? All session data will be cleared.
+                        </p>
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={cancelSignOut}
+                                className="px-4 py-2 border border-slate-300 rounded-md text-slate-700 hover:bg-slate-50 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmSignOut}
+                                className="px-4 py-2 bg-indigo-600 border border-indigo-600 rounded-md text-white hover:bg-indigo-700 transition-colors"
+                            >
+                                Confirm Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

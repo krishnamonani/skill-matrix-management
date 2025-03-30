@@ -59,8 +59,6 @@ const SignInPage = () => {
             }
         }
 
-        
-
         if (!password) {
             newErrors.push('Password is required');
         } else if (isRegistering && !validatePassword(password)) {
@@ -73,7 +71,6 @@ const SignInPage = () => {
         if (newErrors.length === 0) {
             try {
                 if (isRegistering) {
-
                     if (!email) {
                         newErrors.push('Email is required');
                     } else if (!validateEmail(email)) {
@@ -96,13 +93,16 @@ const SignInPage = () => {
                         password: password,
                         rememberMe: rememberMe
                     });
+                    
                     if(response.data.result === 1){
+                        // Store username/email and any other needed user info in localStorage
+                        localStorage.setItem('userEmail', email);
+                        localStorage.setItem('userName', email); // Since login uses email as username, storing the same value
+                        
                         toast.success(response.data.description);
                         setTimeout(()=>{
                             navigate('/skillDashboard')
                         },[2000])
-                       
-
                     } else {
                         toast.error(response.data.description);
                     }
@@ -117,7 +117,6 @@ const SignInPage = () => {
                 }
                 setErrors(newErrors);
                 toast.error(errors[0]);
-                // console.log(errors);
             }
         }
     };
