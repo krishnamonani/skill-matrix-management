@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/skillDashboard" element={<SkillDashboard />} />
         <Route path="/profile" element={<ProfileSection />} />
-        <Route path="/login" element={<SignInPage />} />
+        <Route path="/" element={<SignInPage />} />
       </Routes>
     </BrowserRouter>
   )
