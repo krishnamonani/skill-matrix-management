@@ -8,7 +8,7 @@ namespace SkillMatrixManagement.Constants
 {
     public enum ProjectStatusEnum
     {
-        AVAILABLE = 1,
+        AVAILABLE = 2,
         STABLE = 1,
         BUSY = 0
     }
