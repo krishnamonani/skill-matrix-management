@@ -28,7 +28,7 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
 
         public DateTime? EndorsedAt { get; set; }
 
-        public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
+        //public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
 
         public bool IsDeleted { get; set; }
     }

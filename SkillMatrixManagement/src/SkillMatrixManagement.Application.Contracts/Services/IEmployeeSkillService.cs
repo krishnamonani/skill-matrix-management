@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
 using SkillMatrixManagement.DTOs.Shared;
 using Volo.Abp.Application.Services;
+using static SkillMatrixManagement.SkillMatrixManagementDomainErrorCodes;
 
 namespace SkillMatrixManagement.Services
 {
@@ -21,5 +22,7 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse> RestoreEmployeeSkillAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<EmployeeSkillLookupDto>>> GetLookupAsync();
+
+        Task<ServiceResponse<List<EmployeeSkillDto>>> GetSkillsByUserAsync(Guid userId);
     }
 }

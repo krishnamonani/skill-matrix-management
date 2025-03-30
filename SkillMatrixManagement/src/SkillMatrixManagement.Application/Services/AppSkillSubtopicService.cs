@@ -116,7 +116,7 @@ namespace SkillMatrixManagement.Services
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code, 400);
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message, 400);
             }
             catch (Exception ex)
             {

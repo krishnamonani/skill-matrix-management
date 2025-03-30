@@ -51,7 +51,7 @@ namespace SkillMatrixManagement.Services
         {
             try
             {
-
+                
                 var EmployeeSkill = new EmployeeSkill()
                 {
                     UserId = input.UserId,
@@ -127,21 +127,26 @@ namespace SkillMatrixManagement.Services
         {
             try
             {
+                var data = await _employeeSkillRepository.GetByIdAsync(id);
 
-            return ServiceResponse<EmployeeSkillDto>.SuccessResult(_mapper.Map<EmployeeSkillDto>(_employeeSkillRepository.GetByIdAsync(id)), 201);
+                if (data == null)
+                {
+                    return ServiceResponse<EmployeeSkillDto>.Failure("Employee Skill not found", 404);
+                }
+
+                var mappedData = _mapper.Map<EmployeeSkillDto>(data);
+                return ServiceResponse<EmployeeSkillDto>.SuccessResult(mappedData, 200); // 200 OK instead of 201 Created
             }
-            catch(BusinessException ex)
+            catch (BusinessException ex)
             {
                 return ServiceResponse<EmployeeSkillDto>.Failure(ex.Message, 400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<EmployeeSkillDto>.Failure(ex.Message, 500);
-
+                return ServiceResponse<EmployeeSkillDto>.Failure("An unexpected error occurred: " + ex.Message, 500);
             }
-
-
         }
+
 
         public async Task<ServiceResponse<List<EmployeeSkillLookupDto>>> GetLookupAsync()
         {
@@ -216,6 +221,31 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<EmployeeSkillPagedResultDto>.Failure($"Failed to retrieve paged employee skills: {ex.Message}", 400);
             }
         }
+
+        public async Task<ServiceResponse<List<EmployeeSkillDto>>> GetSkillsByUserAsync(Guid userId)
+        {
+            try
+            {
+                var empData = await _employeeSkillRepository.GetSkillsByUserAsync(userId);
+
+                if (empData == null || !empData.Any())
+                {
+                    return ServiceResponse<List<EmployeeSkillDto>>.Failure("No skills found for this user", 404);
+                }
+
+                var mappedData = _mapper.Map<List<EmployeeSkillDto>>(empData);
+                return ServiceResponse<List<EmployeeSkillDto>>.SuccessResult(mappedData, 200);
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResponse<List<EmployeeSkillDto>>.Failure(ex.Message, 400);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<List<EmployeeSkillDto>>.Failure("An unexpected error occurred: " + ex.Message, 500);
+            }
+        }
+
 
         public async Task<ServiceResponse> PermanentDeleteAsync(Guid id)
         {
