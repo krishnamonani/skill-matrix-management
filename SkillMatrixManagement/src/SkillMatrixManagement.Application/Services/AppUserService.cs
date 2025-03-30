@@ -413,5 +413,69 @@ namespace SkillMatrixManagement.Services
             }
             return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
         }
+
+        public async Task<ServiceResponse<UserDto>> CreateOrUpdateUserAsync(CreateUserDto input)
+        {
+            try
+            {
+                if (input == null)
+                {
+                    throw new UserFriendlyException("Input cannot be null.");
+                }
+                if (string.IsNullOrWhiteSpace(input.FirstName))
+                {
+                    throw new UserFriendlyException("First name cannot be empty.");
+                }
+                if (string.IsNullOrWhiteSpace(input.LastName))
+                {
+                    throw new UserFriendlyException("Last name cannot be empty.");
+                }
+                if (string.IsNullOrWhiteSpace(input.Email))
+                {
+                    throw new UserFriendlyException("Email cannot be empty.");
+                }
+                if (input.RoleId == Guid.Empty)
+                {
+                    throw new UserFriendlyException("Role ID cannot be empty.");
+                }
+
+                var query = await _userRepository.WithDetailsAsync();
+                var existingUser = await query.FirstOrDefaultAsync(u => u.Email == input.Email && !u.IsDeleted);
+
+                if (existingUser != null)
+                {
+                    var updateUserDtoObj = _mapper.Map<UpdateUserDto>(input);
+                    var serviceResponse = await UpdateAsync(existingUser.Id, updateUserDtoObj);
+                    if (!serviceResponse.Success)
+                    {
+                        return ServiceResponse<UserDto>.Failure(serviceResponse.ErrorMessage ?? "Something wrong happen while updating", serviceResponse.StatusCode);
+                    }
+                    var updatedUserDto = _mapper.Map<UserDto>(existingUser);
+                    return ServiceResponse<UserDto>.SuccessResult(updatedUserDto, 200, "User updated successfully.");
+                }
+
+                var user = new User()
+                {
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
+                };
+
+                var createdUser = await _userRepository.CreateAsync(user);
+                var userDto = _mapper.Map<UserDto>(createdUser);
+                return ServiceResponse<UserDto>.SuccessResult(userDto, 201, "User created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<UserDto>.Failure($"Failed to create or update user: {ex.Message}", 500);
+            }
+        }
+ 
     }
 }
