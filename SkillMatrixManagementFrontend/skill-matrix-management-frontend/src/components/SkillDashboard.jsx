@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Home, BookOpen, Settings, LogOut, Edit2, Trash2, PlusCircle, ChevronDown } from 'lucide-react';
+import { User, Home, BookOpen, Settings, LogOut, Edit2, Trash2, PlusCircle, ChevronDown, Lightbulb, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ProfileSettings from './ProfileSettings';
 
@@ -19,6 +19,10 @@ const SkillDashboard = () => {
     const [editSkill, setEditSkill] = useState('');
     const [editLevel, setEditLevel] = useState('');
     const [profileComplete, setProfileComplete] = useState(false);
+    const [showRecommendations, setShowRecommendations] = useState(false);
+    const [recommendedSkills, setRecommendedSkills] = useState([]);
+    const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+    const [recommendationError, setRecommendationError] = useState(null);
     const navigate = useNavigate();
 
     // User profile state
@@ -28,6 +32,51 @@ const SkillDashboard = () => {
 
     // Skill options
     const skillSuggestions = ['JavaScript', 'HTML', 'CSS', 'Node.js', 'Next.js', 'Vue.js', 'Angular', 'Python', 'Java'];
+    
+    // Map skill levels to recommended levels
+    const getSkillLevel = (index) => {
+        const levels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+        return levels[index % levels.length];
+    };
+
+    // Fetch skill recommendations from the API
+    const fetchRecommendations = async () => {
+        setIsLoadingRecommendations(true);
+        setRecommendationError(null);
+        
+        try {
+            // Get userId from localStorage
+            const userId = localStorage.getItem('userProfileId') || '1'; // Default to '1' if not found
+            
+            const response = await fetch(`https://localhost:44302/api/app/app-ai-recommendation/skill-recommendation/${userId}`);
+            const result = await response.json();
+            
+            if (result.success) {
+                // Map string array to skill objects
+                const recommendedSkillsData = result.data.map((skillName, index) => ({
+                    name: skillName,
+                    level: getSkillLevel(index),
+                    description: `Recommended based on your current skill set`
+                }));
+                setRecommendedSkills(recommendedSkillsData);
+            } else {
+                setRecommendationError(result.errorMessage || 'Failed to fetch recommendations');
+            }
+        } catch (error) {
+            console.error('Error fetching recommendations:', error);
+            setRecommendationError('Could not connect to recommendation service. Please try again later.');
+        } finally {
+            setIsLoadingRecommendations(false);
+        }
+    };
+
+    // Fetch recommendations when the button is clicked
+    const handleShowRecommendations = () => {
+        if (!showRecommendations) {
+            fetchRecommendations();
+        }
+        setShowRecommendations(!showRecommendations);
+    };
 
     // Check if profile is complete (this would be updated by the ProfileSettings component)
     useEffect(() => {
@@ -87,6 +136,7 @@ const SkillDashboard = () => {
         // Clear local storage data related to user profile
         localStorage.removeItem('userProfileData');
         localStorage.removeItem('userNameOrEmail');
+        localStorage.removeItem('userProfileId');
         
         // Redirect to login page
         navigate('/');
@@ -96,6 +146,30 @@ const SkillDashboard = () => {
     const cancelSignOut = () => {
         setShowSignOutConfirm(false);
     };
+
+    // Function to add recommended skill
+    const addRecommendedSkill = (skill) => {
+        setSkills([...skills, {
+            id: skills.length ? Math.max(...skills.map(s => s.id)) + 1 : 1,
+            name: skill.name,
+            level: skill.level
+        }]);
+    };
+
+    // Close recommendations if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showRecommendations && !event.target.closest('.recommendations-container') && 
+                !event.target.closest('.recommend-button')) {
+                setShowRecommendations(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showRecommendations]);
 
     return (
         <div className="flex h-screen bg-slate-50">
@@ -199,7 +273,83 @@ const SkillDashboard = () => {
                 <main className="flex-1 p-6 bg-slate-50 overflow-y-auto">
                     {currentPage === 'Skills' && (
                         <div className="bg-white rounded-lg shadow-md p-6 border border-slate-200">
-                            <h3 className="text-xl font-semibold mb-6 text-indigo-800">My Skills</h3>
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-semibold text-indigo-800">My Skills</h3>
+                                
+                                {/* Recommend Skill Button */}
+                                <div className="relative recommend-button">
+                                    <button
+                                        onClick={handleShowRecommendations}
+                                        className="bg-amber-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-amber-600 transition-colors"
+                                    >
+                                        <Lightbulb size={18} className="mr-2" />
+                                        Recommend Skills
+                                    </button>
+                                    
+                                    {/* Recommendations Floating Box */}
+                                    {showRecommendations && (
+                                        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-20 border border-slate-200 recommendations-container">
+                                            <div className="p-4">
+                                                <h4 className="font-semibold text-slate-800 pb-2 border-b border-slate-200 mb-3">
+                                                    Recommended Skills
+                                                </h4>
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {isLoadingRecommendations && (
+                                                        <div className="flex justify-center items-center py-8">
+                                                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {recommendationError && !isLoadingRecommendations && (
+                                                        <div className="p-3 bg-rose-50 text-rose-700 rounded-md flex items-start">
+                                                            <AlertCircle size={16} className="mr-2 flex-shrink-0 mt-0.5" />
+                                                            <div>
+                                                                <p className="text-sm font-medium">Unable to load recommendations</p>
+                                                                <p className="text-xs mt-1">{recommendationError}</p>
+                                                                <button 
+                                                                    onClick={fetchRecommendations} 
+                                                                    className="text-xs mt-2 underline hover:text-rose-800"
+                                                                >
+                                                                    Try again
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {!isLoadingRecommendations && !recommendationError && recommendedSkills.length === 0 && (
+                                                        <div className="p-3 text-center text-slate-500">
+                                                            No recommendations available at this time.
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {!isLoadingRecommendations && !recommendationError && recommendedSkills.map((skill, index) => (
+                                                        <div key={index} className="p-3 hover:bg-slate-50 border-b border-slate-100 last:border-0">
+                                                            <div className="flex justify-between items-start mb-1">
+                                                                <span className="font-medium text-slate-700">{skill.name}</span>
+                                                                <span className={`px-2 py-0.5 text-xs rounded-full 
+                                                                ${skill.level === 'Beginner' ? 'bg-slate-100 text-slate-800' : ''}
+                                                                ${skill.level === 'Intermediate' ? 'bg-indigo-100 text-indigo-800' : ''}
+                                                                ${skill.level === 'Advanced' ? 'bg-emerald-100 text-emerald-800' : ''}
+                                                                ${skill.level === 'Expert' ? 'bg-violet-100 text-violet-800' : ''}
+                                                                `}>
+                                                                    {skill.level}
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-xs text-slate-500 mb-2">{skill.description}</p>
+                                                            <button
+                                                                onClick={() => addRecommendedSkill(skill)}
+                                                                className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded hover:bg-indigo-100 transition-colors"
+                                                            >
+                                                                Add to My Skills
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
 
                             {/* Add new skill form */}
                             <div className="mb-8 bg-indigo-50 p-5 rounded-lg border border-indigo-100">

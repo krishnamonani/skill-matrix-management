@@ -290,21 +290,21 @@ const ProfileSettings = () => {
         }
         
         // Store the user ID from the response
-        if (data && data.id) {
+        if (data && data.data.id) {
           // Set user ID in state
-          setUserId(data.id);
+          setUserId(data.data.id);
           
           // Store user ID in local storage
-          localStorage.setItem('UserProfileId', data.id);
+          localStorage.setItem('userProfileId', data.data.id);
           
           // Update the profile data in local storage with the ID
           const updatedProfile = {
             ...userProfile,
-            userId: data.id
+            userId: data.data.id
           };
           localStorage.setItem('userProfileData', JSON.stringify(updatedProfile));
           
-          console.log('User ID stored in local storage:', data.id);
+          // console.log('User ID stored in local storage:', data.id);
         }
         
         // Update status
@@ -314,8 +314,9 @@ const ProfileSettings = () => {
           success: true
         });
         
-        console.log('Profile saved:', userProfile);
-        console.log('API response:', data);
+        // console.log('Profile saved:', userProfile);
+        // console.log('API response:', data);
+        // console.log("ProfileId: ", data.data.id);
       } catch (error) {
         console.error('Error saving profile:', error);
         
