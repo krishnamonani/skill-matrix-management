@@ -13,7 +13,17 @@ const SignInPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState([]);
     const [isRegistering, setIsRegistering] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    // Check for user profile in local storage and redirect if found
+    useEffect(() => {
+        const userNameOrEmail = localStorage.getItem('userNameOrEmail');
+        
+        if (userNameOrEmail) {
+            // User is already logged in, redirect to dashboard
+            navigate('/skillDashboard');
+        }
+    }, [navigate]);
 
     // Display errors as toasts whenever they change
     useEffect(() => {
@@ -96,8 +106,8 @@ const SignInPage = () => {
                     
                     if(response.data.result === 1){
                         // Store username/email and any other needed user info in localStorage
-                        localStorage.setItem('userEmail', email);
-                        localStorage.setItem('userName', email); // Since login uses email as username, storing the same value
+                        localStorage.setItem('userNameOrEmail', email);
+                        // localStorage.setItem('userName', email); // Since login uses email as username, storing the same value
                         
                         toast.success(response.data.description);
                         setTimeout(()=>{

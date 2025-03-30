@@ -4,6 +4,16 @@ import { User, AlertTriangle, Camera } from 'lucide-react';
 const ProfileSettings = () => {
   const [showProfileAlert, setShowProfileAlert] = useState(true);
   const [profileComplete, setProfileComplete] = useState(false);
+
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [departmentIds, setDepartmentIds] = useState({});
+
+  const [departmentRoleOptions, setDepartmentRoleOptions] = useState([]);
+  const [internalRoleIds, setDepartmentRoleIds] = useState({});
+
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [roleIds, setRoleIds] = useState({});
+
   const [userProfile, setUserProfile] = useState({
     userName: '',
     email: '',
@@ -27,96 +37,158 @@ const ProfileSettings = () => {
   });
 
   // Sample options for dropdowns and autocomplete
-  const departmentOptions = ['Engineering', 'Marketing', 'Sales', 'Finance', 'Human Resources', 'Operations'];
-  const roleOptions = ['Developer', 'Manager', 'Hr'];
-  const projectStatusOptions = ['Available', 'Busy', 'Stable'];
+
+  const projectStatusOptions = ['Available', 'Busy', 'Stable'];  
+
+
+  // fetching departments
+  useEffect(() => {
+    const fetchDepartment = async () => {
+      try {
+        const response = await fetch(`https://localhost:44302/api/app/app-department/lookup`);
+        const result = await response.json();
+
+        if (result.success && Array.isArray(result.data)) {
+          setDepartmentOptions(result.data.map(dept => dept.name));
+
+          setDepartmentIds(prevIds => ({
+            ...prevIds,
+            ...Object.fromEntries(result.data.map(dept => [dept.name, dept.id]))
+          }));
+        } else {
+          console.log("Invalid response format");
+        }
+      } catch (error) {
+        console.log("Error while fetching departments:", error);
+      }
+    };
+
+    fetchDepartment();
+  }, []); 
+
+  // fetching department internal roles
+  useEffect(() => {
+    const fetchDepartmentRole = async () => {
+      try {
+        const response = await fetch(`https://localhost:44302/api/app/app-department-internal-role/lookup`);
+        const result = await response.json();
+
+        if (result.success && Array.isArray(result.data)) {
+          setDepartmentRoleOptions(result.data.map(deptRole => deptRole.departmentRole));
+
+          setDepartmentRoleIds(prevIds => ({
+            ...prevIds,
+            ...Object.fromEntries(result.data.map(deptRole => [deptRole.departmentRole, deptRole.id]))
+          }));
+        } else {
+          console.log("Invalid response format");
+        }
+      } catch (error) {
+        console.log("Error while fetching department roles:", error);
+      }
+    };
+
+    fetchDepartmentRole();
+  }, []); 
+
+  // fetching roles
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await fetch(`https://localhost:44302/api/app/app-role/lookup`);
+        const result = await response.json();
+
+        if (result.success && Array.isArray(result.data)) {
+          setRoleOptions(result.data.map(role => role.roleNameString));
+
+          setRoleIds(prevIds => ({
+            ...prevIds,
+            ...Object.fromEntries(result.data.map(role => [role.roleNameString, role.id]))
+          }));
+        } else {
+          console.log("Invalid response format");
+        }
+      } catch (error) {
+        console.log("Error while fetching roles:", error);
+      }
+    };
+
+    fetchRoles();
+  }, []); 
+
   
-  // Department role options - Now a flat list instead of being department-dependent
-  const departmentRoleOptions = [
-    'Software Engineer', 'QA Engineer', 'DevOps Engineer', 'Technical Lead',
-    'Marketing Specialist', 'Content Creator', 'SEO Analyst', 'Campaign Manager',
-    'Sales Representative', 'Account Manager', 'Sales Analyst', 'Business Developer',
-    'Financial Analyst', 'Accountant', 'Payroll Specialist', 'Tax Consultant',
-    'HR Coordinator', 'Recruiter', 'Benefits Specialist', 'Employee Relations',
-    'Operations Manager', 'Logistics Coordinator', 'Supply Chain Analyst', 'Facility Manager'
-  ];
-  
-  // Sample IDs mapping for departments, roles and internal roles
-  // In a real application, these would likely be fetched from an API
-  const departmentIds = {
-    'Engineering': '3a18d3e9-66fc-5396-d7ba-b4ad87d4d535',
-    'Marketing': '4b29e4f9-77ac-6487-e8cb-c5d098e2f646',
-    'Sales': '5c30f5g0-88bd-7598-f9dc-d6e109f3g757',
-    'Finance': '6d41g6h1-99ce-8609-g0ed-e7f210g4h868',
-    'Human Resources': '7e52h7i2-00df-9710-h1fe-f8g321h5i979',
-    'Operations': '8f63i8j3-11eg-0821-i2gf-g9h432i6j080'
-  };
-  
-  const roleIds = {
-    'Manager': '5c30f5g0-8d54-db2-f8c9-4e1hf03gh2d8',
-    'Developer': '3a18d3e9-6b32-b9b0-d6a7-2c9fd81ef0b6',
-    'Hr': '7e52h7i2-0f76-fd4-h0e1-6g3jh25ij4f0'
-  };
-  
-  const internalRoleIds = {
-    'Software Engineer': '3a18d0a2-f635-f198-c056-51f6e13b9a4d',
-    'QA Engineer': '4b29e1b3-g746-g209-d167-62g7f24b0b5e',
-    'DevOps Engineer': '5c30f2c4-h857-h310-e278-73h8g35c1c6f',
-    'Technical Lead': '6d41g3d5-i968-i421-f389-84i9h46d2d7g',
-    'Marketing Specialist': '7e52h4e6-j079-j532-g490-95j0i57e3e8h',
-    'Content Creator': '8f63i5f7-k180-k643-h501-06k1j68f4f9i',
-    'SEO Analyst': '9g74j6g8-l291-l754-i612-17l2k79g5g0j',
-    'Campaign Manager': '0h85k7h9-m302-m865-j723-28m3l80h6h1k',
-    'Sales Representative': '1i96l8i0-n413-n976-k834-39n4m91i7i2l',
-    'Account Manager': '2j07m9j1-o524-o087-l945-40o5n02j8j3m',
-    'Sales Analyst': '3k18n0k2-p635-p198-m056-51p6o13k9k4n',
-    'Business Developer': '4l29o1l3-q746-q209-n167-62q7p24l0l5o',
-    'Financial Analyst': '5m30p2m4-r857-r310-o278-73r8q35m1m6p',
-    'Accountant': '6n41q3n5-s968-s421-p389-84s9r46n2n7q',
-    'Payroll Specialist': '7o52r4o6-t079-t532-q490-95t0s57o3o8r',
-    'Tax Consultant': '8p63s5p7-u180-u643-r501-06u1t68p4p9s',
-    'HR Coordinator': '9q74t6q8-v291-v754-s612-17v2u79q5q0t',
-    'Recruiter': '0r85u7r9-w302-w865-t723-28w3v80r6r1u',
-    'Benefits Specialist': '1s96v8s0-x413-x976-u834-39x4w91s7s2v',
-    'Employee Relations': '2t07w9t1-y524-y087-v945-40y5x02t8t3w',
-    'Operations Manager': '3u18x0u2-z635-z198-w056-51z6y13u9u4x',
-    'Logistics Coordinator': '4v29y1v3-a746-a209-x167-62a7z24v0v5y',
-    'Supply Chain Analyst': '5w30z2w4-b857-b310-y278-73b8a35w1w6z',
-    'Facility Manager': '6x41a3x5-c968-c421-z389-84c9b46x2x7a'
+
+  // Fetch username and email from the API instead of localStorage
+  const fetchUserNameAndEmail = async () => {
+    try {
+      // Get the initial username or email from localStorage
+      const initialUserNameOrEmail = localStorage.getItem('userNameOrEmail');
+      
+      if (!initialUserNameOrEmail) {
+        throw new Error('No Session data Found');
+      }
+      
+      const response = await fetch(`https://localhost:44302/api/app/app-user/user-name-and-email-by-user-name-or-email?userNameOrEmail=${encodeURIComponent(initialUserNameOrEmail)}`);
+      
+      const data = await response.json();
+      
+      if (!response.ok || !data.success) {
+        throw new Error(data.errorMessage || `Server responded with ${response.status}`);
+      }
+      
+      // Extract username and email from response
+      const [userName, email] = data.data;
+      
+      return { userName, email };
+    } catch (error) {
+      console.error('Error fetching username and email:', error);
+      throw error;
+    }
   };
 
-  // Load profile data from local storage on component mount
+  // Load profile data on component mount
   useEffect(() => {
-    const storedProfileData = localStorage.getItem('userProfileData');
-    const storedUserId = localStorage.getItem('UserProfileId');
-    
-    // Get username and email from localStorage (saved during login)
-    const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (storedProfileData) {
-      const parsedData = JSON.parse(storedProfileData);
-      // Override with username and email from login if available
-      if (userName && userEmail) {
-        parsedData.userName = userName;
-        parsedData.email = userEmail;
+    const loadProfileData = async () => {
+      try {
+        // First try to fetch username and email from API
+        const { userName, email } = await fetchUserNameAndEmail();
+        
+        const storedProfileData = localStorage.getItem('userProfileData');
+        const storedUserId = localStorage.getItem('UserProfileId');
+        
+        if (storedProfileData) {
+          const parsedData = JSON.parse(storedProfileData);
+          // Override with username and email from API
+          parsedData.userName = userName;
+          parsedData.email = email;
+          
+          setUserProfile(parsedData);
+          
+          // Check if required fields are filled to determine profile completeness
+          checkProfileCompleteness(parsedData);
+        } else {
+          // If no stored profile data but we have API info, create a new profile with it
+          setUserProfile(prevProfile => ({
+            ...prevProfile,
+            userName: userName,
+            email: email
+          }));
+        }
+        
+        if (storedUserId) {
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        // Set API error state
+        setApiStatus({
+          loading: false,
+          error: error.message || 'Failed to load user information',
+          success: false
+        });
       }
-      setUserProfile(parsedData);
-      
-      // Check if required fields are filled to determine profile completeness
-      checkProfileCompleteness(parsedData);
-    } else if (userName && userEmail) {
-      // If no stored profile data but we have login info, create a new profile with it
-      setUserProfile(prevProfile => ({
-        ...prevProfile,
-        userName: userName,
-        email: userEmail
-      }));
-    }
+    };
     
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
+    loadProfileData();
   }, []);
   
   // Function to check profile completeness
@@ -174,7 +246,7 @@ const ProfileSettings = () => {
     // Check if required fields are filled
     const requiredFields = ['userName', 'email', 'firstName', 'lastName', 'department', 'role', 'departmentRole'];
     const isComplete = requiredFields.every(field => {
-      return userProfile[field].trim() !== '';
+      return userProfile[field] && userProfile[field].trim() !== '';
     });
     
     setProfileComplete(isComplete);
@@ -195,15 +267,15 @@ const ProfileSettings = () => {
           lastName: userProfile.lastName,
           email: userProfile.email,
           phoneNumber: userProfile.phoneNumber || "",
-          roleId: roleIds[userProfile.role] || "3a18d3e9-6b32-b9b0-d6a7-2c9fd81ef0b6", // Default to Developer if not found
-          departmentId: departmentIds[userProfile.department] || "3a18d3e9-66fc-5396-d7ba-b4ad87d4d535", // Default to Engineering if not found
-          internalRoleId: internalRoleIds[userProfile.departmentRole] || "3a18d0a2-f635-f198-c056-51f6e13b9a4d", // Use department role mapping
-          isAvailable: userProfile.projectStatus === 'Available' ? 1 : 0,
+          roleId: roleIds[userProfile.role] , 
+          departmentId: departmentIds[userProfile.department] , 
+          internalRoleId: internalRoleIds[userProfile.departmentRole] ,
+          isAvailable: userProfile.projectStatus === 'Busy' ? 0 : (userProfile.projectStatus === 'Stable' ? 1 : 2),
           profilePhoto: userProfile.profilePhoto || "string"
         };
         
         // Make API request
-        const response = await fetch('https://localhost:44302/api/app/app-user', {
+        const response = await fetch('https://localhost:44302/api/app/app-user/or-update-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -211,11 +283,11 @@ const ProfileSettings = () => {
           body: JSON.stringify(payload)
         });
         
-        if (!response.ok) {
-          throw new Error(`Server responded with ${response.status}`);
-        }
-        
         const data = await response.json();
+        
+        if (!response.ok || !data.success) {
+          throw new Error(data.errorMessage || `Server responded with ${response.status}`);
+        }
         
         // Store the user ID from the response
         if (data && data.id) {

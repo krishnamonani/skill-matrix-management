@@ -86,8 +86,7 @@ const SkillDashboard = () => {
         
         // Clear local storage data related to user profile
         localStorage.removeItem('userProfileData');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userNameOrEmail');
         
         // Redirect to login page
         navigate('/');
