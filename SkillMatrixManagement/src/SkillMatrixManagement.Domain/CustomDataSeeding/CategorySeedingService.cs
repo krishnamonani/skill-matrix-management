@@ -54,6 +54,11 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Skills required to guide, influence, and manage teams (e.g., delegation, motivation, strategic thinking)."
             };
 
+            var leadershipSkill = new Category()
+            {
+                CategoryName = CategoryEnum.LEADERSHIP_SKILL,
+                Description = "Skills are the abilities that enable an individual to guide, inspire, and motivate a team or organization toward achieving goals."
+            };
             var creativeSkill = new Category()
             {
                 CategoryName = CategoryEnum.CREATIVE_SKILL,
@@ -99,7 +104,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
             digitalSkill,
             creativeSkill,
             managementSkill,
-            softSkill
+            softSkill,
+            leadershipSkill// New category added
         });
         }
     }

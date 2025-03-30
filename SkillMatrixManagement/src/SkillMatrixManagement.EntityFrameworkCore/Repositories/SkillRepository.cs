@@ -34,7 +34,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var exists = await dbContext.Set<Skill>().AnyAsync(s => s.Name == skill.Name && !s.IsDeleted);
             if (exists)
-                throw new BusinessException("Skill-001", "A skill with this name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_ALREADY_EXISTS_WITH_SAME_NAME, "A skill with this name already exists");
 
             var result = await dbContext.Set<Skill>().AddAsync(skill);
             await dbContext.SaveChangesAsync();
@@ -48,7 +48,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skill = await dbContext.Set<Skill>().FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted)
-                ?? throw new BusinessException("Skill-002", "Skill not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND, "Skill not found");
 
             return skill;
         }
@@ -65,7 +65,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             Check.NotNull(skill, nameof(skill));
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<Skill>().FirstOrDefaultAsync(s => s.Id == skill.Id && !s.IsDeleted)
-                ?? throw new BusinessException("Skill-003", "Skill not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND_FOR_UPDATE, "Skill not found for update");
 
             dbContext.Set<Skill>().Update(skill);
             await dbContext.SaveChangesAsync();
@@ -81,7 +81,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skill = await dbContext.Set<Skill>().FirstOrDefaultAsync(s => s.Id == skillId && !s.IsDeleted)
-                ?? throw new BusinessException("Skill-004", "Skill not found for soft deletion");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND_FOR_DELETION, "Skill not found for soft deletion");
 
             skill.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -95,7 +95,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             var skill = await dbContext.Set<Skill>().IgnoreQueryFilters().FirstOrDefaultAsync(s => s.Id == skillId);
 
             if (skill == null)
-                throw new BusinessException("Skill-005", "Skill not found for permanent deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND_FOR_DELETION, "Skill not found for permanent deletion");
 
             dbContext.Set<Skill>().Remove(skill);
             await dbContext.SaveChangesAsync();
@@ -105,10 +105,10 @@ namespace SkillMatrixManagement.Repositories.Implementations
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skill = await dbContext.Set<Skill>().IgnoreQueryFilters().FirstOrDefaultAsync(s => s.Id == skillId)
-                ?? throw new BusinessException("Skill-006", "Skill not found for restoration");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND_FOR_RESTORED, "Skill not found for restoration");
 
             if (!skill.IsDeleted)
-                throw new BusinessException("Skill-007", "Skill is not deleted, cannot be restored");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Skill.SKILL_NOT_FOUND_OR_NOT_DELETED, "Skill is not deleted, cannot be restored");
 
             skill.IsDeleted = false;
             await dbContext.SaveChangesAsync();
