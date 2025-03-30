@@ -16,11 +16,17 @@ namespace SkillMatrixManagement.Services
     public class AppUserService : ApplicationService, IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IDepartmentInternalRoleRepository _roleInternalRepository;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUserRepository userRepository, IMapper mapper)
+        public AppUserService(IUserRepository userRepository, IDepartmentRepository departmentRepository, IRoleRepository roleRepository, IDepartmentInternalRoleRepository roleInternalRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
+            _roleRepository = roleRepository;
+            _roleInternalRepository = roleInternalRepository;
             _mapper = mapper;
         }
 
@@ -133,6 +139,18 @@ namespace SkillMatrixManagement.Services
                     users = users.Where(u => !u.IsDeleted).ToList();
                 }
 
+                foreach (var user in users)
+                {
+                    var department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
+                    user.Department = department;
+
+                    var role = await _roleRepository.GetByIdAsync(user.RoleId);
+                    user.Role = role;
+
+                    var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                    user.InternalRole = internaleRole;
+                }
+
                 var userDtos = _mapper.Map<List<UserDto>>(users);
                 return ServiceResponse<List<UserDto>>.SuccessResult(userDtos, 200, "Users retrieved successfully.");
             }
@@ -152,6 +170,15 @@ namespace SkillMatrixManagement.Services
                 }
 
                 var user = await _userRepository.GetByIdAsync(id);
+
+                var department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
+                user.Department = department;
+
+                var role = await _roleRepository.GetByIdAsync(user.RoleId);
+                user.Role = role;
+
+                var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                user.InternalRole = internaleRole;
                 if (user.IsDeleted)
                 {
                     throw new UserFriendlyException("User is deleted.");

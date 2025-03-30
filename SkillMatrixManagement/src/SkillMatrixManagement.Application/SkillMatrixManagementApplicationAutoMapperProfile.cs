@@ -1,5 +1,6 @@
 using AutoMapper;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
+using SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
@@ -68,5 +69,8 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         CreateMap<EmployeeSkill, EmployeeSkillLookupDto>();
         
         CreateMap<UpdateEmployeeSkillDto, EmployeeSkill>();
+
+        CreateMap<DepartmentInternalRole, DepartmentInternalRoleDto>()
+            .ForMember(dest => dest.RoleNameString, opt => opt.MapFrom(src => src.RoleName.ToString()));
     }
 }
