@@ -10,17 +10,20 @@ using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Identity;
 
 namespace SkillMatrixManagement.Services
 {
     public class AppUserService : ApplicationService, IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IIdentityUserRepository _identityUserRepository;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUserRepository userRepository, IMapper mapper)
+        public AppUserService(IUserRepository userRepository, IIdentityUserRepository identityUserRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _identityUserRepository = identityUserRepository;
             _mapper = mapper;
         }
 
@@ -398,6 +401,17 @@ namespace SkillMatrixManagement.Services
             {
                 return ServiceResponse.Failure($"Failed to update user: {ex.Message}", 500);
             }
+        }
+
+        public async Task<ServiceResponse<string[]>> GetUserNameAndEmailByUserNameOrEmail(string userNameOrEmail)
+        {
+            var user = await _identityUserRepository.FindByNormalizedEmailAsync(userNameOrEmail.ToUpper());
+            if(user == null)
+            {   
+                user = await _identityUserRepository.FindByNormalizedUserNameAsync(userNameOrEmail.ToUpper());
+                if (user == null) return ServiceResponse<string[]>.Failure("User not found", 404);
+            }
+            return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
         }
     }
 }
