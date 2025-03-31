@@ -42,9 +42,15 @@ namespace SkillMatrixManagement.Repositories
             {
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_CAN_NOT_BE_NULL);
             }
+
+            if (string.IsNullOrWhiteSpace(employeeSkill.CoreSkillName) || employeeSkill.CoreSkillName.All(char.IsDigit))
+            {
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NAME_CAN_NOT_BE_NUMBER);
+            }
+
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var exists = await dbContext.EmployeeSkills
-                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
+                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName.ToLower() == employeeSkill.CoreSkillName.ToLower() && !es.IsDeleted);
             if (exists)
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
             
