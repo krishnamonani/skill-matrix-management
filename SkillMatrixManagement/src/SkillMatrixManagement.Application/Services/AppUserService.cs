@@ -142,15 +142,19 @@ namespace SkillMatrixManagement.Services
                     users = users.Where(u => !u.IsDeleted).ToList();
                 }
 
+                var departments = await _departmentRepository.GetAllAsync();
+                var roles = await _roleRepository.GetAllAsync();
+                var internalRoles = await _roleInternalRepository.GetAllRolesAsync();
+
                 foreach (var user in users)
                 {
-                    var department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
+                    var department = departments.Where(dept => dept.Id == user.DepartmentId).FirstOrDefault();
                     user.Department = department;
 
-                    var role = await _roleRepository.GetByIdAsync(user.RoleId);
-                    user.Role = role;
+                    var role = roles.Where(role => role.Id == user.RoleId).FirstOrDefault();
+                    user.Role = role ?? throw new Exception("User should have a role, Role not found!");
 
-                    var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                    var internaleRole = internalRoles.Where(internalRole => internalRole.Id == user.InternalRoleId).FirstOrDefault();
                     user.InternalRole = internaleRole;
                 }
 
