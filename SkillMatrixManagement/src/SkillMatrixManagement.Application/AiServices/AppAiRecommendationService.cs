@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using SkillMatrixManagement.DTOs.AiSkillRecommendationDTO;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.Repositories;
@@ -19,14 +20,15 @@ namespace SkillMatrixManagement.AiServices
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentInternalRoleRepository _departmentInternalRoleRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
-        private readonly string RECOMMENDATION_END_POINT= "http://127.0.0.1:8000/recommend-skills";
+        private readonly string RECOMMENDATION_END_POINT;
 
-        public AppAiRecommendationService(IHttpClientFactory httpClientFactory, IUserRepository userRepository, IDepartmentInternalRoleRepository departmentInternalRoleRepository, IEmployeeSkillRepository employeeSkillRepository)
+        public AppAiRecommendationService(IHttpClientFactory httpClientFactory, IUserRepository userRepository, IDepartmentInternalRoleRepository departmentInternalRoleRepository, IEmployeeSkillRepository employeeSkillRepository, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _departmentInternalRoleRepository = departmentInternalRoleRepository;
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
+            RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
         }
 
         public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
