@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 namespace SkillMatrixManagement.HealthChecks;
 
@@ -29,7 +32,9 @@ public static class HealthChecksBuilderExtensions
 
         var healthChecksUiBuilder = services.AddHealthChecksUI(settings =>
         {
-            settings.AddHealthCheckEndpoint("SkillMatrixManagement Health Status", healthCheckUrl);
+            settings.AddHealthCheckEndpoint("SkillMatrixManagement Health Status", $"http://localhost:44302{healthCheckUrl}");
+            settings.SetEvaluationTimeInSeconds(10);
+            settings.MaximumHistoryEntriesPerEndpoint(50);
         });
 
         // Set your HealthCheck UI Storage here
@@ -40,6 +45,13 @@ public static class HealthChecksBuilderExtensions
             options.UIPath = "/health-ui";
             options.ApiPath = "/health-api";
         });
+
+        // Add HTTP client configuration to ignore SSL validation
+        services.AddHttpClient("HealthChecks")
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
     }
 
     private static IServiceCollection ConfigureHealthCheckEndpoint(this IServiceCollection services, string path)

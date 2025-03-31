@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace SkillMatrixManagement.DTOs.Shared
 {
     public class ServiceResponse<T>
@@ -15,16 +14,13 @@ namespace SkillMatrixManagement.DTOs.Shared
         public string? ErrorMessage { get; set; }
         public string? ErrorCode { get; set; }
         public List<string> Errors { get; set; }
-
         protected ServiceResponse()
         {
             Errors = new List<string>();
         }
-
         public static ServiceResponse<T> SuccessResult(T data, int statusCode)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
-
             return new ServiceResponse<T>
             {
                 Success = true,
@@ -33,12 +29,9 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string>()
             };
         }
-
-
         public static ServiceResponse<T> SuccessResult(T data, int statusCode, string successMessage)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
-
             return new ServiceResponse<T>
             {
                 Success = true,
@@ -48,12 +41,10 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string>()
             };
         }
-
         public static ServiceResponse<T> Failure(string errorMessage, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             return new ServiceResponse<T>
             {
                 Success = false,
@@ -62,12 +53,10 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string> { errorMessage }
             };
         }
-
-        public static ServiceResponse<T> Failure(string errorMessage, string errorCode,  int statusCode)
+        public static ServiceResponse<T> Failure(string errorMessage, string errorCode, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             return new ServiceResponse<T>
             {
                 Success = false,
@@ -77,11 +66,9 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string> { errorMessage }
             };
         }
-
         public static ServiceResponse<T> Failure(List<string> errors, int statusCode)
         {
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
-
             return new ServiceResponse<T>
             {
                 Success = false,
@@ -90,14 +77,11 @@ namespace SkillMatrixManagement.DTOs.Shared
                 StatusCode = statusCode
             };
         }
-
         public static ServiceResponse<T> Failure(string errorMessage, List<string> errors, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
-
             return new ServiceResponse<T>
             {
                 Success = false,
@@ -124,8 +108,6 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Data = null
             };
         }
-
-
         public static ServiceResponse SuccessResult(int statusCode, string successMessage)
         {
             return new ServiceResponse
@@ -136,12 +118,10 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Data = null
             };
         }
-
         public static ServiceResponse Failure(string errorMessage, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             return new ServiceResponse
             {
                 Success = false,
@@ -150,13 +130,10 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string> { errorMessage }
             };
         }
-
-
         public static ServiceResponse Failure(string errorMessage, string errorCode, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             return new ServiceResponse
             {
                 Success = false,
@@ -166,12 +143,9 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = new List<string> { errorMessage }
             };
         }
-
-
         public static ServiceResponse Failure(List<string> errors, int statusCode)
         {
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
-
             return new ServiceResponse
             {
                 Success = false,
@@ -180,14 +154,11 @@ namespace SkillMatrixManagement.DTOs.Shared
                 Errors = errors
             };
         }
-
         public static ServiceResponse Failure(string errorMessage, List<string> errors, int statusCode)
         {
             if (string.IsNullOrEmpty(errorMessage))
                 throw new ArgumentNullException(nameof(errorMessage));
-
             errors = errors?.Where(e => !string.IsNullOrEmpty(e)).ToList() ?? new List<string>();
-
             return new ServiceResponse
             {
                 Success = false,

@@ -25,5 +25,7 @@ namespace SkillMatrixManagement.Repositories
         // Custom Methods
         Task<List<ProjectEmployee>> GetByProjectIdAsync(Guid projectId); // Get all employees for a specific project
         Task<List<ProjectEmployee>> GetByUserIdAsync(Guid userId); // Get all projects assigned to a specific user
+
+        Task<ProjectEmployee> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false); // Pagination & Filtering
     }
 }
