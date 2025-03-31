@@ -23,6 +23,7 @@ namespace SkillMatrixManagement.Repositories
 
         // Create a new project employee assignment
         public async Task<ProjectEmployee> CreateAsync(ProjectEmployee projectEmployee)
+
         {
             Check.NotNull(projectEmployee, nameof(projectEmployee));
 
@@ -151,6 +152,20 @@ namespace SkillMatrixManagement.Repositories
             return await dbContext.Set<ProjectEmployee>()
                 .Where(pe => pe.UserId == userId && !pe.IsDeleted)
                 .ToListAsync();
+        }
+
+        public async Task<List<ProjectEmployee>> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false)
+        {
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+            return await (includeDeleted ? dbContext.Set<ProjectEmployee>().IgnoreQueryFilters() : dbContext.Set<ProjectEmployee>())
+                .Skip(skipCount)
+                .Take(maxResultCount)
+                .ToListAsync();
+        }
+
+        Task<ProjectEmployee> IProjectEmployeeRepository.GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted)
+        {
+            throw new NotImplementedException();
         }
     }
 }

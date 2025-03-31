@@ -4,6 +4,7 @@ using SkillMatrixManagement.DTOs.CategoryDTO;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
 using SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
+using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
@@ -99,5 +100,18 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
           .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName))
           .ForMember(dest => dest.RoleDescription, opt => opt.MapFrom(src => src.RoleDescription))
           .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position));
+
+        CreateMap<CreateProjectEmployeeDto, ProjectEmployee>()
+        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+        .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+        .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+
+
+
+        CreateMap<ProjectEmployee, ProjectEmployeeDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+            .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+
     }
 }
