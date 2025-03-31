@@ -22644,3 +22644,185 @@ System.OperationCanceledException: The operation was canceled.
 2025-03-31 18:13:25.765 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
 2025-03-31 18:13:25.765 +05:30 [DBG] HealthReportCollector has completed.
 2025-03-31 18:13:25.765 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:13:35.781 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:13:35.782 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:35.782 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:35.784 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:13:35.784 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:35.785 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:35.785 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:13:35.788 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:13:35.795 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:13:35.795 +05:30 [INF] Received HTTP response headers after 13.1619ms - 200
+2025-03-31 18:13:35.795 +05:30 [INF] End processing HTTP request after 13.2492ms - 200
+2025-03-31 18:13:35.797 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 13.092ms
+2025-03-31 18:13:35.800 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:13:35.800 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:13:35.800 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:13:35.800 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:13:45.809 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:13:45.810 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:45.810 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:45.811 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:13:45.812 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:13:45.813 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:13:45.813 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:13:45.813 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:45.813 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:45.813 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:13:45.815 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:13:45.824 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:13:45.824 +05:30 [INF] Received HTTP response headers after 14.5478ms - 200
+2025-03-31 18:13:45.824 +05:30 [INF] End processing HTTP request after 14.6251ms - 200
+2025-03-31 18:13:45.826 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 14.5518ms
+2025-03-31 18:13:45.828 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:13:45.828 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:13:45.829 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:13:45.829 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:13:55.840 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:13:55.841 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:55.841 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:13:55.842 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:55.843 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:13:55.843 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:13:55.845 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:13:55.851 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:13:55.851 +05:30 [INF] Received HTTP response headers after 9.8994ms - 200
+2025-03-31 18:13:55.851 +05:30 [INF] End processing HTTP request after 9.9819ms - 200
+2025-03-31 18:13:55.853 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 10.9391ms
+2025-03-31 18:13:55.854 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:13:55.854 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:13:55.854 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:13:55.854 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:14:05.858 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:14:05.860 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:05.860 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:05.861 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:14:05.862 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:05.862 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:05.862 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:14:05.862 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:14:05.862 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:05.863 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:05.863 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:14:05.866 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:14:05.873 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:14:05.873 +05:30 [INF] Received HTTP response headers after 13.6013ms - 200
+2025-03-31 18:14:05.874 +05:30 [INF] End processing HTTP request after 13.6845ms - 200
+2025-03-31 18:14:05.874 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 12.799ms
+2025-03-31 18:14:05.876 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:14:05.877 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:14:05.877 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:14:05.877 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:14:15.891 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:14:15.892 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:15.892 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:15.894 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:15.895 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:15.896 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:14:15.898 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:14:15.902 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:14:15.903 +05:30 [INF] Received HTTP response headers after 10.355ms - 200
+2025-03-31 18:14:15.903 +05:30 [INF] End processing HTTP request after 10.4374ms - 200
+2025-03-31 18:14:15.908 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 13.588ms
+2025-03-31 18:14:15.908 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:14:15.908 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:14:15.909 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:14:15.909 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:14:25.913 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:14:25.914 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:25.914 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:25.925 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:25.926 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:25.926 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:14:25.929 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:14:25.941 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:14:25.941 +05:30 [INF] Received HTTP response headers after 26.4339ms - 200
+2025-03-31 18:14:25.941 +05:30 [INF] End processing HTTP request after 26.5591ms - 200
+2025-03-31 18:14:25.964 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 39.565ms
+2025-03-31 18:14:25.966 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:14:25.967 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:14:25.967 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:14:25.967 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-03-31 18:14:35.982 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-03-31 18:14:35.983 +05:30 [INF] Start processing HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:35.983 +05:30 [INF] Sending HTTP request GET https://localhost:44302/health-status
+2025-03-31 18:14:35.984 +05:30 [INF] Request starting HTTP/1.1 GET https://localhost:44302/health-status - null null
+2025-03-31 18:14:35.985 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessRequestContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:35.985 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ResolveRequestUri.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.OpenIddictServerHandlers+InferEndpointType.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateTransportSecurityRequirement.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Server.OpenIddictServerEvents+ProcessRequestContext was successfully processed by OpenIddict.Server.AspNetCore.OpenIddictServerAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ValidateHostHeader.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+EvaluateValidatedTokens.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromAuthorizationHeader.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromBodyForm.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers+ExtractAccessTokenFromQueryString.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was successfully processed by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:35.986 +05:30 [DBG] The event OpenIddict.Validation.OpenIddictValidationEvents+ProcessAuthenticationContext was marked as rejected by OpenIddict.Validation.OpenIddictValidationHandlers+ValidateRequiredTokens.
+2025-03-31 18:14:35.986 +05:30 [DBG] AuthenticationScheme: OpenIddict.Validation.AspNetCore was not authenticated.
+2025-03-31 18:14:35.989 +05:30 [INF] Executing endpoint 'Health checks'
+2025-03-31 18:14:35.995 +05:30 [INF] Executed endpoint 'Health checks'
+2025-03-31 18:14:35.995 +05:30 [INF] Received HTTP response headers after 12.7768ms - 200
+2025-03-31 18:14:35.995 +05:30 [INF] End processing HTTP request after 12.8651ms - 200
+2025-03-31 18:14:36.000 +05:30 [INF] Request finished HTTP/1.1 GET https://localhost:44302/health-status - 200 null application/json 15.6483ms
+2025-03-31 18:14:36.001 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-03-31 18:14:36.001 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-03-31 18:14:36.001 +05:30 [DBG] HealthReportCollector has completed.
+2025-03-31 18:14:36.001 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
