@@ -59,8 +59,11 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException("Invalid role name specified.");
                 }
 
-                // Map DTO to entity
-                var role = _mapper.Map<Role>(input);
+                // creating new role object
+                var role = new Role()
+                {
+                    Name = input.Name
+                };
 
                 // Use repository to create
                 var createdRole = await _roleRepository.CreateAsync(role);
@@ -303,8 +306,7 @@ namespace SkillMatrixManagement.Services
                 // Get existing role
                 var role = await _roleRepository.GetByIdAsync(id);
 
-                // Map updated DTO to entity
-                _mapper.Map(input, role);
+                role.Name = input.Name; // only the name can be updateable
 
                 // Update via repository
                 await _roleRepository.UpdateAsync(role);

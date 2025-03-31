@@ -116,7 +116,7 @@ namespace SkillMatrixManagement.Services
             }
             catch (BusinessException ex)
             {
-                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Code, 400);
+                return ServiceResponse<SkillSubtopicDto>.Failure(ex.Message, 400);
             }
             catch (Exception ex)
             {
@@ -184,7 +184,8 @@ namespace SkillMatrixManagement.Services
         {
             try
             {
-                var skillSubtopic = ObjectMapper.Map<UpdateSkillSubtopicDto, SkillSubtopic>(input);
+
+                var skillSubtopic = _mapper.Map<SkillSubtopic>(input);
                 await _skillSubtopicRepository.UpdateAsync(skillSubtopic);
                 return ServiceResponse.SuccessResult(200);
             }

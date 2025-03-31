@@ -23,6 +23,7 @@ namespace SkillMatrixManagement.Repositories
 
         // Create a new project employee assignment
         public async Task<ProjectEmployee> CreateAsync(ProjectEmployee projectEmployee)
+
         {
             Check.NotNull(projectEmployee, nameof(projectEmployee));
 
@@ -31,7 +32,7 @@ namespace SkillMatrixManagement.Repositories
                 .AnyAsync(pe => pe.ProjectId == projectEmployee.ProjectId && pe.UserId == projectEmployee.UserId && !pe.IsDeleted);
 
             if (exists)
-                throw new BusinessException("PRJ_EMP-001", "Employee is already assigned to this project");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.EMPLOYEE_ALREADY_ASSIGNED_TO_THIS_PROJECT, "Employee is already assigned to this project");
 
             var result = await dbContext.Set<ProjectEmployee>().AddAsync(projectEmployee);
             await dbContext.SaveChangesAsync();
@@ -46,7 +47,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var projectEmployee = await dbContext.Set<ProjectEmployee>().FindAsync(id)
-                ?? throw new BusinessException("PRJ_EMP-002", "Project Employee not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND, "Project Employee not found");
 
             return projectEmployee;
         }
@@ -66,7 +67,7 @@ namespace SkillMatrixManagement.Repositories
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<ProjectEmployee>()
                 .FirstOrDefaultAsync(pe => pe.Id == projectEmployee.Id && !pe.IsDeleted)
-                ?? throw new BusinessException("PRJ_EMP-003", "Project Employee not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND_FOR_UPDATE, "Project Employee not found for update");
 
             dbContext.Set<ProjectEmployee>().Update(projectEmployee);
             await dbContext.SaveChangesAsync();
@@ -86,10 +87,10 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var projectEmployee = await dbContext.Set<ProjectEmployee>().FindAsync(projectEmployeeId)
-                ?? throw new BusinessException("PRJ_EMP-004", "Project Employee not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND, "Project Employee not found");
 
             if (projectEmployee.IsDeleted)
-                throw new BusinessException("PRJ_EMP-005", "Project Employee is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND_FOR_DELETION, "Project Employee is already deleted");
 
             projectEmployee.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -106,7 +107,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(pe => pe.Id == projectEmployeeId);
 
             if (projectEmployee == null)
-                throw new BusinessException("PRJ_EMP-006", "Project Employee not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND_FOR_DELETION, "Project Employee not found for deletion");
 
             dbContext.Set<ProjectEmployee>().Remove(projectEmployee);
             await dbContext.SaveChangesAsync();
@@ -123,7 +124,7 @@ namespace SkillMatrixManagement.Repositories
                 .FirstOrDefaultAsync(pe => pe.Id == projectEmployeeId);
 
             if (projectEmployee == null || !projectEmployee.IsDeleted)
-                throw new BusinessException("PRJ_EMP-007", "Project Employee not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.ProjectEmployee.PROJECT_EMPLOYEE_NOT_FOUND_OR_NOT_DELETED, "Project Employee not found or not deleted");
 
             projectEmployee.IsDeleted = false;
             await dbContext.SaveChangesAsync();
@@ -151,6 +152,20 @@ namespace SkillMatrixManagement.Repositories
             return await dbContext.Set<ProjectEmployee>()
                 .Where(pe => pe.UserId == userId && !pe.IsDeleted)
                 .ToListAsync();
+        }
+
+        public async Task<List<ProjectEmployee>> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false)
+        {
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+            return await (includeDeleted ? dbContext.Set<ProjectEmployee>().IgnoreQueryFilters() : dbContext.Set<ProjectEmployee>())
+                .Skip(skipCount)
+                .Take(maxResultCount)
+                .ToListAsync();
+        }
+
+        Task<ProjectEmployee> IProjectEmployeeRepository.GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted)
+        {
+            throw new NotImplementedException();
         }
     }
 }

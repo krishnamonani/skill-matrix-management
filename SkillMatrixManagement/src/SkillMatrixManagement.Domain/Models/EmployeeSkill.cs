@@ -22,14 +22,17 @@ namespace SkillMatrixManagement.Models
         public ProficiencyEnum SelfAssessedProficiency { get; set; }
         public ProficiencyEnum? ManagerAssignedProficiency { get; set; }
 
-        [ForeignKey("UserId")]
+  
         public Guid? EndorsedBy { get; set; }
         public virtual User Endorser { get; set; }
 
         public DateTime? EndorsedAt { get; set; }
 
 
-        public Dictionary<string, ProficiencyEnum>? SkillDescription { get; set; }
+        //public Dictionary<string, ProficiencyEnum>? SkillDescription { get; set; }
+
+        
+        
 
     }
 

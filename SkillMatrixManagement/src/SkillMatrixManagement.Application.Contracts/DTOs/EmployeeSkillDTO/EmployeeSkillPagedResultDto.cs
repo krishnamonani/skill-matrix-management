@@ -12,6 +12,7 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
         public EmployeeSkillPagedResultDto(long totalCount, IReadOnlyList<EmployeeSkillDto> items)
             : base(totalCount, items)
         {
+
         }
     }
 }

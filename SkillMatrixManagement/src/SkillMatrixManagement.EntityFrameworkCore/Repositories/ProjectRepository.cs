@@ -30,7 +30,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<Project>().AnyAsync(p => p.ProjectName == project.ProjectName && !p.IsDeleted);
 
             if (exists)
-                throw new BusinessException("PRJ-001", "Project with the same name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_ALREADY_EXISTS_WITH_SAME_NAME, "Project with the same name already exists");
 
             var result = await dbContext.Set<Project>().AddAsync(project);
             await dbContext.SaveChangesAsync();
@@ -45,7 +45,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var project = await dbContext.Set<Project>().FindAsync(id)
-                ?? throw new BusinessException("PRJ-002", "Project not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND, "Project not found");
 
             return project;
         }
@@ -64,7 +64,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<Project>().FirstOrDefaultAsync(p => p.Id == project.Id && !p.IsDeleted)
-                ?? throw new BusinessException("PRJ-003", "Project not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND_FOR_UPDATE, "Project not found for update");
 
             dbContext.Set<Project>().Update(project);
             await dbContext.SaveChangesAsync();
@@ -84,10 +84,10 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var project = await dbContext.Set<Project>().FindAsync(projectId)
-                ?? throw new BusinessException("PRJ-004", "Project not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND, "Project not found");
 
             if (project.IsDeleted)
-                throw new BusinessException("PRJ-005", "Project is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_ALREADY_DELETED, "Project is already deleted");
 
             project.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace SkillMatrixManagement.Repositories
             var project = await dbContext.Set<Project>().IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == projectId);
 
             if (project == null)
-                throw new BusinessException("PRJ-006", "Project not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND_FOR_DELETION, "Project not found for deletion");
 
             dbContext.Set<Project>().Remove(project);
             await dbContext.SaveChangesAsync();
@@ -119,7 +119,7 @@ namespace SkillMatrixManagement.Repositories
             var project = await dbContext.Set<Project>().IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == projectId);
 
             if (project == null || !project.IsDeleted)
-                throw new BusinessException("PRJ-007", "Project not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND_OR_NOT_DELETED, "Project not found or not deleted");
 
             project.IsDeleted = false;
             await dbContext.SaveChangesAsync();

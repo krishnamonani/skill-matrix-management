@@ -12,6 +12,7 @@ namespace SkillMatrixManagement.DTOs.CategoryDTO
     {
         public Guid Id { get; set; }
         public CategoryEnum CategoryName { get; set; }
+        public string CategoryNameString { get; set; }
         public string Description { get; set; }
     }
 }

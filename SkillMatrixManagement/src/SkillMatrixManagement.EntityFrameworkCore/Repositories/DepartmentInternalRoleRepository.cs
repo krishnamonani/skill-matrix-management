@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.EntityFrameworkCore;
 using SkillMatrixManagement.Models;
 using Volo.Abp;
@@ -63,10 +64,10 @@ namespace SkillMatrixManagement.Repositories
             Check.NotNull(departmentInternalRole, nameof(departmentInternalRole));
             if (departmentInternalRole.Id == Guid.Empty)
                 throw new ArgumentException("Department Internal ID cannot be empty", nameof(departmentInternalRole.Id));
-            if (!Enum.IsDefined(typeof(DepartmentInternalRole), departmentInternalRole.RoleName)) throw new BusinessException("DEP_ROLE-004", "Invalid department internal role name specified");
+            if (!Enum.IsDefined(typeof(DepartmentRoleEnum), departmentInternalRole.RoleName)) throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.INVALID_ROLE_NAME, "Invalid department internal role name specified");
 
             //Check Existence 
-            var existing = await dbContext.Set<DepartmentInternalRole>().FirstOrDefaultAsync(r => r.Id == departmentInternalRole.Id && !r.IsDeleted) ?? throw new BusinessException("DEP_ROLE-005", "Depaertment internal Role not found for update");
+            var existing = await dbContext.Set<DepartmentInternalRole>().FirstOrDefaultAsync(r => r.Id == departmentInternalRole.Id && !r.IsDeleted) ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.DepartmentInternalRole.ROLE_NOT_FOUND_FOR_UPDATE, "Depaertment internal Role not found for update");
 
             //check for duplicates
             var duplicateExists = await dbContext.Set<DepartmentInternalRole>().AnyAsync(r => r.RoleName == departmentInternalRole.RoleName && r.Id != departmentInternalRole.Id && !r.IsDeleted);

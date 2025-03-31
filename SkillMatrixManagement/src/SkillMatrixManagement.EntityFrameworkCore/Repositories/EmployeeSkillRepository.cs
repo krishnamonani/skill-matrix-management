@@ -23,19 +23,41 @@ namespace SkillMatrixManagement.Repositories
 
         public async Task<EmployeeSkill> CreateAsync(EmployeeSkill employeeSkill)
         {
-            Check.NotNull(employeeSkill, nameof(employeeSkill));
+            //Check.NotNull(employeeSkill, nameof(employeeSkill));
+
+            //var dbContext = await _dbContextProvider.GetDbContextAsync();
+
+            //// Check for duplicates
+            //var exists = await dbContext.Set<EmployeeSkill>()
+            //    .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
+            //if (exists)
+            //    throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
+
+            //var result = await dbContext.Set<EmployeeSkill>().AddAsync(employeeSkill);
+            ////var result = await dbContext.EmployeeSkills.AddAsync(employeeSkill);
+            //var isChanged = await dbContext.SaveChangesAsync() > 0;
+            //return result.Entity;
+
+            if (employeeSkill == null)
+            {
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_CAN_NOT_BE_NULL);
+            }
+
+            if (string.IsNullOrWhiteSpace(employeeSkill.CoreSkillName) || employeeSkill.CoreSkillName.All(char.IsDigit))
+            {
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NAME_CAN_NOT_BE_NUMBER);
+            }
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-
-            // Check for duplicates
-            var exists = await dbContext.Set<EmployeeSkill>()
-                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
+            var exists = await dbContext.EmployeeSkills
+                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName.ToLower() == employeeSkill.CoreSkillName.ToLower() && !es.IsDeleted);
             if (exists)
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
-
-            var result = await dbContext.Set<EmployeeSkill>().AddAsync(employeeSkill);
+            
+            var entity =await dbContext.EmployeeSkills.AddAsync(employeeSkill);
             await dbContext.SaveChangesAsync();
-            return result.Entity;
+            return entity.Entity;
+
         }
 
         public async Task<EmployeeSkill> GetByIdAsync(Guid id)
@@ -44,11 +66,11 @@ namespace SkillMatrixManagement.Repositories
                 throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.INVALID_EMPLOYEE_SKILL_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            var employeeSkill = await dbContext.Set<EmployeeSkill>()
-                .FirstOrDefaultAsync(es => es.Id == id && !es.IsDeleted)
-                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NOT_FOUND);
 
-            return employeeSkill;
+            var res=await dbContext.EmployeeSkills.FirstOrDefaultAsync(e=> e.UserId==id) ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NOT_FOUND);
+
+            return res;
+
         }
 
         public async Task<List<EmployeeSkill>> GetAllAsync()
@@ -66,11 +88,16 @@ namespace SkillMatrixManagement.Repositories
                 throw new ArgumentException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.INVALID_EMPLOYEE_SKILL_ID);
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            var existing = await dbContext.Set<EmployeeSkill>()
+            var exists = await dbContext.EmployeeSkills
+                .AnyAsync(es => es.UserId == employeeSkill.UserId && es.CoreSkillName == employeeSkill.CoreSkillName && !es.IsDeleted);
+            if (exists)
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_ALREADY_EXISTS);
+
+            var existing = await dbContext.EmployeeSkills
                 .FirstOrDefaultAsync(es => es.Id == employeeSkill.Id && !es.IsDeleted)
                 ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.EmployeeSkill.EMPLOYEE_SKILL_NOT_FOUND);
 
-            dbContext.Set<EmployeeSkill>().Update(employeeSkill);
+            dbContext.EmployeeSkills.Update(employeeSkill);
             await dbContext.SaveChangesAsync();
         }
 

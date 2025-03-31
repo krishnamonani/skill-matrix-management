@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,8 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
         public Guid UserId { get; set; }
         public UserDto? User { get; set; } // Optional inclusion of User details
 
-        public Guid SkillId { get; set; }
+        [Required]
+        public string CoreSkillName { get; set; }
         public SkillDto? Skill { get; set; } // Optional inclusion of Skill details
 
         public ProficiencyEnum SelfAssessedProficiency { get; set; }
@@ -26,7 +28,7 @@ namespace SkillMatrixManagement.DTOs.EmployeeSkillDTO
 
         public DateTime? EndorsedAt { get; set; }
 
-        public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
+        //public Dictionary<string, ProficiencyEnum> SkillDescription { get; set; }
 
         public bool IsDeleted { get; set; }
     }

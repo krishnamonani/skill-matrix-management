@@ -28,7 +28,7 @@ namespace SkillMatrixManagement.Repositories
             var exists = await dbContext.Set<SkillRecommendation>().AnyAsync(s => s.RecommendedSkill == skillRecommendation.RecommendedSkill && !s.IsDeleted);
 
             if (exists)
-                throw new BusinessException("SR-001", "A skill recommendation with the same name already exists");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_ALREADY_EXISTS, "A skill recommendation with the same name already exists");
 
             var result = await dbContext.Set<SkillRecommendation>().AddAsync(skillRecommendation);
             await dbContext.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skillRecommendation = await dbContext.Set<SkillRecommendation>().FindAsync(id)
-                ?? throw new BusinessException("SR-002", "Skill recommendation not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_NOT_FOUND, "Skill recommendation not found");
 
             return skillRecommendation;
         }
@@ -58,7 +58,7 @@ namespace SkillMatrixManagement.Repositories
             Check.NotNull(skillRecommendation, nameof(skillRecommendation));
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var existing = await dbContext.Set<SkillRecommendation>().FirstOrDefaultAsync(s => s.Id == skillRecommendation.Id && !s.IsDeleted)
-                ?? throw new BusinessException("SR-003", "Skill recommendation not found for update");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_NOT_FOUND_FOR_UPDATE, "Skill recommendation not found for update");
 
             dbContext.Set<SkillRecommendation>().Update(skillRecommendation);
             await dbContext.SaveChangesAsync();
@@ -76,10 +76,10 @@ namespace SkillMatrixManagement.Repositories
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             var skillRecommendation = await dbContext.Set<SkillRecommendation>().FindAsync(skillRecommendationId)
-                ?? throw new BusinessException("SR-004", "Skill recommendation not found");
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_NOT_FOUND, "Skill recommendation not found");
 
             if (skillRecommendation.IsDeleted)
-                throw new BusinessException("SR-005", "Skill recommendation is already deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_ALREADY_DELETED, "Skill recommendation is already deleted");
 
             skillRecommendation.IsDeleted = true;
             await dbContext.SaveChangesAsync();
@@ -94,7 +94,7 @@ namespace SkillMatrixManagement.Repositories
             var skillRecommendation = await dbContext.Set<SkillRecommendation>().IgnoreQueryFilters().FirstOrDefaultAsync(s => s.Id == skillRecommendationId);
 
             if (skillRecommendation == null)
-                throw new BusinessException("SR-006", "Skill recommendation not found for deletion");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_NOT_FOUND_FOR_DELETION, "Skill recommendation not found for deletion");
 
             dbContext.Set<SkillRecommendation>().Remove(skillRecommendation);
             await dbContext.SaveChangesAsync();
@@ -109,7 +109,7 @@ namespace SkillMatrixManagement.Repositories
             var skillRecommendation = await dbContext.Set<SkillRecommendation>().IgnoreQueryFilters().FirstOrDefaultAsync(s => s.Id == skillRecommendationId);
 
             if (skillRecommendation == null || !skillRecommendation.IsDeleted)
-                throw new BusinessException("SR-007", "Skill recommendation not found or not deleted");
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillRecommendation.SKILL_RECOMMENDATION_NOT_FOUND_OR_NOT_DELETED, "Skill recommendation not found or not deleted");
 
             skillRecommendation.IsDeleted = false;
             await dbContext.SaveChangesAsync();

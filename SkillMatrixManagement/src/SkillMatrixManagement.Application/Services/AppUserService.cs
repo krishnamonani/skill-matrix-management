@@ -10,17 +10,26 @@ using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Identity;
 
 namespace SkillMatrixManagement.Services
 {
     public class AppUserService : ApplicationService, IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IDepartmentInternalRoleRepository _roleInternalRepository;
+        private readonly IIdentityUserRepository _identityUserRepository;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUserRepository userRepository, IMapper mapper)
+        public AppUserService(IUserRepository userRepository, IDepartmentRepository departmentRepository, IRoleRepository roleRepository, IDepartmentInternalRoleRepository roleInternalRepository, IIdentityUserRepository identityUserRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
+            _roleRepository = roleRepository;
+            _roleInternalRepository = roleInternalRepository;
+            _identityUserRepository = identityUserRepository;
             _mapper = mapper;
         }
 
@@ -73,7 +82,21 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                var user = _mapper.Map<User>(input);
+                //var user = _mapper.Map<User>(input);
+
+                var user = new User()
+                {
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
+                };
+
                 var createdUser = await _userRepository.CreateAsync(user);
                 var userDto = _mapper.Map<UserDto>(createdUser);
                 return ServiceResponse<UserDto>.SuccessResult(userDto, 201, "User created successfully.");
@@ -119,6 +142,22 @@ namespace SkillMatrixManagement.Services
                     users = users.Where(u => !u.IsDeleted).ToList();
                 }
 
+                var departments = await _departmentRepository.GetAllAsync();
+                var roles = await _roleRepository.GetAllAsync();
+                var internalRoles = await _roleInternalRepository.GetAllRolesAsync();
+
+                foreach (var user in users)
+                {
+                    var department = departments.Where(dept => dept.Id == user.DepartmentId).FirstOrDefault();
+                    user.Department = department;
+
+                    var role = roles.Where(role => role.Id == user.RoleId).FirstOrDefault();
+                    user.Role = role ?? throw new Exception("User should have a role, Role not found!");
+
+                    var internaleRole = internalRoles.Where(internalRole => internalRole.Id == user.InternalRoleId).FirstOrDefault();
+                    user.InternalRole = internaleRole;
+                }
+
                 var userDtos = _mapper.Map<List<UserDto>>(users);
                 return ServiceResponse<List<UserDto>>.SuccessResult(userDtos, 200, "Users retrieved successfully.");
             }
@@ -138,6 +177,15 @@ namespace SkillMatrixManagement.Services
                 }
 
                 var user = await _userRepository.GetByIdAsync(id);
+
+                var department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
+                user.Department = department;
+
+                var role = await _roleRepository.GetByIdAsync(user.RoleId);
+                user.Role = role;
+
+                var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                user.InternalRole = internaleRole;
                 if (user.IsDeleted)
                 {
                     throw new UserFriendlyException("User is deleted.");
@@ -364,7 +412,19 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                _mapper.Map(input, user);
+                user.FirstName = input.FirstName;
+                user.LastName = input.LastName;
+                user.Email = input.Email;
+                user.PhoneNumber = input.PhoneNumber;
+                user.RoleId = input.RoleId;
+
+                // optional fields
+                user.DepartmentId = input.DepartmentId;
+                user.InternalRoleId = input.InternalRoleId;
+                user.ProfilePhoto = input.ProfilePhoto;
+
+                user.IsAvailable = input.IsAvailable; // default false
+
                 await _userRepository.UpdateAsync(user);
                 return ServiceResponse.SuccessResult(200, "User updated successfully.");
             }
@@ -373,5 +433,82 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse.Failure($"Failed to update user: {ex.Message}", 500);
             }
         }
+
+        public async Task<ServiceResponse<string[]>> GetUserNameAndEmailByUserNameOrEmail(string userNameOrEmail)
+        {
+            var user = await _identityUserRepository.FindByNormalizedEmailAsync(userNameOrEmail.ToUpper());
+            if(user == null)
+            {   
+                user = await _identityUserRepository.FindByNormalizedUserNameAsync(userNameOrEmail.ToUpper());
+                if (user == null) return ServiceResponse<string[]>.Failure("User not found", 404);
+            }
+            return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
+        }
+
+        public async Task<ServiceResponse<UserDto>> CreateOrUpdateUserAsync(CreateUserDto input)
+        {
+            try
+            {
+                if (input == null)
+                {
+                    throw new UserFriendlyException("Input cannot be null.");
+                }
+                if (string.IsNullOrWhiteSpace(input.FirstName))
+                {
+                    throw new UserFriendlyException("First name cannot be empty.");
+                }
+                if (string.IsNullOrWhiteSpace(input.LastName))
+                {
+                    throw new UserFriendlyException("Last name cannot be empty.");
+                }
+                if (string.IsNullOrWhiteSpace(input.Email))
+                {
+                    throw new UserFriendlyException("Email cannot be empty.");
+                }
+                if (input.RoleId == Guid.Empty)
+                {
+                    throw new UserFriendlyException("Role ID cannot be empty.");
+                }
+
+                var query = await _userRepository.WithDetailsAsync();
+                var existingUser = await query.FirstOrDefaultAsync(u => u.Email == input.Email && !u.IsDeleted);
+
+                if (input.FirstName.Contains(' ') || input.LastName.Contains(' ')) return ServiceResponse<UserDto>.Failure("Firstname or the lastname should not contain any space between", 400);
+
+                if (existingUser != null)
+                {
+                    var updateUserDtoObj = _mapper.Map<UpdateUserDto>(input);
+                    var serviceResponse = await UpdateAsync(existingUser.Id, updateUserDtoObj);
+                    if (!serviceResponse.Success)
+                    {
+                        return ServiceResponse<UserDto>.Failure(serviceResponse.ErrorMessage ?? "Something wrong happen while updating", serviceResponse.StatusCode);
+                    }
+                    var updatedUserDto = _mapper.Map<UserDto>(existingUser);
+                    return ServiceResponse<UserDto>.SuccessResult(updatedUserDto, 200, "User updated successfully.");
+                }
+
+                var user = new User()
+                {
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
+                };
+
+                var createdUser = await _userRepository.CreateAsync(user);
+                var userDto = _mapper.Map<UserDto>(createdUser);
+                return ServiceResponse<UserDto>.SuccessResult(userDto, 201, "User created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<UserDto>.Failure($"Failed to create or update user: {ex.Message}", 500);
+            }
+        }
+ 
     }
 }

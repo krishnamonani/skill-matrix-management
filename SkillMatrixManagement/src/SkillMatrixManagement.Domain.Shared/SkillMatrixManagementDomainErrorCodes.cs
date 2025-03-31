@@ -1,4 +1,7 @@
-﻿namespace SkillMatrixManagement;
+﻿using System.Data;
+using Volo.Abp.Validation.StringValues;
+
+namespace SkillMatrixManagement;
 
 public static class SkillMatrixManagementDomainErrorCodes
 {
@@ -24,7 +27,7 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string ROLE_NOT_FOUND_FOR_UPDATE = "DEP_ROLE-005";
         public const string DUPLICATE_ROLE_NAME = "DEP_ROLE-006";
         public const string ROLE_NOT_FOUND_OR_NOT_DELETED = "DEP_ROLE-007"; // Unique code assigned
-        public const string ROLE_ALREADY_DELETED = "DEP_ROLE-008"; 
+        public const string ROLE_ALREADY_DELETED = "DEP_ROLE-008";
     }
 
     public static class DepartmentManager
@@ -121,6 +124,9 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string INVALID_EMPLOYEE_SKILL_ID = "EMPLOYEE_SKILL-003";
         public const string EMPLOYEE_SKILL_ALREADY_DELETED = "EMPLOYEE_SKILL-004";
         public const string EMPLOYEE_SKILL_NOT_DELETED = "EMPLOYEE_SKILL-005";
+        public const string EMPLOYEE_SKILL_CAN_NOT_BE_NULL = "EMPLOYEE_SKILL-006";
+        public const string EMPLOYEE_SKILL_NAME_CAN_NOT_BE_NUMBER = "EMPLOYEE_SKILL-007";
+
     }
     public static class SkillSubtopicErrorCodes
     {
@@ -166,4 +172,65 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_RESTORATION = "PROF-007";
         public const string PERMISSION_PROFICIENCY_LEVEL_NOT_DELETED_CANNOT_RESTORE = "PROF-008";
     }
+    public static class ProjectEmployee
+    {
+        public const string EMPLOYEE_ALREADY_ASSIGNED_TO_THIS_PROJECT = "PROJECT_EMPLOYEE-001";
+        public const string PROJECT_EMPLOYEE_NOT_FOUND = "PROJECT_EMPLOYEE-002";
+        public const string PROJECT_EMPLOYEE_NOT_FOUND_FOR_UPDATE = "PROJECT_EMPLOYEE-003";
+        public const string PROJECT_EMPLOYEE_ALREADY_DELETED = "PROJECT_EMPLOYEE-004";
+        public const string PROJECT_EMPLOYEE_NOT_FOUND_FOR_DELETION = "PROJECT_EMPLOYEE-005";
+        public const string PROJECT_EMPLOYEE_NOT_FOUND_OR_NOT_DELETED = "PROJECT_EMPLOYEE-006";
+
+    }
+
+    public static class Project
+    {
+        public const string PROJECT_ALREADY_EXISTS_WITH_SAME_NAME = "PROJECT-001";
+        public const string PROJECT_NOT_FOUND = "PROJECT-002";
+        public const string PROJECT_NOT_FOUND_FOR_UPDATE = "PROJECT-003";
+        public const string PROJECT_ALREADY_DELETED = "PROJECT-004";
+        public const string PROJECT_NOT_FOUND_FOR_DELETION = "PROJECT-005";
+        public const string PROJECT_NOT_FOUND_OR_NOT_DELETED = "PROJECT-006";
+    }
+    public static class RolePermission
+    {
+        public const string PERMISSION_ALREADY_ASSIGNED_TO_THIS_ROLE = "ROLE_PERMISSION-001";
+        public const string ROLE_PERMISSION_NOT_FOUND = "ROLE_PERMISSION-002";
+
+        public const string ROLE_PERMISSION_NOT_FOUND_FOR_UPDATE = "ROLE_PERMISSION-003";
+        public const string ROLE_PERMISSION_ALREADY_DELETED = "ROLE_PERMISSION-004";
+        public const string ROLE_PERMISSION_NOT_FOUND_FOR_DELETION = "ROLE_PERMISSION-005";
+        public const string ROLE_PERMISSION_NOT_FOUND_OR_NOT_DELETED = "ROLE_PERMISSION-006";
+    }
+    public static class SkillRecommendation
+    {
+        public const string SKILL_RECOMMENDATION_ALREADY_EXISTS = "SKILL_RECOMMENDATION-001";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND = "SKILL_RECOMMENDATION-002";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_FOR_UPDATE = "SKILL_RECOMMENDATION-003";
+        public const string SKILL_RECOMMENDATION_ALREADY_DELETED = "SKILL_RECOMMENDATION-004";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_FOR_DELETION = "SKILL_RECOMMENDATION-005";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_OR_NOT_DELETED = "SKILL_RECOMMENDATION-006";
+    }
+
+    public static class SkillRecommendationByManager
+    {
+        public const string SKILL_RECOMMENDATION_NOT_FOUND = "SKILL_RECOMMENDATION_BY_MANAGER-001";
+
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_FOR_DELETION = "SKILL_RECOMMENDATION_BY_MANAGER-002";
+
+        public const string SKILL_RECOMMENDATION_ALREADY_DELETED = "SKILL_RECOMMENDATION_BY_MANAGER-003";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_OR_NOT_DELETED = "SKILL_RECOMMENDATION_BY_MANAGER-004";
+        public const string SKILL_RECOMMENDATION_NOT_FOUND_FOR_UPDATE = "SKILL_RECOMMENDATION_BY_MANAGER-005";
+    }
+    public static class Skill
+    {
+        public const string SKILL_ALREADY_EXISTS_WITH_SAME_NAME = "SKILL-001";
+        public const string SKILL_NOT_FOUND = "SKILL-002";
+        public const string SKILL_NOT_FOUND_FOR_UPDATE = "SKILL-003";
+        public const string SKILL_ALREADY_DELETED = "SKILL-004";
+        public const string SKILL_NOT_FOUND_FOR_DELETION = "SKILL-005";
+        public const string SKILL_NOT_FOUND_OR_NOT_DELETED = "SKILL-006";
+        public const string SKILL_NOT_FOUND_FOR_RESTORED = "SKILL-007";
+    }
+
 }

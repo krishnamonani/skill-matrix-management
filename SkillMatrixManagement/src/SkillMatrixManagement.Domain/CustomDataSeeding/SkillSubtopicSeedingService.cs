@@ -17,16 +17,27 @@ namespace SkillMatrixManagement.CustomDataSeeding
 
         private readonly IRepository<SkillSubtopic, Guid> _skillSubtopicRepository;
 
-        public SkillSubtopicSeedingService(IRepository<Skill, Guid> skillRepository, IRepository<SkillSubtopic, Guid> skillSubtopic)
+        private readonly IRepository<Category, Guid> _categoryRepository;
+        private readonly IRepository<DepartmentInternalRole, Guid> _internalRoleRepository;
+
+
+
+        public SkillSubtopicSeedingService(IRepository<Skill, Guid> skillRepository, IRepository<SkillSubtopic, Guid> skillSubtopic, IRepository<Category, Guid> categoryRepository, IRepository<DepartmentInternalRole, Guid> internalRoleRepository)
         {
             _skillRepository = skillRepository;
 
             _skillSubtopicRepository = skillSubtopic;
+
+            _categoryRepository = categoryRepository;
+            _internalRoleRepository = internalRoleRepository;
         }
 
         public async Task SeedAsync(DataSeedContext context)
         {
             if (await _skillSubtopicRepository.GetCountAsync() > 0) return;
+
+            await new SkillSeedingService(_skillRepository, _categoryRepository, _internalRoleRepository).SeedAsync(context);
+
             var SkillsTableData = await _skillRepository.GetListAsync();
 
 
