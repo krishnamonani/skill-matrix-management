@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Nito.AsyncEx;
+using SkillMatrixManagement.EntityFrameworkCore;
+using SkillMatrixManagement.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SkillMatrixManagement.EntityFrameworkCore;
@@ -48,6 +53,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             return skill;
         }
 
+
         public async Task<List<Skill>> GetAllAsync()
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
@@ -64,6 +70,7 @@ namespace SkillMatrixManagement.Repositories.Implementations
             dbContext.Set<Skill>().Update(skill);
             await dbContext.SaveChangesAsync();
         }
+        
 
         public async Task DeleteAsync(Guid skillId)
         {
@@ -79,6 +86,8 @@ namespace SkillMatrixManagement.Repositories.Implementations
             skill.IsDeleted = true;
             await dbContext.SaveChangesAsync();
         }
+
+        
 
         public async Task PermanentDeleteAsync(Guid skillId)
         {

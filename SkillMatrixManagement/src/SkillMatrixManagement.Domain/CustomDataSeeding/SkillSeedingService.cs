@@ -30,9 +30,11 @@ namespace SkillMatrixManagement.CustomDataSeeding
         {
             if (await _skillRepository.GetCountAsync() > 0) return;
 
+
             // Retrieve existing categories and roles
             var categories = await _categoryRepository.GetListAsync();
             var internalRoles = await _internalRoleRepository.GetListAsync();
+
 
             // Map specific IDs by role and category names
             var technicalSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.TECHNICAL_SKILL)?.Id ?? Guid.NewGuid();

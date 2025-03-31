@@ -17,16 +17,27 @@ namespace SkillMatrixManagement.CustomDataSeeding
 
         private readonly IRepository<SkillSubtopic, Guid> _skillSubtopicRepository;
 
-        public SkillSubtopicSeedingService(IRepository<Skill, Guid> skillRepository, IRepository<SkillSubtopic, Guid> skillSubtopic)
+        private readonly IRepository<Category, Guid> _categoryRepository;
+        private readonly IRepository<DepartmentInternalRole, Guid> _internalRoleRepository;
+
+
+
+        public SkillSubtopicSeedingService(IRepository<Skill, Guid> skillRepository, IRepository<SkillSubtopic, Guid> skillSubtopic, IRepository<Category, Guid> categoryRepository, IRepository<DepartmentInternalRole, Guid> internalRoleRepository)
         {
             _skillRepository = skillRepository;
 
             _skillSubtopicRepository = skillSubtopic;
+
+            _categoryRepository = categoryRepository;
+            _internalRoleRepository = internalRoleRepository;
         }
 
         public async Task SeedAsync(DataSeedContext context)
         {
             if (await _skillSubtopicRepository.GetCountAsync() > 0) return;
+
+            await new SkillSeedingService(_skillRepository, _categoryRepository, _internalRoleRepository).SeedAsync(context);
+
             var SkillsTableData = await _skillRepository.GetListAsync();
 
 
@@ -457,1344 +468,1344 @@ namespace SkillMatrixManagement.CustomDataSeeding
             };
 
             var SOFTWARE_ENGINEER_I_BACKEND_DOTNET_SUBSKILLS = new List<SkillSubtopic>
+    {
+        new SkillSubtopic
+        {
+            Name = "Programming Languages",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
             {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "C#", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "ASP.NET", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Entity Framework", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Dapper", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Visual Studio", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "NUnit/XUnit", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+                { "C#", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Backend Frameworks",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "ASP.NET", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Relational Database Fundamentals",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Relational Database",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "NoSQL Database",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
+                { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "ORM",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Entity Framework", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Dapper", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Version Control System",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "IDE",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Visual Studio", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Testing Frameworks",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "NUnit/XUnit", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "CI/CD Tools",
+            SkillId = SOFTWARE_ENGINEER_I_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        }
+    };
 
             var SOFTWARE_ENGINEER_I_COMMON_SUBSKILSS = new List<SkillSubtopic>
+        {
+            new SkillSubtopic
             {
-                new SkillSubtopic
+                Name = "SDLC Concepts",
+                SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
+                Description = new Dictionary<string, string>
                 {
-                    Name = "SDLC Concepts",
-                    SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Agile Concepts",
-                    SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Scrum", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Kanban", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Redmine", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Project Management Tools",
-                    SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JIRA", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Asana", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
+                    { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() }
                 }
-            };
+            },
+            new SkillSubtopic
+            {
+                Name = "Agile Concepts",
+                SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
+                Description = new Dictionary<string, string>
+                {
+                    { "Scrum", ProficiencyEnum.INTERMEDIATE.ToString() },
+                    { "Kanban", ProficiencyEnum.INTERMEDIATE.ToString() },
+                    { "Redmine", ProficiencyEnum.INTERMEDIATE.ToString() },
+                    { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() }
+                }
+            },
+            new SkillSubtopic
+            {
+                Name = "Project Management Tools",
+                SkillId = SOFTWARE_ENGINEER_I_COMMON.Id,
+                Description = new Dictionary<string, string>
+                {
+                    { "JIRA", ProficiencyEnum.INTERMEDIATE.ToString() },
+                    { "Asana", ProficiencyEnum.INTERMEDIATE.ToString() }
+                }
+            }
+        };
             var SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "C#", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "ASP.NET", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Performance", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Entity Framework", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Dapper", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.BEGINNER.ToString() },
-                        { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Visual Studio", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "NUnit/XUnit/MSTest", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "C#", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Backend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "ASP.NET", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database Fundamentals",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
+            { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
+            { "Performance", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
+            { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "NoSQL Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "ORM",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Entity Framework", ProficiencyEnum.BEGINNER.ToString() },
+            { "Dapper", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.BEGINNER.ToString() },
+            { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
+            { "Visual Studio", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "NUnit/XUnit/MSTest", ProficiencyEnum.BEGINNER.ToString() },
+            { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
+            { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_DOTNET.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    }
+};
             var SOFTWARE_ENGINEER_I_MOBILE_IOS_SUBSKILLS = new List<SkillSubtopic>
+    {
+        new SkillSubtopic
+        {
+            Name = "Programming Languages",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
             {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Objective C", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Swift", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Mobile Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "iOS SDK", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Cocoa Touch", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "REST API Integration (NSURL, Alamofire, AFNetworking)", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AutoLayout", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "SwiftUI", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "UIKit", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "RxSwift",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Cordova", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Capacitor", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Multi Threading", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Lazy Loading", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Concurrency", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Bridging", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Database",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Core Data", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Realm", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "XCode", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "XCUITest", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Architecture",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "MVC/MVVM", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Misc",
-                    SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Push Notifications", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Dependency Manager", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Pod", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Instruments", ProficiencyEnum.BEGINNER.ToString() },
-                        { "CICD", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Fastlane", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Bitrise", ProficiencyEnum.BEGINNER.ToString() },
-                        { "TestFlight", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Firebase", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "App Store Deployment", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+                { "Objective C", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Swift", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Mobile Frameworks",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "iOS SDK", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Cocoa Touch", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "REST API Integration (NSURL, Alamofire, AFNetworking)", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "AutoLayout", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "SwiftUI", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "UIKit", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "RxSwift",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Cordova", ProficiencyEnum.BEGINNER.ToString() },
+                { "Capacitor", ProficiencyEnum.BEGINNER.ToString() },
+                { "Multi Threading", ProficiencyEnum.BEGINNER.ToString() },
+                { "Lazy Loading", ProficiencyEnum.BEGINNER.ToString() },
+                { "Concurrency", ProficiencyEnum.BEGINNER.ToString() },
+                { "Bridging", ProficiencyEnum.BEGINNER.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Database",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Core Data", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Realm", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Version Control System",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Git", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "IDE",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "XCode", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Testing Frameworks",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "XCUITest", ProficiencyEnum.BEGINNER.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Architecture",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "MVC/MVVM", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Misc",
+            SkillId = SOFTWARE_ENGINEER_I_MOBILE_IOS.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Push Notifications", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Dependency Manager", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Pod", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Instruments", ProficiencyEnum.BEGINNER.ToString() },
+                { "CICD", ProficiencyEnum.BEGINNER.ToString() },
+                { "Fastlane", ProficiencyEnum.BEGINNER.ToString() },
+                { "Bitrise", ProficiencyEnum.BEGINNER.ToString() },
+                { "TestFlight", ProficiencyEnum.BEGINNER.ToString() },
+                { "Firebase", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "App Store Deployment", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        }
+    };
             var SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Java", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Spring", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Performance", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Spring Data", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Hibernate", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.BEGINNER.ToString() },
-                        { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
-                        { "IntelliJ", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JUnit", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Java", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Backend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Spring", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database Fundamentals",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
+            { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
+            { "Performance", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
+            { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "NoSQL Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "ORM",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Spring Data", ProficiencyEnum.BEGINNER.ToString() },
+            { "Hibernate", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.BEGINNER.ToString() },
+            { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
+            { "IntelliJ", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JUnit", ProficiencyEnum.BEGINNER.ToString() },
+            { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
+            { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    }
+};
 
             var SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS_SUBSKILS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Objective C", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Swift", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Mobile Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "iOS SDK", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Cocoa Touch", ProficiencyEnum.BEGINNER.ToString() },
-                        { "REST API Integration (NSURL, Alamofire, AFNetworking)", ProficiencyEnum.BEGINNER.ToString() },
-                        { "AutoLayout", ProficiencyEnum.BEGINNER.ToString() },
-                        { "SwiftUI",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "UIKit",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "RxSwift",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Multi Threading",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Cordova",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Capacitor",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Multi Threading",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Lazy Loading",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Concurrency",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Bridging",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Core Data", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Realm", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "XCode", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "XCUITest",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Architecture",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "MVC/MVVM",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Misc",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Push Notifications", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Dependency Manager",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Pod",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Fastlane",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Bitrise",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TestFlight",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Firebase",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "App Store Deployment", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Objective C", ProficiencyEnum.BEGINNER.ToString() },
+            { "Swift", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Mobile Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "iOS SDK", ProficiencyEnum.BEGINNER.ToString() },
+            { "Cocoa Touch", ProficiencyEnum.BEGINNER.ToString() },
+            { "REST API Integration (NSURL, Alamofire, AFNetworking)", ProficiencyEnum.BEGINNER.ToString() },
+            { "AutoLayout", ProficiencyEnum.BEGINNER.ToString() },
+            { "SwiftUI",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "UIKit",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "RxSwift",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Multi Threading",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Cordova",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Capacitor",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Multi Threading",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Lazy Loading",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Concurrency",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Bridging",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.BEGINNER.ToString() },
+            { "Core Data", ProficiencyEnum.BEGINNER.ToString() },
+            { "Realm", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "XCode", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "XCUITest",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Architecture",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "MVC/MVVM",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Misc",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_IOS.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Push Notifications", ProficiencyEnum.BEGINNER.ToString() },
+            { "Dependency Manager",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Pod",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Fastlane",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Bitrise",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "TestFlight",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Firebase",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "App Store Deployment", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    }
+};
             var SOFTWARE_ENGINEER_II_BACKEND_DOTNET_SUBSKILL = new List<SkillSubtopic>
+    {
+        new SkillSubtopic
+        {
+            Name = "Programming Languages",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
             {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "C#", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "ASP.NET", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.EXPERT.ToString() },
-                        { "Indexing", ProficiencyEnum.EXPERT.ToString() },
-                        { "Performance", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.EXPERT.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Entity Framework", ProficiencyEnum.EXPERT.ToString() },
-                        { "Dapper", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.EXPERT.ToString() },
-                        { "TFVC", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() },
-                        { "Visual Studio", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "NUnit/XUnit/MSTest", ProficiencyEnum.EXPERT.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() },
-                        { "Jenkins", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions", ProficiencyEnum.BEGINNER.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.BEGINNER.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                }
-            };
+                { "C#", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Backend Frameworks",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "ASP.NET", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Relational Database Fundamentals",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Normalization", ProficiencyEnum.EXPERT.ToString() },
+                { "Indexing", ProficiencyEnum.EXPERT.ToString() },
+                { "Performance", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Relational Database",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "SQL Queries", ProficiencyEnum.EXPERT.ToString() },
+                { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "Microsoft SQL Server", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "NoSQL Database",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "DynamoDB", ProficiencyEnum.INTERMEDIATE.ToString() },
+                { "MongoDB", ProficiencyEnum.INTERMEDIATE.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "ORM",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Entity Framework", ProficiencyEnum.EXPERT.ToString() },
+                { "Dapper", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Version Control System",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Git", ProficiencyEnum.EXPERT.ToString() },
+                { "TFVC", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "IDE",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() },
+                { "Visual Studio", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "Testing Frameworks",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "NUnit/XUnit/MSTest", ProficiencyEnum.EXPERT.ToString() },
+                { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() },
+                { "Jenkins", ProficiencyEnum.EXPERT.ToString() }
+            }
+        },
+        new SkillSubtopic
+        {
+            Name = "CI/CD Tools",
+            SkillId = SOFTWARE_ENGINEER_II_BACKEND_DOTNET.Id,
+            Description = new Dictionary<string, string>
+            {
+                { "Github Actions", ProficiencyEnum.BEGINNER.ToString() },
+                { "AWS Codebuild/CodePipeline", ProficiencyEnum.BEGINNER.ToString() },
+                { "CircleCI/Travis CI", ProficiencyEnum.BEGINNER.ToString() }
+            }
+        }
+    };
 
             var SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JavaScript", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Express JS", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Typescript",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Nest JS", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Performance", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MongoDB",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Sequelize", ProficiencyEnum.BEGINNER.ToString() },
-                        { "TypeORM", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.BEGINNER.ToString() },
-                        { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Jest", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Jest", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JavaScript", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Backend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Express JS", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Typescript",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Nest JS", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database Fundamentals",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Normalization", ProficiencyEnum.BEGINNER.ToString() },
+            { "Indexing", ProficiencyEnum.BEGINNER.ToString() },
+            { "Performance", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "SQL Queries", ProficiencyEnum.BEGINNER.ToString() },
+            { "PostgreSQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "MySQL", ProficiencyEnum.BEGINNER.ToString() },
+            { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "NoSQL Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "DynamoDB",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "MongoDB",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "ORM",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Sequelize", ProficiencyEnum.BEGINNER.ToString() },
+            { "TypeORM", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.BEGINNER.ToString() },
+            { "TFVC", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() },
+            { "Jest", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Jest", ProficiencyEnum.BEGINNER.ToString() },
+            { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() },
+            { "Jenkins", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Github Actions",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "AWS Codebuild/CodePipeline",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CircleCI/Travis CI",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    }
+};
             var SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Java", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Kotlin", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Mobile Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Android SDK", ProficiencyEnum.BEGINNER.ToString() },
-                        { "REST API Integration (Volley/Retrofit)", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Android Layouts, Custom Views", ProficiencyEnum.BEGINNER.ToString() },
-                        { "LiveData", ProficiencyEnum.BEGINNER.ToString() },
-                        { "RxJava",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "NDK",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Multi Threading",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Cordova",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Capacitor",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Services", ProficiencyEnum.BEGINNER.ToString() },
-                        { "WorkerThread", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Database",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.BEGINNER.ToString() },
-                        { "SQLite", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Room", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Realm", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Android Studio", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Robolectric",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Firebase Analytics",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Misc",
-                    SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Push Notifications", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Gradle", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Google APIs", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Android Profiler",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Bitrise",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Testify",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Firebase",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Play Store Deployment", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Java", ProficiencyEnum.BEGINNER.ToString() },
+            { "Kotlin", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Mobile Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Android SDK", ProficiencyEnum.BEGINNER.ToString() },
+            { "REST API Integration (Volley/Retrofit)", ProficiencyEnum.BEGINNER.ToString() },
+            { "Android Layouts, Custom Views", ProficiencyEnum.BEGINNER.ToString() },
+            { "LiveData", ProficiencyEnum.BEGINNER.ToString() },
+            { "RxJava",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "NDK",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Multi Threading",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Cordova",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Capacitor",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Services", ProficiencyEnum.BEGINNER.ToString() },
+            { "WorkerThread", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Database",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.BEGINNER.ToString() },
+            { "SQLite", ProficiencyEnum.BEGINNER.ToString() },
+            { "Room", ProficiencyEnum.BEGINNER.ToString() },
+            { "Realm", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Android Studio", ProficiencyEnum.BEGINNER.ToString() },
+            { "Visual Studio Code", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Robolectric",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Firebase Analytics",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Misc",
+        SkillId = SOFTWARE_ENGINEER_TRAINEE_MOBILE_ANDROID.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Push Notifications", ProficiencyEnum.BEGINNER.ToString() },
+            { "Gradle", ProficiencyEnum.BEGINNER.ToString() },
+            { "Google APIs", ProficiencyEnum.BEGINNER.ToString() },
+            { "Android Profiler",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Bitrise",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Testify",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Firebase",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Play Store Deployment", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    }
+};
             var SOFTWARE_TEST_ENGINEER_FUNCTIONAL_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "STLC",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Understanding of SDLC and Agile concepts",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Design Test",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Test Planning", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Design Test Case", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Preparation of Test Data", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Severity and Priority Identification", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Defect Management",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Defect Reporting", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Defect Reproduction", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Operation - Automation Basic",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Knowledge of automation testing tools", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Understanding manual vs. automated testing", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Basic scripting knowledge", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Selenium",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "OOP",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Automation - Web Testing",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "WebDriver IO",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Cypress",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Automation - API Testing",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Postman",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "RestAssured",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Karate",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Automation - Mobile Application Testing",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Appium",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Performance Testing",
-                    SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JMeter", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "STLC",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Understanding of SDLC and Agile concepts",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Design Test",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Test Planning", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Design Test Case", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Preparation of Test Data", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Severity and Priority Identification", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Defect Management",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Defect Reporting", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Defect Reproduction", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Operation - Automation Basic",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Knowledge of automation testing tools", ProficiencyEnum.BEGINNER.ToString() },
+            { "Understanding manual vs. automated testing", ProficiencyEnum.BEGINNER.ToString() },
+            { "Basic scripting knowledge", ProficiencyEnum.BEGINNER.ToString() },
+            { "Selenium",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "OOP",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Automation - Web Testing",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "CI/CD",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "WebDriver IO",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Cypress",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Automation - API Testing",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Postman",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "RestAssured",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Karate",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Automation - Mobile Application Testing",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Appium",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Performance Testing",
+        SkillId = SOFTWARE_TEST_ENGINEER_FUNCTIONAL.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JMeter", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    }
+};
             var SOFTWARE_ENGINEER_I_BACKEND_JAVA_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Java", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Spring", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MongoDB", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Spring Data", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Hibernate", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "IntelliJ", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JUnit", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline",  ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI",  ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Java", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Backend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Spring", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database Fundamentals",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "NoSQL Database",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
+            { "MongoDB", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "ORM",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Spring Data", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Hibernate", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "IntelliJ", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JUnit", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_JAVA.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Github Actions",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "AWS Codebuild/CodePipeline",  ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CircleCI/Travis CI",  ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    }
+};
 
             var SOFTWARE_ENGINEER_I_BACKEND_NODE_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JavaScript", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TypeScript", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Backend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Express JS", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Nest JS", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database Fundamentals",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Relational Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "NoSQL Database",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
-                        { "MongoDB", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "ORM",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Sequelize", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TypeORM", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Jest", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JavaScript", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "TypeScript", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Backend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Express JS", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Nest JS", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database Fundamentals",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Normalization", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Indexing", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Performance", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Relational Database",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "SQL Queries", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "PostgreSQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "MySQL", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Microsoft SQL Server", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "NoSQL Database",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "DynamoDB", ProficiencyEnum.BEGINNER.ToString() },
+            { "MongoDB", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "ORM",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Sequelize", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "TypeORM", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Jest", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Azure DevOps", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Jenkins", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_I_BACKEND_NODE.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Github Actions", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "AWS Codebuild/CodePipeline", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CircleCI/Travis CI", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    }
+};
             var VP_OF_ENGINEERING_COMMON_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "SDLC Concepts",
-                    SkillId = VP_OF_ENGINEERING_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Agile Concepts",
-                    SkillId = VP_OF_ENGINEERING_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Scrum", ProficiencyEnum.EXPERT.ToString() },
-                        { "Kanban", ProficiencyEnum.EXPERT.ToString() },
-                        { "Redmine", ProficiencyEnum.EXPERT.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Project Management Tools",
-                    SkillId = VP_OF_ENGINEERING_COMMON.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JIRA", ProficiencyEnum.EXPERT.ToString() },
-                        { "Asana", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "SDLC Concepts",
+        SkillId = VP_OF_ENGINEERING_COMMON.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Agile Concepts",
+        SkillId = VP_OF_ENGINEERING_COMMON.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Scrum", ProficiencyEnum.EXPERT.ToString() },
+            { "Kanban", ProficiencyEnum.EXPERT.ToString() },
+            { "Redmine", ProficiencyEnum.EXPERT.ToString() },
+            { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Project Management Tools",
+        SkillId = VP_OF_ENGINEERING_COMMON.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JIRA", ProficiencyEnum.EXPERT.ToString() },
+            { "Asana", ProficiencyEnum.EXPERT.ToString() }
+        }
+    }
+};
 
             var SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "TypeScript", ProficiencyEnum.EXPERT.ToString() },
-                        { "JavaScript", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Frontend Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Angular", ProficiencyEnum.EXPERT.ToString() },
-                        { "HTML", ProficiencyEnum.EXPERT.ToString() },
-                        { "CSS", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Application Programming Interface (API)",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "REST/HTTP", ProficiencyEnum.EXPERT.ToString() },
-                        { "GRC", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Jasmine/Karma", ProficiencyEnum.EXPERT.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Jenkins", ProficiencyEnum.BEGINNER.ToString() },
-                        { "Github Actions", ProficiencyEnum.BEGINNER.ToString() },
-                        { "AWS Codebuild/CodePipeline", ProficiencyEnum.BEGINNER.ToString() },
-                        { "CircleCI/Travis CI", ProficiencyEnum.BEGINNER.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "TypeScript", ProficiencyEnum.EXPERT.ToString() },
+            { "JavaScript", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Frontend Frameworks",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Angular", ProficiencyEnum.EXPERT.ToString() },
+            { "HTML", ProficiencyEnum.EXPERT.ToString() },
+            { "CSS", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Application Programming Interface (API)",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "REST/HTTP", ProficiencyEnum.EXPERT.ToString() },
+            { "GRC", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Jasmine/Karma", ProficiencyEnum.EXPERT.ToString() },
+            { "Azure DevOps", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = SOFTWARE_ENGINEER_II_FRONTEND_ANGULAR.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Jenkins", ProficiencyEnum.BEGINNER.ToString() },
+            { "Github Actions", ProficiencyEnum.BEGINNER.ToString() },
+            { "AWS Codebuild/CodePipeline", ProficiencyEnum.BEGINNER.ToString() },
+            { "CircleCI/Travis CI", ProficiencyEnum.BEGINNER.ToString() }
+        }
+    }
+};
 
             var TECH_LEAD_SUBSKILLS = new List<SkillSubtopic>
-            {
-                // Inherited Common Skills from Page 3
-                new SkillSubtopic
-                {
-                    Name = "SDLC Concepts",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Agile Concepts",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Scrum", ProficiencyEnum.EXPERT.ToString() },
-                        { "Kanban", ProficiencyEnum.EXPERT.ToString() },
-                        { "Redmine", ProficiencyEnum.EXPERT.ToString() },
-                        { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Project Management Tools",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "JIRA", ProficiencyEnum.EXPERT.ToString() },
-                        { "Asana", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
+{
+    // Inherited Common Skills from Page 3
+    new SkillSubtopic
+    {
+        Name = "SDLC Concepts",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Agile Concepts",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Scrum", ProficiencyEnum.EXPERT.ToString() },
+            { "Kanban", ProficiencyEnum.EXPERT.ToString() },
+            { "Redmine", ProficiencyEnum.EXPERT.ToString() },
+            { "Azure DevOps", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Project Management Tools",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "JIRA", ProficiencyEnum.EXPERT.ToString() },
+            { "Asana", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
 
                 // Tech Lead-specific Skills from Page 1
                 new SkillSubtopic
@@ -1907,161 +1918,161 @@ namespace SkillMatrixManagement.CustomDataSeeding
                     }
                 },
 
-                // Tech Lead-specific Skills from Page 2
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks (Frontend)", // Corrected "fibrillation" to "Frontend"
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Jest", ProficiencyEnum.EXPERT.ToString() },
-                        { "Jasmine/Karma", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "CI/CD Tools",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate (All)" as per the table
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Cloud Platforms",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate (All)" as per the table
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "DevOps",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Networking",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Microservices",
-                    SkillId = TECH_LEAD.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
-                    }
-                }
-            };
+    // Tech Lead-specific Skills from Page 2
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks (Frontend)", // Corrected "fibrillation" to "Frontend"
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Jest", ProficiencyEnum.EXPERT.ToString() },
+            { "Jasmine/Karma", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "CI/CD Tools",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate (All)" as per the table
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Cloud Platforms",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate (All)" as per the table
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "DevOps",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Networking",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Microservices",
+        SkillId = TECH_LEAD.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Proficiency", ProficiencyEnum.INTERMEDIATE.ToString() } // "Intermediate" as per the table
+        }
+    }
+};
             var SOFTWARE_ENGINEER_II_MOBILE_FLUTTER_SUBSKILLS = new List<SkillSubtopic>
-            {
-                new SkillSubtopic
-                {
-                    Name = "Programming Languages",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Dart", ProficiencyEnum.EXPERT.ToString() },
-                        { "Java", ProficiencyEnum.EXPERT.ToString() },
-                        { "Kotlin", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Mobile Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Flutter", ProficiencyEnum.EXPERT.ToString() },
-                        { "Android SDK", ProficiencyEnum.EXPERT.ToString() },
-                        { "REST API Integration (Volley/Retrofit/Http)", ProficiencyEnum.EXPERT.ToString() },
-                        { "Android Flutter Layouts, Custom Views", ProficiencyEnum.EXPERT.ToString() },
-                        { "LiveData/RxJava/RxDart", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "NDK", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Multi Threading",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Cordova", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Capacitor", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Services", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "WorkerThread", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Database",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.EXPERT.ToString() },
-                        { "SQLite", ProficiencyEnum.EXPERT.ToString() },
-                        { "Room", ProficiencyEnum.EXPERT.ToString() },
-                        { "Realm", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Version Control System",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Git", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "IDE",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Android Studio", ProficiencyEnum.EXPERT.ToString() },
-                        { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Testing Frameworks",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Flutter Test", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Firebase Analytics", ProficiencyEnum.INTERMEDIATE.ToString() }
-                    }
-                },
-                new SkillSubtopic
-                {
-                    Name = "Misc",
-                    SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
-                    Description = new Dictionary<string, string>
-                    {
-                        { "Push Notifications", ProficiencyEnum.EXPERT.ToString() },
-                        { "Gradle", ProficiencyEnum.EXPERT.ToString() },
-                        { "Google APIs", ProficiencyEnum.EXPERT.ToString() },
-                        { "Android Profiler", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "CI/CD", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Bitrise", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Testify", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Firebase", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Play Store Deployment", ProficiencyEnum.EXPERT.ToString() }
-                    }
-                }
-            };
+{
+    new SkillSubtopic
+    {
+        Name = "Programming Languages",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Dart", ProficiencyEnum.EXPERT.ToString() },
+            { "Java", ProficiencyEnum.EXPERT.ToString() },
+            { "Kotlin", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Mobile Frameworks",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Flutter", ProficiencyEnum.EXPERT.ToString() },
+            { "Android SDK", ProficiencyEnum.EXPERT.ToString() },
+            { "REST API Integration (Volley/Retrofit/Http)", ProficiencyEnum.EXPERT.ToString() },
+            { "Android Flutter Layouts, Custom Views", ProficiencyEnum.EXPERT.ToString() },
+            { "LiveData/RxJava/RxDart", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "NDK", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Multi Threading",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Cordova", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Capacitor", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Services", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "WorkerThread", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Database",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Relational Database Fundamentals (Normalization, Indexing, Performance etc.)", ProficiencyEnum.EXPERT.ToString() },
+            { "SQLite", ProficiencyEnum.EXPERT.ToString() },
+            { "Room", ProficiencyEnum.EXPERT.ToString() },
+            { "Realm", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Version Control System",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Git", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "IDE",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Android Studio", ProficiencyEnum.EXPERT.ToString() },
+            { "Visual Studio Code", ProficiencyEnum.EXPERT.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Testing Frameworks",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Flutter Test", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Firebase Analytics", ProficiencyEnum.INTERMEDIATE.ToString() }
+        }
+    },
+    new SkillSubtopic
+    {
+        Name = "Misc",
+        SkillId = SOFTWARE_ENGINEER_II_MOBILE_FLUTTER.Id,
+        Description = new Dictionary<string, string>
+        {
+            { "Push Notifications", ProficiencyEnum.EXPERT.ToString() },
+            { "Gradle", ProficiencyEnum.EXPERT.ToString() },
+            { "Google APIs", ProficiencyEnum.EXPERT.ToString() },
+            { "Android Profiler", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "CI/CD", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Bitrise", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Testify", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Firebase", ProficiencyEnum.INTERMEDIATE.ToString() },
+            { "Play Store Deployment", ProficiencyEnum.EXPERT.ToString() }
+        }
+    }
+};
             var UX_DESIGNER_TRAINEE_SUBSKILLS = new List<SkillSubtopic>
 {
     new SkillSubtopic

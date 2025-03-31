@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -13,9 +15,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 {
     [DbContext(typeof(SkillMatrixManagementApplicationDbContext))]
-    partial class SkillMatrixManagementApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250326175218_UpdateSkillDescriptionNullable")]
+    partial class UpdateSkillDescriptionNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -618,6 +622,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid?>("EndorsedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("EndorserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("text")
@@ -643,6 +650,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<string>("SelfAssessedProficiency")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Dictionary<string, ProficiencyEnum>>("SkillDescription")
+                        .HasColumnType("jsonb");
 
                     b.Property<Guid?>("SkillId")
                         .HasColumnType("uuid");
@@ -684,6 +694,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("EndorsedBy"), "HASH");
 
+                    b.HasIndex("EndorserId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("EndorserId"), "HASH");
+
                     b.HasIndex("ExtraProperties");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ExtraProperties"), "HASH");
@@ -711,6 +725,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("SelfAssessedProficiency");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SelfAssessedProficiency"), "HASH");
+
+                    b.HasIndex("SkillDescription");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SkillDescription"), "HASH");
 
                     b.HasIndex("SkillId");
 
@@ -2345,9 +2363,8 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid?>("InternalRoleId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("IsAvailable")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -2500,8 +2517,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                 {
                     b.HasOne("SkillMatrixManagement.Models.User", "Endorser")
                         .WithMany()
-                        .HasForeignKey("EndorsedBy")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("EndorserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SkillMatrixManagement.Models.Skill", null)
                         .WithMany("EmployeeSkills")

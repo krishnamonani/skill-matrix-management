@@ -124,6 +124,52 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string INVALID_EMPLOYEE_SKILL_ID = "EMPLOYEE_SKILL-003";
         public const string EMPLOYEE_SKILL_ALREADY_DELETED = "EMPLOYEE_SKILL-004";
         public const string EMPLOYEE_SKILL_NOT_DELETED = "EMPLOYEE_SKILL-005";
+        public const string EMPLOYEE_SKILL_CAN_NOT_BE_NULL = "EMPLOYEE_SKILL-006";
+
+    }
+    public static class SkillSubtopicErrorCodes
+    {
+        public const string SkillSubtopicInvalid = "SKILLSUBTOPIC-001"; // When input is null in CreateAsync
+        public const string SkillSubtopicNotFound = "SKILLSUBTOPIC-002"; // When entity is not found in GetByIdAsync
+        public const string SkillSubtopicAlreadyDeleted = "SKILLSUBTOPIC-003"; // When trying to restore an already active entity
+        public const string SkillSubtopicNotFoundForUpdate = "SKILLSUBTOPIC-004"; // When trying to update a non-existent entity
+        public const string SkillSubtopicNotFoundForDelete = "SKILLSUBTOPIC-005"; // When trying to delete a non-existent entity
+        public const string SkillSubtopicNotFoundForPermanentDelete = "SKILLSUBTOPIC-006"; // When trying to permanently delete a non-existent entity
+    }
+
+    public static class Notification
+    {
+        public const string NOTIFICATION_NOT_FOUND = "NOTIF-001";
+        public const string NOTIFICATION_NOT_FOUND_FOR_UPDATE = "NOTIF-002";
+        public const string NOTIFICATION_NOT_FOUND_FOR_SOFT_DELETE = "NOTIF-003";
+        public const string NOTIFICATION_ALREADY_DELETED = "NOTIF-004";
+        public const string NOTIFICATION_NOT_FOUND_FOR_PERMANENT_DELETE = "NOTIF-005";
+        public const string NOTIFICATION_NOT_FOUND_FOR_RESTORATION = "NOTIF-006";
+        public const string NOTIFICATION_NOT_DELETED_CANNOT_RESTORE = "NOTIF-007";
+    }
+
+    public static class Permission
+    {
+        public const string PERMISSION_WITH_THIS_NAME_ALREADY_EXISTS = "PERM-001";
+        public const string PERMISSION_NOT_FOUND = "PERM-002";
+        public const string PERMISSION_NOT_FOUND_FOR_UPDATE = "PERM-003";
+        public const string PERMISSION_NOT_FOUND_FOR_SOFT_DELETE = "PERM-004";
+        public const string PERMISSION_ALREADY_DELETED = "PERM-005";
+        public const string PERMISSION_NOT_FOUND_FOR_PERMANENT_DELETE = "PERM-006";
+        public const string PERMISSION_NOT_FOUND_FOR_RESTORATION = "PERM-007";
+        public const string PERMISSION_NOT_DELETED_CANNOT_RESTORE = "PERM-008";
+    }
+
+    public static class ProficiencyLevel
+    {
+        public const string PERMISSION_PROFICIENCY_LEVEL_WITH_THIS_NAME_ALREADY_EXISTS = "PROF-001";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND = "PROF-002";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_UPDATE = "PROF-003";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_SOFT_DELETE = "PROF-004";
+        public const string PERMISSION_PROFICIENCY_LEVEL_ALREADY_DELETED = "PROF-005";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_PERMANENT_DELETE = "PROF-006";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_FOUND_FOR_RESTORATION = "PROF-007";
+        public const string PERMISSION_PROFICIENCY_LEVEL_NOT_DELETED_CANNOT_RESTORE = "PROF-008";
     }
     public static class ProjectEmployee
     {

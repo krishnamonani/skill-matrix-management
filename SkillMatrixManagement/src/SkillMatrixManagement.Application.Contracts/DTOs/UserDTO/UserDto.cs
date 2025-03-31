@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
 using SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
@@ -27,7 +28,7 @@ namespace SkillMatrixManagement.DTOs.UserDTO
         public Guid? InternalRoleId { get; set; }
         public DepartmentInternalRoleDto? InternalRole { get; set; } // Optional inclusion of InternalRole details
 
-        public bool IsAvailable { get; set; }
+        public ProjectStatusEnum IsAvailable { get; set; }
         public string? ProfilePhoto { get; set; }
 
         public ICollection<EmployeeSkillDto>? EmployeeSkills { get; set; } // Optional inclusion of EmployeeSkills

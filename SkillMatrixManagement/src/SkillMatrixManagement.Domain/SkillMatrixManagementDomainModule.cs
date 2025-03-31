@@ -19,6 +19,7 @@ using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
 using SkillMatrixManagement.CustomDataSeeding;
 using Volo.Abp.Data;
+using System.ComponentModel.Design.Serialization;
 
 namespace SkillMatrixManagement;
 

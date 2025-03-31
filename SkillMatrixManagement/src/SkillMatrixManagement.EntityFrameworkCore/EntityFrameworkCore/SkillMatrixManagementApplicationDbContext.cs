@@ -78,6 +78,12 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             {
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "User", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.Property(r => r.IsAvailable)
+                .HasConversion(
+                    v => v.ToString(), // Convert enum to string when saving
+                    v => (ProjectStatusEnum)Enum.Parse(typeof(ProjectStatusEnum), v) // Convert string back to enum when reading
+                );
             });
 
             // Configure SkillRecommendationByManager entity
@@ -138,10 +144,6 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "EmployeeSkill", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
 
-                b.HasOne(e => e.Skill)
-                .WithMany(s => s.EmployeeSkills)
-                .HasForeignKey(e => e.SkillId);
-
                 b.HasOne(e => e.User)
                 .WithMany(u => u.EmployeeSkills)
                 .HasForeignKey(e => e.UserId);
@@ -157,9 +159,17 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                     v => v.ToString(), // Convert enum to string when saving
                     v => (ProficiencyEnum)Enum.Parse(typeof(ProficiencyEnum), v) // Convert string back to enum when reading
                 );
+                b.HasOne(e => e.Endorser) // Define relationship with User
+                .WithMany() // No navigation property required on User side
+                .HasForeignKey(e => e.EndorsedBy) // Set foreign key
+                .OnDelete(DeleteBehavior.SetNull); // Allow NULL values on delete
 
-                b.Property(e => e.SkillDescription)
-                .HasColumnType("jsonb");
+                b.Property(e => e.EndorsedBy)
+                .IsRequired(false); // Explicitly make it nullable
+
+
+                //b.Property(e => e.SkillDescription)
+                //.HasColumnType("jsonb");
             });
 
             // Configure SkillMatrix entity
