@@ -473,6 +473,8 @@ namespace SkillMatrixManagement.Services
                 var query = await _userRepository.WithDetailsAsync();
                 var existingUser = await query.FirstOrDefaultAsync(u => u.Email == input.Email && !u.IsDeleted);
 
+                if (input.FirstName.Contains(' ') || input.LastName.Contains(' ')) return ServiceResponse<UserDto>.Failure("Firstname or the lastname should not contain any space between", 400);
+
                 if (existingUser != null)
                 {
                     var updateUserDtoObj = _mapper.Map<UpdateUserDto>(input);
