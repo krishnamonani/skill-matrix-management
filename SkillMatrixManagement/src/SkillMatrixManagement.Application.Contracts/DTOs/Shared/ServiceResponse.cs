@@ -90,11 +90,6 @@ namespace SkillMatrixManagement.DTOs.Shared
                 StatusCode = statusCode
             };
         }
-
-        public object Where(Func<object, object> value)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class ServiceResponse : ServiceResponse<object>
