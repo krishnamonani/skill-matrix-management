@@ -15,7 +15,7 @@ const SkillDashboard = () => {
     const [editLevel, setEditLevel] = useState('');
     const navigate = useNavigate();
     const apiUrl = 'https://localhost:44302/api/app/app-employee-skill';
-    const userId = '0b4f97bd-11ea-4713-8248-bbfb7f488444';
+    const userId = 'aa57eb01-9d92-4edf-bed3-0857eeb48d0e';
 
     const proficiencyMap = {
         Beginner: 10,
