@@ -29,7 +29,7 @@ public class EntityFrameworkCoreSkillMatrixManagementDbSchemaMigrator
             .GetRequiredService<SkillMatrixManagementDbContext>()
             .Database
             .MigrateAsync();
-        
+
         await _serviceProvider
             .GetRequiredService<SkillMatrixManagementApplicationDbContext>()
             .Database
