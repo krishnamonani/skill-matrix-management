@@ -73,6 +73,9 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         
         CreateMap<UpdateEmployeeSkillDto, EmployeeSkill>();
 
+        CreateMap<DepartmentInternalRole, DepartmentInternalRoleDto>()
+            .ForMember(dest => dest.RoleNameString, opt => opt.MapFrom(src => src.RoleName.ToString()));
+
         //category Mapping
         CreateMap<CreateCategoryDto, Category>();
 

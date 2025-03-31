@@ -11,6 +11,7 @@ namespace SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO
     public class DepartmentInternalRoleDto : FullAuditedEntityDto<Guid>
     {
         public DepartmentRoleEnum RoleName { get; set; }
+        public string RoleNameString { get; set; }
         public string DepartmentRole { get; set; }
         public string? RoleDescription { get; set; }
         public RolePositionEnum Position { get; set; }
