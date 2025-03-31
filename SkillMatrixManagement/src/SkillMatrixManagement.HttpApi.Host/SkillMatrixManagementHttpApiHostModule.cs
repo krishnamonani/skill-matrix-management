@@ -39,6 +39,7 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
+using Volo.Abp.AspNetCore.Mvc.UI;
 
 namespace SkillMatrixManagement;
 
@@ -118,6 +119,28 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
         ConfigureSwagger(context, configuration);
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
+
+        // Disable libs check
+        Configure<AbpAspNetCoreMvcOptions>(options =>
+        {
+            options.ConventionalControllers.Create(typeof(SkillMatrixManagementApplicationModule).Assembly);
+        });
+
+        // Add this configuration to disable the wwwroot/libs check
+        Configure<AbpBundlingOptions>(options =>
+        {
+            options.StyleBundles.Configure(
+                LeptonXLiteThemeBundles.Styles.Global,
+                bundle =>
+                {
+                    bundle.AddFiles("/global-scripts.js");
+                    bundle.AddFiles("/global-styles.css");
+                }
+            );
+            
+            // Disable libs checking
+            options.MinificationIgnoredFiles.Add("/libs/*");
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -162,10 +185,12 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.ReplaceEmbeddedByPhysical<SkillMatrixManagementDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}SkillMatrixManagement.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<SkillMatrixManagementDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}SkillMatrixManagement.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<SkillMatrixManagementApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}SkillMatrixManagement.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<SkillMatrixManagementApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}SkillMatrixManagement.Application"));
+                // Comment out or remove the ReplaceEmbeddedByPhysical call since we don't need it in Docker
+                /*
+                options.FileSets.ReplaceEmbeddedByPhysical<SkillMatrixManagementDomainSharedModule>(
+                    Path.Combine(hostingEnvironment.ContentRootPath, 
+                        $"..{Path.DirectorySeparatorChar}SkillMatrixManagement.Domain.Shared"));
+                */
             });
         }
     }

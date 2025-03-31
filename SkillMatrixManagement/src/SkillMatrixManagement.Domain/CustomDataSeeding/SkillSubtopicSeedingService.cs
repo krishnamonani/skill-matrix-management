@@ -1,4 +1,4 @@
-﻿using SkillMatrixManagement.Constants;
+using SkillMatrixManagement.Constants;
 using SkillMatrixManagement.Models;
 using System;
 using System.Collections.Generic;
