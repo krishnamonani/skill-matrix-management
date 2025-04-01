@@ -21,15 +21,17 @@ namespace SkillMatrixManagement.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IDepartmentInternalRoleRepository _roleInternalRepository;
         private readonly IIdentityUserRepository _identityUserRepository;
+        private readonly IdentityUserManager _identityUserManager;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUserRepository userRepository, IDepartmentRepository departmentRepository, IRoleRepository roleRepository, IDepartmentInternalRoleRepository roleInternalRepository, IIdentityUserRepository identityUserRepository, IMapper mapper)
+        public AppUserService(IUserRepository userRepository, IDepartmentRepository departmentRepository, IRoleRepository roleRepository, IDepartmentInternalRoleRepository roleInternalRepository, IIdentityUserRepository identityUserRepository, IdentityUserManager identityUserManager, IMapper mapper)
         {
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
             _roleRepository = roleRepository;
             _roleInternalRepository = roleInternalRepository;
             _identityUserRepository = identityUserRepository;
+            _identityUserManager = identityUserManager;
             _mapper = mapper;
         }
 
@@ -116,6 +118,12 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException("User ID cannot be empty.");
                 }
 
+                var userEmail = (await _userRepository.GetByIdAsync(id)).Email;
+                var abpUser   = await _identityUserManager.FindByEmailAsync(userEmail);
+
+                if (abpUser == null) return ServiceResponse.Failure("User not found!", 400);
+                await _identityUserRepository.DeleteAsync(abpUser.Id, autoSave: true);
+
                 await _userRepository.SoftDeleteAsync(id); 
                 return ServiceResponse.SuccessResult(200, "User deleted successfully.");
             }
@@ -165,6 +173,17 @@ namespace SkillMatrixManagement.Services
             {
                 return ServiceResponse<List<UserDto>>.Failure($"Failed to retrieve users: {ex.Message}", 500);
             }
+        }
+
+        public async Task<ServiceResponse<UserDto>> GetByUserNameOrEmailAsync(string userNameOrEmail)
+        {
+            if (string.IsNullOrEmpty(userNameOrEmail)) throw new Exception("Usernamae or Email is empty");
+
+            var users = await _userRepository.GetAllAsync();
+            var user  = users.Where(user => user.Email.Equals(userNameOrEmail, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+
+            if (user == null) return ServiceResponse<UserDto>.Failure("User not exist", 400);
+            return ServiceResponse<UserDto>.SuccessResult(_mapper.Map<UserDto>(user), 200);
         }
 
         public async Task<ServiceResponse<UserDto>> GetByIdAsync(Guid id)
