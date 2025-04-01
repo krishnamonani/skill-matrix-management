@@ -3,6 +3,9 @@ import google.generativeai as genai
 import google  # Import the google module
 from fastapi import HTTPException
 from typing import List
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
