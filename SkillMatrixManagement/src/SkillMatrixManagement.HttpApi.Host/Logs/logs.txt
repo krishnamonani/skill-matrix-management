@@ -14706,3 +14706,99 @@ System.Net.Http.HttpRequestException: An error occurred while sending the reques
 2025-04-03 18:16:50.389 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
 2025-04-03 18:16:50.389 +05:30 [DBG] HealthReportCollector has completed.
 2025-04-03 18:16:50.389 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-04-03 18:17:00.403 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-04-03 18:17:00.403 +05:30 [INF] Start processing HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:00.403 +05:30 [INF] Sending HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:00.407 +05:30 [ERR] GetHealthReport threw an exception when trying to get report from http://localhost:44302/health-status configured with name SkillMatrixManagement Health Status.
+System.Net.Http.HttpRequestException: An error occurred while sending the request.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host..
+ ---> System.Net.Sockets.SocketException (10054): An existing connection was forcibly closed by the remote host.
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Http.HttpConnection.InitialFillAsync(Boolean async)
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at HealthChecks.UI.Core.HostedService.HealthCheckReportCollector.GetHealthReportAsync(HealthCheckConfiguration configuration) in /home/runner/work/AspNetCore.Diagnostics.HealthChecks/AspNetCore.Diagnostics.HealthChecks/src/HealthChecks.UI/Core/HostedService/HealthCheckReportCollector.cs:line 142
+2025-04-03 18:17:00.408 +05:30 [INF] Notification is sent on same window time.
+2025-04-03 18:17:00.408 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-04-03 18:17:00.408 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-04-03 18:17:00.408 +05:30 [DBG] HealthReportCollector has completed.
+2025-04-03 18:17:00.408 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-04-03 18:17:10.418 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-04-03 18:17:10.419 +05:30 [INF] Start processing HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:10.419 +05:30 [INF] Sending HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:10.430 +05:30 [ERR] GetHealthReport threw an exception when trying to get report from http://localhost:44302/health-status configured with name SkillMatrixManagement Health Status.
+System.Net.Http.HttpRequestException: An error occurred while sending the request.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host..
+ ---> System.Net.Sockets.SocketException (10054): An existing connection was forcibly closed by the remote host.
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Http.HttpConnection.InitialFillAsync(Boolean async)
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at HealthChecks.UI.Core.HostedService.HealthCheckReportCollector.GetHealthReportAsync(HealthCheckConfiguration configuration) in /home/runner/work/AspNetCore.Diagnostics.HealthChecks/AspNetCore.Diagnostics.HealthChecks/src/HealthChecks.UI/Core/HostedService/HealthCheckReportCollector.cs:line 142
+2025-04-03 18:17:10.430 +05:30 [INF] Notification is sent on same window time.
+2025-04-03 18:17:10.430 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-04-03 18:17:10.431 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-04-03 18:17:10.431 +05:30 [DBG] HealthReportCollector has completed.
+2025-04-03 18:17:10.431 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-04-03 18:17:20.434 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-04-03 18:17:20.435 +05:30 [INF] Start processing HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:20.435 +05:30 [INF] Sending HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:20.441 +05:30 [ERR] GetHealthReport threw an exception when trying to get report from http://localhost:44302/health-status configured with name SkillMatrixManagement Health Status.
+System.Net.Http.HttpRequestException: An error occurred while sending the request.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host..
+ ---> System.Net.Sockets.SocketException (10054): An existing connection was forcibly closed by the remote host.
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Http.HttpConnection.InitialFillAsync(Boolean async)
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at HealthChecks.UI.Core.HostedService.HealthCheckReportCollector.GetHealthReportAsync(HealthCheckConfiguration configuration) in /home/runner/work/AspNetCore.Diagnostics.HealthChecks/AspNetCore.Diagnostics.HealthChecks/src/HealthChecks.UI/Core/HostedService/HealthCheckReportCollector.cs:line 142
+2025-04-03 18:17:20.442 +05:30 [INF] Notification is sent on same window time.
+2025-04-03 18:17:20.442 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-04-03 18:17:20.442 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-04-03 18:17:20.442 +05:30 [DBG] HealthReportCollector has completed.
+2025-04-03 18:17:20.442 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
+2025-04-03 18:17:30.446 +05:30 [DBG] Executing HealthCheck collector HostedService.
+2025-04-03 18:17:30.447 +05:30 [INF] Start processing HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:30.447 +05:30 [INF] Sending HTTP request GET http://localhost:44302/health-status
+2025-04-03 18:17:30.458 +05:30 [ERR] GetHealthReport threw an exception when trying to get report from http://localhost:44302/health-status configured with name SkillMatrixManagement Health Status.
+System.Net.Http.HttpRequestException: An error occurred while sending the request.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host..
+ ---> System.Net.Sockets.SocketException (10054): An existing connection was forcibly closed by the remote host.
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Http.HttpConnection.InitialFillAsync(Boolean async)
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|4_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at HealthChecks.UI.Core.HostedService.HealthCheckReportCollector.GetHealthReportAsync(HealthCheckConfiguration configuration) in /home/runner/work/AspNetCore.Diagnostics.HealthChecks/AspNetCore.Diagnostics.HealthChecks/src/HealthChecks.UI/Core/HostedService/HealthCheckReportCollector.cs:line 142
+2025-04-03 18:17:30.459 +05:30 [INF] Notification is sent on same window time.
+2025-04-03 18:17:30.459 +05:30 [DBG] HealthReportCollector - health report execution history saved.
+2025-04-03 18:17:30.459 +05:30 [DBG] HealthReport history already exists and is in the same state, updating the values.
+2025-04-03 18:17:30.459 +05:30 [DBG] HealthReportCollector has completed.
+2025-04-03 18:17:30.459 +05:30 [DBG] HealthCheck collector HostedService executed successfully.
