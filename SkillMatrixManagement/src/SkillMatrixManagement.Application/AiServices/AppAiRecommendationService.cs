@@ -7,10 +7,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using SkillMatrixManagement.DTOs.AiSkillRecommendationDTO;
+using SkillMatrixManagement.DTOs.AiTeamRecommendationDTO;
 using SkillMatrixManagement.DTOs.Shared;
+using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using SkillMatrixManagement.Services;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Content;
 
 namespace SkillMatrixManagement.AiServices
 {
@@ -20,14 +23,21 @@ namespace SkillMatrixManagement.AiServices
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentInternalRoleRepository _departmentInternalRoleRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly string RECOMMENDATION_END_POINT;
 
-        public AppAiRecommendationService(IHttpClientFactory httpClientFactory, IUserRepository userRepository, IDepartmentInternalRoleRepository departmentInternalRoleRepository, IEmployeeSkillRepository employeeSkillRepository, IConfiguration configuration)
+        public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
+                                          IUserRepository userRepository, 
+                                          IDepartmentInternalRoleRepository departmentInternalRoleRepository, 
+                                          IEmployeeSkillRepository employeeSkillRepository, 
+                                          IDepartmentRepository departmentRepository,
+                                          IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _departmentInternalRoleRepository = departmentInternalRoleRepository;
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
+            _departmentRepository = departmentRepository;
             RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
         }
 
@@ -84,6 +94,56 @@ namespace SkillMatrixManagement.AiServices
             {
                 return ServiceResponse<SkillRecommendationResponseDto>.Failure(ex.Message, 500);
             }
+        }
+
+        public async Task<ServiceResponse<ICollection<EmployeeDetailDto>>> GetTeamRecommendationAsync(string projectDescription)
+        {
+            return ServiceResponse<ICollection<EmployeeDetailDto>>.SuccessResult((await GetEmployeeDetails()), 200);
+        }
+
+        //public ServiceResponse GetTeamRecommendationAsync(IRemoteStreamContent file)
+        //{
+        //    return ServiceResponse.SuccessResult(200, "Team recommendation from file stream");
+        //}
+
+
+        private async Task<ICollection<EmployeeDetailDto>> GetEmployeeDetails()
+        {
+            var users = await _userRepository.GetAllAsync();
+            var employeeSkills = await _employeeSkillRepository.GetAllAsync();
+            var departments = await _departmentRepository.GetAllAsync();
+            var departmentInternalRoles = await _departmentInternalRoleRepository.GetAllAsync();
+
+            var employeeDetailsList = new List<EmployeeDetailDto>();
+            foreach(var user in users)
+            {
+                var department = departments.Where(dept => dept.Id == user.DepartmentId).FirstOrDefault() ?? null;
+                var internalRole = departmentInternalRoles.Where(irole => irole.Id == user.InternalRoleId).FirstOrDefault() ?? null;
+
+                string? departmentName = null;
+                string? internalRoleName = null;
+
+                if (department != null) departmentName = department.Name;
+                if (internalRole != null) internalRoleName = internalRole.RoleName.ToString();
+
+                employeeDetailsList.Add(
+                       new EmployeeDetailDto()
+                       {
+                           Id = user.Id,
+                           FirstName = user.FirstName,
+                           LastName = user.LastName,
+                           UserName = user.UserName,
+                           Email = user.Email,
+                           Experience = user.Experience,
+                           Department = departmentName,
+                           Designation = internalRoleName,
+                           Skills = new List<string>(employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList()),
+                           ProjectStatus = user.IsAvailable.ToString()
+                       }
+                    );
+            }
+
+            return employeeDetailsList;
         }
     }
 }
