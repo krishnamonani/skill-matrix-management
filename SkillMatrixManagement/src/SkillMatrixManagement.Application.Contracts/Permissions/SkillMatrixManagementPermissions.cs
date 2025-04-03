@@ -49,15 +49,15 @@ public static class SkillMatrixManagementPermissions
         }
     }
 
-    public static class Employee
+    public static class Developer
     {
-        public const string Default = GroupName + ".Employee";
+        public const string Default = GroupName + ".Developer";
         public const string ViewAssignedSkills = Default + ".ViewAssignedSkills";
         public const string UpdateSelfAssessment = Default + ".UpdateSelfAssessment";
         public const string AccessRecommendations = Default + ".AccessRecommendations";
         public static string[] GetAll()
         {
-            return ReflectionHelper.GetPublicConstantsRecursively(typeof(Employee));
+            return ReflectionHelper.GetPublicConstantsRecursively(typeof(Developer));
         }
     }
 

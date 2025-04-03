@@ -21,7 +21,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         {
             _permissionManager = permissionManager;
             _roleRepository = roleRepository;
-            
+
         }
 
         public async Task SeedAsync(DataSeedContext context)
@@ -29,7 +29,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
             await GrantPermissionsToRoleAsync("Admin", SkillMatrixManagementPermissions.Admin.GetAll());
             await GrantPermissionsToRoleAsync("Manager", SkillMatrixManagementPermissions.Manager.GetAll());
             await GrantPermissionsToRoleAsync("HR", SkillMatrixManagementPermissions.HR.GetAll());
-            await GrantPermissionsToRoleAsync("Employee", SkillMatrixManagementPermissions.Employee.GetAll());
+            await GrantPermissionsToRoleAsync("Employee", SkillMatrixManagementPermissions.Developer.GetAll());
         }
 
         private async Task GrantPermissionsToRoleAsync(string roleName, string[] permissions)

@@ -31,10 +31,10 @@ public class SkillMatrixManagementPermissionDefinitionProvider : PermissionDefin
         hrGroup.AddChild(SkillMatrixManagementPermissions.HR.GenerateReports, L("Permission:GenerateReports"));
         hrGroup.AddChild(SkillMatrixManagementPermissions.HR.FacilitateTrainingPrograms, L("Permission:FacilitateTrainingPrograms"));
 
-        var employeeGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Employee.Default, L("Permission:Employee"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.ViewAssignedSkills, L("Permission:ViewAssignedSkills"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.UpdateSelfAssessment, L("Permission:UpdateSelfAssessment"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.AccessRecommendations, L("Permission:AccessRecommendations"));
+        var employeeGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Developer.Default, L("Permission:Developer"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.ViewAssignedSkills, L("Permission:ViewAssignedSkills"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.UpdateSelfAssessment, L("Permission:UpdateSelfAssessment"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.AccessRecommendations, L("Permission:AccessRecommendations"));
     }
 
     private static LocalizableString L(string name)
