@@ -1,11 +1,9 @@
 import os
 import google.generativeai as genai
-import google  # Import the google module
 from fastapi import HTTPException
 from typing import List
-from dotenv import load_dotenv
+from .models import Skill_req
 
-load_dotenv()
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -16,64 +14,56 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 
-def validate_input(Role: str, NumberOfRecommendations: int, Skills: List[str]):
-    """Validates input before passing to Gemini API."""
-    if not isinstance(Role, str) or not Role.strip():
-        raise HTTPException(status_code=422, detail="Invalid Role: Must be a non-empty string.")
-    
-    if not isinstance(NumberOfRecommendations, int) or NumberOfRecommendations <= 0:
-        raise HTTPException(status_code=422, detail="Invalid NumberOfRecommendations: Must be a positive integer.")
-    
-    if not isinstance(Skills, list) or not all(isinstance(skill, str) for skill in Skills):
-        raise HTTPException(status_code=422, detail="Invalid Skills: Must be a list of strings.")
-    
-    # Remove duplicates from Skills
-    Skills[:] = list(set(skill.strip() for skill in Skills if skill.strip()))
-
-
-def generate_skill_recommendation(Role: str, NumberOfRecommendations: int, Skills: List[str]) -> List[str]:
+def generate_skill_recommendation(skill: Skill_req):
     """Generates skill recommendations using Gemini AI."""
     
-    validate_input(Role, NumberOfRecommendations, Skills)
+   
+    genai.configure(api_key=GEMINI_API_KEY)
 
-    # Ensure Role is not empty
-    if not Role.strip():
-        raise HTTPException(status_code=400, detail="Role cannot be empty.")
+    generation_config = {
+    "temperature": 0.2,
+    }
 
-    # Create the prompt dynamically
-    if Skills:
-        prompt = (
-            f"Suggest {NumberOfRecommendations} technical skills for a {Role}, "
-            f"excluding these: {', '.join(Skills)}. Respond with skill names only, one per line."
-        )
-    else:
-        prompt = (
-            f"Suggest {NumberOfRecommendations} most important technical skills for a {Role}. "
-            "Respond with skill names only, one per line."
-        )
+    model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    generation_config=generation_config,
+    system_instruction="Input Format:\n\nNumber of new Required Skills:\nCurrent Skills: \nRole: \n\nSuggest the top skills as requested by user also consider current role of the user. The user should learn to enhance their expertise.  \nThe employee already has proficiency in his/her current skills.  \nExclude these from your recommendations.  \n\nInstructions:  \n- Focus on technical and industry-relevant skills.  \n- Prioritize skills that are in high demand for this role.  \n- Output should a dictionary with key value pairs with key 'skills' (having list of skills) and 'reason' (having a short explanation of why the above skills are relevant.)\n\n\nExample Usage:\n\nInput:\nNumber of new Required Skills: 3\nCurrent Skills: Python, Pandas, Machine Learning\nRole: AI/ML Developer\n\nOutput:\n{\"skills\":\"['Deep Learning','GenAI','Cloud Computing']\",\n \"reason\":\"These skills are crucial for an AI/ML Developer to advance in their career. \n  Deep Learning is essential for working with neural networks and complex AI models. \n  GenAI (Generative AI) is a rapidly growing field, enabling developers to build advanced AI applications like chatbots and content generation models. \n  Cloud Computing is important for deploying, scaling, and managing ML models efficiently on platforms like AWS, GCP, or Azure.\"}",
+    )
 
-    try:
-        model = genai.GenerativeModel("gemini-1.5-pro")
-        response = model.generate_content(
-            prompt, 
-            generation_config=genai.types.GenerationConfig(temperature=0)
-        )
+    chat_session = model.start_chat(
+    history=[
+        {
+        "role": "user",
+        "parts": [
+            "Number of new Required Skills: 4\nCurrent Skills: HTML, CSS, JS\nRole: Front-End Developer",
+        ],
+        },
+        {
+        "role": "model",
+        "parts": [
+            "{\n  \"skills\": [\"React\", \"Angular or Vue.js\", \"TypeScript\", \"Web Accessibility\"],\n  \"reason\": \"These skills are highly sought after for Front-End Developers. React, Angular, and Vue.js are popular JavaScript frameworks that enable efficient and scalable web application development.  TypeScript adds static typing to JavaScript, improving code maintainability and reducing errors in large projects. Web Accessibility ensures your applications are usable by people with disabilities, a crucial aspect of inclusive design and increasingly important for compliance.\"\n}",
+        ],
+        },
+        {
+        "role": "user",
+        "parts": [
+            "Number of new Required Skills: 3\nCurrent Skills: Linux, Docker\nRole: Dev-Ops",
+        ],
+        },
+        {
+        "role": "model",
+        "parts": [
+            "{\n  \"skills\": [\"Kubernetes\", \"Terraform or CloudFormation\", \"CI/CD pipelines\"],\n  \"reason\": \"These skills are crucial for advancing in a DevOps role. Kubernetes is essential for container orchestration and management at scale.  Terraform or CloudFormation are Infrastructure-as-Code (IaC) tools that automate infrastructure provisioning and management, improving efficiency and consistency.  CI/CD (Continuous Integration/Continuous Delivery) pipelines automate the software release process, enabling faster and more reliable deployments.\"\n}",
+        ],
+        },
+    ]
+    )
+    prompt=f"""
+    Number of new Required Skills: {skill.number}\nCurrent Skills: {skill.skills}\nRole: {skill.role}"""
+    response = chat_session.send_message(prompt)
 
-        if not response.text:
-            raise HTTPException(status_code=500, detail="Received an empty response from Gemini API.")
+    dict1 = (response.text)
+    rec=eval(dict1[8:-5])
 
-        # Process skills
-        SkillsList = response.text.strip().split("\n")
-        return list(dict.fromkeys(skill.strip() for skill in SkillsList if skill))
-
-    except google.api_core.exceptions.InvalidArgument as api_error:
-        raise HTTPException(status_code=500, detail=f"API Error: {str(api_error)}")
-    
-    except google.api_core.exceptions.ResourceExhausted:
-        raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
-
-    except google.api_core.exceptions.DeadlineExceeded:
-        raise HTTPException(status_code=504, detail="Request timed out. Please try again.")
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+# Print the dictionary
+    return rec
