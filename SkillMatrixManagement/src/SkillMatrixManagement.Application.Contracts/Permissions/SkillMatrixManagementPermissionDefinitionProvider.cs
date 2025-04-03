@@ -9,10 +9,32 @@ public class SkillMatrixManagementPermissionDefinitionProvider : PermissionDefin
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(SkillMatrixManagementPermissions.GroupName);
+        var skillMatrixGroup = context.GetGroupOrNull(SkillMatrixManagementPermissions.GroupName)
+                         ?? context.AddGroup(SkillMatrixManagementPermissions.GroupName, L("Permission:SkillMatrix"));
 
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(SkillMatrixManagementPermissions.MyPermission1, L("Permission:MyPermission1"));
+
+        var adminGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Admin.Default, L("Permission:Admin"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageSkills, L("Permission:ManageSkills"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageProficiencyLevels, L("Permission:ManageProficiencyLevels"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageUsers, L("Permission:ManageUsers"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageDashboard, L("Permission:ManageDashboard"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ConfigureSystem, L("Permission:ConfigureSystem"));
+
+        var managerGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Manager.Default, L("Permission:Manager"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.AssignSkills, L("Permission:AssignSkills"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.TrackProgress, L("Permission:TrackProgress"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.ValidateProficiency, L("Permission:ValidateProficiency"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.GenerateReports, L("Permission:GenerateReports"));
+
+        var hrGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.HR.Default, L("Permission:HR"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.AnalyzeSkillTrends, L("Permission:AnalyzeSkillTrends"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.GenerateReports, L("Permission:GenerateReports"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.FacilitateTrainingPrograms, L("Permission:FacilitateTrainingPrograms"));
+
+        var employeeGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Employee.Default, L("Permission:Employee"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.ViewAssignedSkills, L("Permission:ViewAssignedSkills"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.UpdateSelfAssessment, L("Permission:UpdateSelfAssessment"));
+        employeeGroup.AddChild(SkillMatrixManagementPermissions.Employee.AccessRecommendations, L("Permission:AccessRecommendations"));
     }
 
     private static LocalizableString L(string name)
