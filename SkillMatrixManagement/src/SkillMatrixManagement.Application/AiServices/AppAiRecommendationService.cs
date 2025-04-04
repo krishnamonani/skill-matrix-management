@@ -41,7 +41,7 @@ namespace SkillMatrixManagement.AiServices
             RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
         }
 
-        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>>/*Task<ServiceResponse<string>>*/ GetSkillRecommendation(Guid userId)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace SkillMatrixManagement.AiServices
                 {
                     Role = departmentInternalRoleName,
                     Skills = skills.Count() != 0 ? skills : new List<string>(),
-                    Experience = user.Experience
+                    Experience = user.Experience.ToString()
                 };
 
                 // Serialize to JSON
@@ -87,13 +87,19 @@ namespace SkillMatrixManagement.AiServices
 
                 // Return response as string
                 var responseBody = await response.Content.ReadAsStringAsync();
+                //var type = responseBody?.GetType();
+
                 var recommendationData = JsonSerializer.Deserialize<SkillRecommendationResponseDto>(responseBody);
 
+                //Console.WriteLine(responseBody?.skills.GEt);
+
                 return ServiceResponse<SkillRecommendationResponseDto>.SuccessResult(recommendationData ?? new SkillRecommendationResponseDto(), 200);
+                //return ServiceResponse<string>.SuccessResult(responseBody, 200);
             }
             catch (Exception ex)
             {
                 return ServiceResponse<SkillRecommendationResponseDto>.Failure(ex.Message, 500);
+                //return ServiceResponse<string>.Failure("fuck you", 400);
             }
         }
 
