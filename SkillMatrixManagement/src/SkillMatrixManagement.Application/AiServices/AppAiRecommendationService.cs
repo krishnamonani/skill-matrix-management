@@ -109,11 +109,14 @@ namespace SkillMatrixManagement.AiServices
 
         private async Task<ICollection<EmployeeDetailDto>> GetEmployeeDetails()
         {
+
+            // fetching all the db details here
             var users = await _userRepository.GetAllAsync();
             var employeeSkills = await _employeeSkillRepository.GetAllAsync();
             var departments = await _departmentRepository.GetAllAsync();
             var departmentInternalRoles = await _departmentInternalRoleRepository.GetAllAsync();
 
+            // init the Dto object
             var employeeDetailsList = new List<EmployeeDetailDto>();
             foreach(var user in users)
             {
@@ -126,6 +129,20 @@ namespace SkillMatrixManagement.AiServices
                 if (department != null) departmentName = department.Name;
                 if (internalRole != null) internalRoleName = internalRole.RoleName.ToString();
 
+                var skills = new List<Dictionary<string, string>>();
+
+                var skillList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList();
+                var proficiencyList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.SelfAssessedProficiency.ToString()).ToList();
+
+                if (skillList.Count != proficiencyList.Count) continue;
+                int index = 0;
+                foreach(var skill in skillList)
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    dictionary.Add(skill, proficiencyList[index++]);
+                    skills.Add(dictionary);
+                }
+
                 employeeDetailsList.Add(
                        new EmployeeDetailDto()
                        {
@@ -137,7 +154,7 @@ namespace SkillMatrixManagement.AiServices
                            Experience = user.Experience,
                            Department = departmentName,
                            Designation = internalRoleName,
-                           Skills = new List<string>(employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList()),
+                           Skills = skills,
                            ProjectStatus = user.IsAvailable.ToString()
                        }
                     );
