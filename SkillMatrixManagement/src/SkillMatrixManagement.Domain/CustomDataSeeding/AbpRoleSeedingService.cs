@@ -26,7 +26,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
         {
             await AddRoleIfNotExistsAsync("manager");
             await AddRoleIfNotExistsAsync("hr");
-            await AddRoleIfNotExistsAsync("employee");
+            await AddRoleIfNotExistsAsync("developer");
         }
 
         private async Task AddRoleIfNotExistsAsync(string roleName)

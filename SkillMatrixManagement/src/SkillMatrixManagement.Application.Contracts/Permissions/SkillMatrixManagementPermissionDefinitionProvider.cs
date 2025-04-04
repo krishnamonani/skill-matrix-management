@@ -1,7 +1,6 @@
 using SkillMatrixManagement.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
-using Volo.Abp.MultiTenancy;
 
 namespace SkillMatrixManagement.Permissions;
 
@@ -12,29 +11,33 @@ public class SkillMatrixManagementPermissionDefinitionProvider : PermissionDefin
         var skillMatrixGroup = context.GetGroupOrNull(SkillMatrixManagementPermissions.GroupName)
                          ?? context.AddGroup(SkillMatrixManagementPermissions.GroupName, L("Permission:SkillMatrix"));
 
-
+        // Admin CRUD Permissions
         var adminGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Admin.Default, L("Permission:Admin"));
-        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageSkills, L("Permission:ManageSkills"));
-        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageProficiencyLevels, L("Permission:ManageProficiencyLevels"));
-        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageUsers, L("Permission:ManageUsers"));
-        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ManageDashboard, L("Permission:ManageDashboard"));
-        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.ConfigureSystem, L("Permission:ConfigureSystem"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.Create, L("Permission:Admin.Create"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.Read, L("Permission:Admin.Read"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.Update, L("Permission:Admin.Update"));
+        adminGroup.AddChild(SkillMatrixManagementPermissions.Admin.Delete, L("Permission:Admin.Delete"));
 
+        // Manager CRUD Permissions
         var managerGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Manager.Default, L("Permission:Manager"));
-        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.AssignSkills, L("Permission:AssignSkills"));
-        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.TrackProgress, L("Permission:TrackProgress"));
-        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.ValidateProficiency, L("Permission:ValidateProficiency"));
-        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.GenerateReports, L("Permission:GenerateReports"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.Create, L("Permission:Manager.Create"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.Read, L("Permission:Manager.Read"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.Update, L("Permission:Manager.Update"));
+        managerGroup.AddChild(SkillMatrixManagementPermissions.Manager.Delete, L("Permission:Manager.Delete"));
 
+        // HR CRUD Permissions
         var hrGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.HR.Default, L("Permission:HR"));
-        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.AnalyzeSkillTrends, L("Permission:AnalyzeSkillTrends"));
-        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.GenerateReports, L("Permission:GenerateReports"));
-        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.FacilitateTrainingPrograms, L("Permission:FacilitateTrainingPrograms"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.Create, L("Permission:HR.Create"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.Read, L("Permission:HR.Read"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.Update, L("Permission:HR.Update"));
+        hrGroup.AddChild(SkillMatrixManagementPermissions.HR.Delete, L("Permission:HR.Delete"));
 
-        var employeeGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Developer.Default, L("Permission:Developer"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.ViewAssignedSkills, L("Permission:ViewAssignedSkills"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.UpdateSelfAssessment, L("Permission:UpdateSelfAssessment"));
-        employeeGroup.AddChild(SkillMatrixManagementPermissions.Developer.AccessRecommendations, L("Permission:AccessRecommendations"));
+        // Developer CRUD Permissions
+        var developerGroup = skillMatrixGroup.AddPermission(SkillMatrixManagementPermissions.Developer.Default, L("Permission:Developer"));
+        developerGroup.AddChild(SkillMatrixManagementPermissions.Developer.Create, L("Permission:Developer.Create"));
+        developerGroup.AddChild(SkillMatrixManagementPermissions.Developer.Read, L("Permission:Developer.Read"));
+        developerGroup.AddChild(SkillMatrixManagementPermissions.Developer.Update, L("Permission:Developer.Update"));
+        developerGroup.AddChild(SkillMatrixManagementPermissions.Developer.Delete, L("Permission:Developer.Delete"));
     }
 
     private static LocalizableString L(string name)
