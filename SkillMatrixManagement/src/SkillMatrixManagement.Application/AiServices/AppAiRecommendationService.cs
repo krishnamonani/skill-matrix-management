@@ -73,7 +73,8 @@ namespace SkillMatrixManagement.AiServices
                 var requestBody = new SkillRecommendationInputDto()
                 {
                     Role = departmentInternalRoleName,
-                    Skills = skills.Count() != 0 ? skills : new List<string>()
+                    Skills = skills.Count() != 0 ? skills : new List<string>(),
+                    Experience = user.Experience
                 };
 
                 // Serialize to JSON
