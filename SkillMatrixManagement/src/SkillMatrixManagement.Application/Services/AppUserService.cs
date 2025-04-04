@@ -221,6 +221,8 @@ namespace SkillMatrixManagement.Services
         {
             if (string.IsNullOrEmpty(userNameOrEmail)) throw new Exception("Usernamae or Email is empty");
 
+
+            // checking for user exist in the db or not
             var users = await _userRepository.GetAllAsync();
             var user  = users.Where(u => u.Email.ToUpper() == userNameOrEmail.ToUpper()).FirstOrDefault();
 
@@ -229,6 +231,28 @@ namespace SkillMatrixManagement.Services
                 user = users.Where(u => u.UserName == userNameOrEmail).FirstOrDefault();
                 if (user == null) return ServiceResponse<UserDto>.Failure("User does not exist", 400);
             }
+
+            // performing lazy loading
+            if(user.DepartmentId != null)
+            {
+                user.Department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
+
+            } 
+            else
+            {
+                user.Department = null;
+            }
+
+            if(user.InternalRoleId != null)
+            {
+                user.InternalRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+            }
+            else
+            {
+                user.InternalRole = null;
+            }
+
+             user.Role = await _roleRepository.GetByIdAsync(user.RoleId);
 
             return ServiceResponse<UserDto>.SuccessResult(_mapper.Map<UserDto>(user), 200);
         }
