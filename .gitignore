@@ -347,3 +347,19 @@ Thumbs.db
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+
+.env
+.env.local
+.env.development
+.env.production
+.env.*
+
+# Virtual Environment
+myenv/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
