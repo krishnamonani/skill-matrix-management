@@ -57,10 +57,7 @@ Processing Guidelines:
 - For mid-level and senior professionals, suggest advanced, leadership-oriented, and specialized skills.  
 
 Output Format:  
-The system should return a JSON object with the following key-value pairs:  
-- "skills": A dictionary where:  
-  - Keys are the recommended skill names.  
-  - Values are individual explanations of why each skill is relevant.  
+The system should return a JSON object with list of skills and corresponding list of reasons.
 
  '''
         ),
@@ -71,61 +68,25 @@ The system should return a JSON object with the following key-value pairs:
     {
       "role": "user",
       "parts": [
-        "Number of new Required Skills: 3  \nCurrent Skills: Python, Pandas, Machine Learning  \nRole: AI/ML Developer  \nExperience: 2 years  \n",
+        "{\n  \"number_of_new_required_skills\": 3,\n  \"current_skills\": [\"Python\", \"Pandas\", \"SQL\"],\n  \"role\": \"Data Analyst\",\n  \"experience\": 2\n}\n",
       ],
     },
     {
       "role": "model",
       "parts": [
-        "```json\n{\n  \"skills\": {\n    \"Deep Learning\": \"With 2 years of experience in AI/ML, building upon your foundation in Machine Learning by learning Deep Learning is a natural progression.  Deep learning is essential for advanced AI model development, encompassing neural networks and enabling you to tackle complex problems like image recognition, natural language processing, and more.\",\n    \"MLOps\": \"As an AI/ML developer, understanding MLOps (Machine Learning Operations) is critical for deploying and managing your models effectively in production. This involves streamlining the entire machine learning lifecycle, improving model reliability, and scaling your projects efficiently.\",\n    \"TensorFlow/PyTorch\": \"While you know Python, mastering a deep learning framework like TensorFlow or PyTorch is crucial. These frameworks provide tools and resources to build, train, and deploy complex deep learning models efficiently, expanding your capabilities significantly.\"\n  }\n}\n```\n",
+        "```json\n{\n  \"skills\": [\"Data Visualization with Tableau\", \"Data Storytelling\", \"Statistical Modeling\"],\n  \"reasons\": [\n    \"Tableau is a widely used data visualization tool that will enhance your ability to communicate insights effectively.\",\n    \"Data storytelling is crucial for conveying complex data analyses to non-technical audiences and stakeholders.\",\n    \"Statistical modeling provides a deeper understanding of data and improves predictive capabilities, expanding your analytical toolkit beyond basic descriptive statistics.\"\n  ]\n}\n```\n",
       ],
     },
     {
       "role": "user",
       "parts": [
-        "Number of new Required Skills: 3  \nCurrent Skills: Python, Pandas, Machine Learning , Deep Learning,YOLO,ML,CVIP,NLP\nRole: AI/ML Developer  \nExperience: 2 years  ",
+        "{\n  \"number_of_new_required_skills\": 2,\n  \"current_skills\": [\"HTML\", \"CSS\"],\n  \"role\": \"Frontend Developer\",\n  \"experience\": 0.5\n}\n",
       ],
     },
     {
       "role": "model",
       "parts": [
-        "```json\n{\n  \"skills\": {\n    \"MLOps\": \"With your existing strong foundation in AI/ML, including Deep Learning, YOLO, and NLP, focusing on MLOps (Machine Learning Operations) is the next logical step.  MLOps will allow you to effectively deploy, monitor, and maintain your models in production environments, a crucial skill for any AI/ML developer.\",\n    \"Cloud Computing (AWS/Azure/GCP)\": \"To scale your AI/ML projects effectively, proficiency in at least one major cloud platform (AWS, Azure, or GCP) is essential.  These platforms offer scalable computing resources, storage solutions, and managed services specifically designed for machine learning workloads, allowing you to deploy and manage your models more efficiently.\",\n    \"Software Engineering Principles\": \"Strengthening your software engineering fundamentals will improve the quality, maintainability, and scalability of your AI/ML projects. This includes best practices in version control (Git), software design patterns, testing methodologies, and writing clean, well-documented code, significantly increasing your value as an AI/ML Developer.\"\n  }\n}\n```\n",
-      ],
-    },
-    {
-      "role": "user",
-      "parts": [
-        "Number of new Required Skills: 5\nCurrent Skills: Python, Pandas, Machine Learning , Deep Learning,YOLO,ML,CVIP,NLP, Software engineering\nRole: AI/ML Developer\nExperience: 2 years",
-      ],
-    },
-    {
-      "role": "model",
-      "parts": [
-        "```json\n{\n  \"skills\": {\n    \"MLOps\": \"Given your strong background, including software engineering, the next crucial step is mastering MLOps. This will allow you to effectively deploy, monitor, and maintain your models in production, a highly sought-after skill for AI/ML developers.\",\n    \"Cloud Computing (AWS/Azure/GCP)\": \"Proficiency in a major cloud platform (AWS, Azure, or GCP) is essential for scaling your AI/ML projects.  These platforms offer managed services and resources optimized for machine learning, crucial for deploying and managing your models efficiently.\",\n    \"Data Visualization (e.g., Tableau, Power BI)\": \"Effective communication of insights from your AI/ML models is key.  Learning data visualization tools will help you present your findings clearly and persuasively to stakeholders, a critical skill for career advancement.\",\n    \"Big Data Technologies (e.g., Spark, Hadoop)\": \"To handle increasingly large datasets common in AI/ML, familiarity with big data technologies is highly beneficial.  This will enable you to process and analyze massive amounts of data efficiently, expanding your project capabilities.\",\n    \"Deployment and Containerization (Docker, Kubernetes)\":  \"To streamline the deployment and scaling of your AI/ML models, learn containerization technologies like Docker and Kubernetes.  This allows for consistent and efficient deployment across different environments, making your models more robust and scalable.\"\n  }\n}\n```\n",
-      ],
-    },
-    {
-      "role": "user",
-      "parts": [
-        "Number of new Required Skills: 4  \nCurrent Skills: Java, Spring Boot, SQL, Git  \nRole: Backend Developer  \nExperience: 5 years  \n\n",
-      ],
-    },
-    {
-      "role": "model",
-      "parts": [
-        "```json\n{\n  \"skills\": {\n    \"Microservices Architecture\": \"With 5 years of experience, moving towards a microservices architecture is a natural progression. This allows for better scalability, maintainability, and independent deployment of your backend applications, enhancing your expertise and increasing your value.\",\n    \"Cloud Platforms (AWS, Azure, or GCP)\": \"Cloud adoption is now standard for backend development.  Familiarizing yourself with a major cloud provider's services (like AWS, Azure, or GCP) will open doors to more advanced and scalable solutions, enabling you to build and deploy more robust applications.\",\n    \"API Gateway and Security\": \"Securing and managing APIs is paramount.  Gaining experience with API gateways and various security protocols (OAuth 2.0, JWT) will improve the overall security and management of your backend systems, making your applications more resilient.\",\n    \"Containerization (Docker and Kubernetes)\": \"Containerization is becoming increasingly important for deploying and managing applications efficiently. Mastering Docker and Kubernetes allows for streamlined deployment, improved scalability, and easier management of your applications across different environments.\"\n  }\n}\n```\n",
-      ],
-    },
-    {
-      "role": "user",
-      "parts": [
-        "Number of new Required Skills: 3  \nCurrent Skills: Figma, Adobe XD, Wireframing, Prototyping, User Research, Design Thinking  \nRole: UI/UX Designer  \nExperience: 3 years  \n",
-      ],
-    },
-    {
-      "role": "model",
-      "parts": [
-        "```json\n{\n  \"skills\": {\n    \"Motion Design\": \"Adding motion design skills to your existing UI/UX skillset will significantly elevate your designs, creating more engaging and intuitive user experiences. This is a highly sought-after skill in the current market.\",\n    \"Accessibility Design Principles\": \"Mastering accessibility design principles is crucial for creating inclusive and usable products for everyone.  Understanding WCAG guidelines and implementing them in your designs demonstrates a commitment to user-centered design and broadens your appeal to potential employers.\",\n    \"Interaction Design\": \"Focusing on interaction design will allow you to create more intuitive and engaging user flows.  By understanding how users interact with your designs, you can craft more seamless and enjoyable experiences, leading to higher user satisfaction and improved product adoption.\"\n  }\n}\n```\n",
+        "```json\n{\n  \"skills\": [\"JavaScript\", \"Responsive Web Design\"],\n  \"reasons\": [\n    \"JavaScript is essential for adding interactivity and dynamic functionality to websites.  It's a foundational skill for any frontend developer.\",\n    \"Responsive web design ensures your websites adapt seamlessly to different screen sizes and devices, a critical skill for modern web development.\"\n  ]\n}\n```\n",
       ],
     },
   ]
