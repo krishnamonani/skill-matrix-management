@@ -90,16 +90,12 @@ namespace SkillMatrixManagement.AiServices
                 //var type = responseBody?.GetType();
 
                 var recommendationData = JsonSerializer.Deserialize<SkillRecommendationResponseDto>(responseBody);
-
-                //Console.WriteLine(responseBody?.skills.GEt);
-
                 return ServiceResponse<SkillRecommendationResponseDto>.SuccessResult(recommendationData ?? new SkillRecommendationResponseDto(), 200);
-                //return ServiceResponse<string>.SuccessResult(responseBody, 200);
+
             }
             catch (Exception ex)
             {
                 return ServiceResponse<SkillRecommendationResponseDto>.Failure(ex.Message, 500);
-                //return ServiceResponse<string>.Failure("fuck you", 400);
             }
         }
 
