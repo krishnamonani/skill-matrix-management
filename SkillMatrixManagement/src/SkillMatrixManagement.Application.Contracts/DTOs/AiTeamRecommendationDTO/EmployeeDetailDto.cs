@@ -17,7 +17,8 @@ namespace SkillMatrixManagement.DTOs.AiTeamRecommendationDTO
         public int Experience { get; set; }
         public string? Department { get; set; }
         public string? Designation { get; set; }
-        public List<Dictionary<string, string>> Skills { get; set; }
+        public List<string> Skills { get; set; }
+        public List<string> Proficiencies { get; set; }
         public string ProjectStatus { get; set; } // A = 2, S = 1, B = 0
     }
 }
