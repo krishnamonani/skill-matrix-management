@@ -151,6 +151,7 @@ namespace SkillMatrixManagement.Services
             {
                 var roles = await _roleRepository.GetAllAsync(); // Only active roles for lookup
                 var lookupDtos = _mapper.Map<List<RoleLookupDto>>(roles);
+                lookupDtos = lookupDtos.Where(role => role.Name != RoleEnum.ROLE_ADMIN).ToList(); // excluding the admin role
                 return ServiceResponse<List<RoleLookupDto>>.SuccessResult(lookupDtos, 200, "Role lookup retrieved successfully.");
             }
             catch (Exception ex)
