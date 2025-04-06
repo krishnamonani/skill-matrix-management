@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.DTOs.UserDTO;
@@ -23,6 +24,7 @@ namespace SkillMatrixManagement.Services
         private readonly IIdentityUserRepository _identityUserRepository;
         private readonly IdentityUserManager _identityUserManager;
         private readonly IMapper _mapper;
+
 
         public AppUserService(IUserRepository userRepository,
                               IDepartmentRepository departmentRepository, 
