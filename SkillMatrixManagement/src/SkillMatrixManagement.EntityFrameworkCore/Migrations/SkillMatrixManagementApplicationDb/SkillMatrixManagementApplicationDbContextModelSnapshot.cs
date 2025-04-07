@@ -2333,9 +2333,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<int>("Experience")
-                        .HasColumnType("integer");
-
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("text")
@@ -2380,11 +2377,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ConcurrencyStamp");
@@ -2414,10 +2406,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("Email");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Email"), "HASH");
-
-                    b.HasIndex("Experience");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Experience"), "HASH");
 
                     b.HasIndex("ExtraProperties");
 
@@ -2466,10 +2454,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("RoleId");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("RoleId"), "HASH");
-
-                    b.HasIndex("UserName");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("UserName"), "HASH");
 
                     b.ToTable("AppUser", (string)null);
                 });
