@@ -113,7 +113,6 @@ namespace SkillMatrixManagement.Services
                     ? await query.IgnoreQueryFilters().ToListAsync()
                     : await _roleRepository.GetAllAsync(); // Repository already filters out deleted by default
                 var roleDtos = _mapper.Map<List<RoleDto>>(roles);
-                roleDtos = roleDtos.Where(role => role.Name != RoleEnum.ROLE_ADMIN).ToList(); // excluding the admin role
                 return ServiceResponse<List<RoleDto>>.SuccessResult(roleDtos, 200, "Roles retrieved successfully.");
             }
             catch (Exception ex)
@@ -151,7 +150,6 @@ namespace SkillMatrixManagement.Services
             {
                 var roles = await _roleRepository.GetAllAsync(); // Only active roles for lookup
                 var lookupDtos = _mapper.Map<List<RoleLookupDto>>(roles);
-                lookupDtos = lookupDtos.Where(role => role.Name != RoleEnum.ROLE_ADMIN).ToList(); // excluding the admin role
                 return ServiceResponse<List<RoleLookupDto>>.SuccessResult(lookupDtos, 200, "Role lookup retrieved successfully.");
             }
             catch (Exception ex)
