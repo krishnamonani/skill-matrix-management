@@ -23,16 +23,8 @@ namespace SkillMatrixManagement.DTOs.UserDTO
         [StringLength(256)]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        public string UserName { get; set; }
-
-        [Required]
-        [Range(0, 100)]
-        public int Experience { get; set; } = 0;
-
         [Phone]
-        [StringLength(10)] // Reasonable limit for phone numbers
+        [StringLength(20)] // Reasonable limit for phone numbers
         public string PhoneNumber { get; set; }
 
         [Required]

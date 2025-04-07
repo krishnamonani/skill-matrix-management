@@ -15,7 +15,5 @@ namespace SkillMatrixManagement.DTOs.AiSkillRecommendationDTO
         public int? NumberOfRecommendations { get; set; } = 5;
         [Required]
         public List<string>? Skills { get; set; }
-        [Required]
-        public string Experience { get; set; } = "0";
     }
 }

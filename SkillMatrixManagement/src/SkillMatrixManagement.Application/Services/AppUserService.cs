@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.Models;
-using SkillMatrixManagement.Permissions;
 using SkillMatrixManagement.Repositories;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Authorization;
 using Volo.Abp.Identity;
 
 namespace SkillMatrixManagement.Services
 {
-    [Authorize]
     public class AppUserService : ApplicationService, IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -28,13 +24,7 @@ namespace SkillMatrixManagement.Services
         private readonly IdentityUserManager _identityUserManager;
         private readonly IMapper _mapper;
 
-        public AppUserService(IUserRepository userRepository,
-                              IDepartmentRepository departmentRepository, 
-                              IRoleRepository roleRepository, 
-                              IDepartmentInternalRoleRepository roleInternalRepository, 
-                              IIdentityUserRepository identityUserRepository, 
-                              IdentityUserManager identityUserManager, 
-                              IMapper mapper)
+        public AppUserService(IUserRepository userRepository, IDepartmentRepository departmentRepository, IRoleRepository roleRepository, IDepartmentInternalRoleRepository roleInternalRepository, IIdentityUserRepository identityUserRepository, IdentityUserManager identityUserManager, IMapper mapper)
         {
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
@@ -44,7 +34,7 @@ namespace SkillMatrixManagement.Services
             _identityUserManager = identityUserManager;
             _mapper = mapper;
         }
-    [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false)
         {
             try
@@ -62,7 +52,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<int>.Failure($"Failed to retrieve count: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Create)]
+
         public async Task<ServiceResponse<UserDto>> CreateAsync(CreateUserDto input)
         {
             try
@@ -87,62 +77,26 @@ namespace SkillMatrixManagement.Services
                 {
                     throw new UserFriendlyException("Role ID cannot be empty.");
                 }
-                if (string.IsNullOrEmpty(input.UserName))
-                {
-                    throw new UserFriendlyException("UserName does not exist");
-                }
-                if(input.Experience > 100 || input.Experience < 0)
-                {
-                    throw new UserFriendlyException("Experience should be greated than equals to 0 and less than 100 Years");
-                }
-                if(input.PhoneNumber.Contains(' '))
-                {
-                    throw new UserFriendlyException("Phone number should not contain any space.");
-                }
-                if(input.UserName.Contains(' '))
-                {
-                    throw new UserFriendlyException("User name should not contain any space.");
-                }
-                if(input.PhoneNumber.Length > 10 || input.PhoneNumber.Length < 0)
-                {
-                    throw new UserFriendlyException("Invalid Phone number");
-                }
 
                 var query = await _userRepository.WithDetailsAsync();
-                if (await query.AnyAsync(u => u.Email.ToLower() == input.Email.ToLower() && !u.IsDeleted))
+                if (await query.AnyAsync(u => u.Email == input.Email && !u.IsDeleted))
                 {
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                if(await query.AnyAsync(u => u.UserName == input.UserName && !u.IsDeleted))
-                {
-                    throw new UserFriendlyException($"A User with userNmae '{input.UserName}' already exists");
-                }
-                
-                if(input.FirstName.Contains(' ') || input.LastName.Contains(' '))
-                {
-                    throw new UserFriendlyException("FirstName and Lastname should not contain any space!");
-                }
-
-                var abpUsers = await _identityUserRepository.GetListAsync();
-                if(!(abpUsers.Any(user => user.UserName == input.UserName && user.Email.ToUpper() == input.Email.ToUpper())))
-                {
-                    throw new Exception($"{input.UserName} or {input.Email} is not registered!");
-                }
+                //var user = _mapper.Map<User>(input);
 
                 var user = new User()
                 {
-                    FirstName        = input.FirstName,
-                    LastName         = input.LastName,
-                    Email            = input.Email,
-                    UserName         = input.UserName,
-                    Experience       = input.Experience,
-                    PhoneNumber      = input.PhoneNumber,
-                    RoleId           = input.RoleId,
-                    DepartmentId     = input.DepartmentId,
-                    InternalRoleId   = input.InternalRoleId,
-                    IsAvailable      = input.IsAvailable,
-                    ProfilePhoto     = input.ProfilePhoto
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
                 };
 
                 var createdUser = await _userRepository.CreateAsync(user);
@@ -154,7 +108,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserDto>.Failure($"Failed to create user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Delete)]
+
         public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             try
@@ -181,12 +135,6 @@ namespace SkillMatrixManagement.Services
 
         public async Task<ServiceResponse<List<UserDto>>> GetAllAsync(bool includeDeleted = false)
         {
-
-            var canRead = await AuthorizationService.IsGrantedAnyAsync(
-                SkillMatrixManagementPermissions.Admin.Read,
-                SkillMatrixManagementPermissions.HR.Read,
-                SkillMatrixManagementPermissions.Manager.Read);
-            if (!canRead) throw new AbpAuthorizationException("Authorization failed");
             try
             {
                 var query = await _userRepository.WithDetailsAsync();
@@ -231,39 +179,10 @@ namespace SkillMatrixManagement.Services
         {
             if (string.IsNullOrEmpty(userNameOrEmail)) throw new Exception("Usernamae or Email is empty");
 
-
-            // checking for user exist in the db or not
             var users = await _userRepository.GetAllAsync();
-            var user  = users.Where(u => u.Email.ToUpper() == userNameOrEmail.ToUpper()).FirstOrDefault();
+            var user  = users.Where(user => user.Email.Equals(userNameOrEmail, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
 
-            if (user == null)
-            {
-                user = users.Where(u => u.UserName == userNameOrEmail).FirstOrDefault();
-                if (user == null) return ServiceResponse<UserDto>.Failure("User does not exist", 400);
-            }
-
-            // performing lazy loading
-            if(user.DepartmentId != null)
-            {
-                user.Department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
-
-            } 
-            else
-            {
-                user.Department = null;
-            }
-
-            if(user.InternalRoleId != null)
-            {
-                user.InternalRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
-            }
-            else
-            {
-                user.InternalRole = null;
-            }
-
-             user.Role = await _roleRepository.GetByIdAsync(user.RoleId);
-
+            if (user == null) return ServiceResponse<UserDto>.Failure("User not exist", 400);
             return ServiceResponse<UserDto>.SuccessResult(_mapper.Map<UserDto>(user), 200);
         }
 
@@ -299,7 +218,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserDto>.Failure($"Failed to retrieve user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<List<UserLookupDto>>> GetLookupAsync()
         {
             try
@@ -314,7 +233,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<List<UserLookupDto>>.Failure($"Failed to retrieve user lookup: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<UserPagedResultDto>> GetPagedListAsync(UserFilterDto input)
         {
             try
@@ -402,12 +321,6 @@ namespace SkillMatrixManagement.Services
                         case "email":
                             query = isDescending ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email);
                             break;
-                        case "username":
-                            query = isDescending ? query.OrderByDescending(u => u.UserName) : query.OrderBy(u => u.UserName);
-                            break;
-                        case "experience":
-                            query = isDescending ? query.OrderByDescending(u => u.Experience) : query.OrderBy(u => u.Experience);
-                            break;
                         case "phonenumber":
                             query = isDescending ? query.OrderByDescending(u => u.PhoneNumber) : query.OrderBy(u => u.PhoneNumber);
                             break;
@@ -440,7 +353,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserPagedResultDto>.Failure($"Failed to retrieve paged users: {ex.Message}", 200);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Delete)]
+
         public async Task<ServiceResponse> PermanentDeleteAsync(Guid id)
         {
             try
@@ -458,7 +371,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse.Failure($"Failed to permanently delete user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Update)]
+
         public async Task<ServiceResponse> RestoreUserAsync(Guid id)
         {
             try
@@ -506,16 +419,6 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException("Role ID cannot be empty.");
                 }
 
-                if(input.UserName.Contains(' '))
-                {
-                    throw new UserFriendlyException("UserName does not contains any space");
-                }
-
-                if (input.FirstName.Contains(' ') || input.LastName.Contains(' '))
-                {
-                    throw new UserFriendlyException("FirstName and Lastname should not contain any space!");
-                }
-
                 var user = await _userRepository.GetByIdAsync(id);
                 if (user.IsDeleted)
                 {
@@ -523,29 +426,21 @@ namespace SkillMatrixManagement.Services
                 }
 
                 var query = await _userRepository.WithDetailsAsync();
-                if (await query.AnyAsync(u => u.Email.ToLower() == input.Email.ToLower() && u.Id != id && !u.IsDeleted))
+                if (await query.AnyAsync(u => u.Email == input.Email && u.Id != id && !u.IsDeleted))
                 {
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                if (await query.AnyAsync(u => u.UserName == input.UserName && u.Id != id && !u.IsDeleted))
-                {
-                    throw new UserFriendlyException($"A user with UserName '{input.UserName}' already exists.");
-                }
-
-
-                user.FirstName   = input.FirstName;
-                user.LastName    = input.LastName;
-                user.Email       = input.Email; // for now it is not updateable by frontend
-                user.UserName    = input.UserName; // for now it is not updateable by frontend
+                user.FirstName = input.FirstName;
+                user.LastName = input.LastName;
+                user.Email = input.Email;
                 user.PhoneNumber = input.PhoneNumber;
-                user.Experience  = input.Experience;
-                user.RoleId      = input.RoleId;
+                user.RoleId = input.RoleId;
 
                 // optional fields
-                user.DepartmentId   = input.DepartmentId;
+                user.DepartmentId = input.DepartmentId;
                 user.InternalRoleId = input.InternalRoleId;
-                user.ProfilePhoto   = input.ProfilePhoto;
+                user.ProfilePhoto = input.ProfilePhoto;
 
                 user.IsAvailable = input.IsAvailable; // default false
 
@@ -568,8 +463,7 @@ namespace SkillMatrixManagement.Services
             }
             return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
         }
-[Authorize(SkillMatrixManagementPermissions.Admin.Create)]
-[Authorize(SkillMatrixManagementPermissions.Admin.Update)]
+
         public async Task<ServiceResponse<UserDto>> CreateOrUpdateUserAsync(CreateUserDto input)
         {
             try
@@ -590,38 +484,18 @@ namespace SkillMatrixManagement.Services
                 {
                     throw new UserFriendlyException("Email cannot be empty.");
                 }
-                if (string.IsNullOrWhiteSpace(input.UserName))
-                {
-                    throw new UserFriendlyException("Username cannot be empty.");
-                }
                 if (input.RoleId == Guid.Empty)
                 {
                     throw new UserFriendlyException("Role ID cannot be empty.");
                 }
 
-                if (input.FirstName.Contains(' ') || input.LastName.Contains(' ')) return ServiceResponse<UserDto>.Failure("Firstname or the lastname should not contain any space between", 400);
-                if (input.UserName.Contains(' ')) return ServiceResponse<UserDto>.Failure("UserName should not contain any space.", 400);
-
-                var abpUsers = await _identityUserRepository.GetListAsync();
-                var abpUserByEmail = abpUsers.Where(u => u.Email.ToUpper() == input.Email.ToUpper()).FirstOrDefault() ?? throw new Exception($"Somthing went wrong! The {input.Email} is not registered.");
-                var abpUserbyUserName = abpUsers.Where(u => u.UserName == input.UserName).FirstOrDefault() ?? throw new Exception($"Something went wrong! The {input.UserName} is not registered.");
-
                 var query = await _userRepository.WithDetailsAsync();
-                var existingUser = await query.FirstOrDefaultAsync(u => (u.Email.ToUpper() == input.Email.ToUpper() || u.UserName == input.UserName)  && !u.IsDeleted);
+                var existingUser = await query.FirstOrDefaultAsync(u => u.Email == input.Email && !u.IsDeleted);
 
+                if (input.FirstName.Contains(' ') || input.LastName.Contains(' ')) return ServiceResponse<UserDto>.Failure("Firstname or the lastname should not contain any space between", 400);
 
                 if (existingUser != null)
                 {
-                    if (await query.AnyAsync(user => (user.UserName == input.UserName) && user.Id != existingUser.Id && !user.IsDeleted))
-                    {
-                        throw new Exception($"{input.UserName} already exist");
-                    } 
-                    
-                    if (await query.AnyAsync(user => (user.Email.ToLower() == input.Email.ToLower()) && user.Id != existingUser.Id && !user.IsDeleted))
-                    {
-                        throw new Exception($"{input.Email} already exist");
-                    }
-
                     var updateUserDtoObj = _mapper.Map<UpdateUserDto>(input);
                     var serviceResponse = await UpdateAsync(existingUser.Id, updateUserDtoObj);
                     if (!serviceResponse.Success)
@@ -634,17 +508,15 @@ namespace SkillMatrixManagement.Services
 
                 var user = new User()
                 {
-                    FirstName        = input.FirstName,
-                    LastName         = input.LastName,
-                    Email            = input.Email,
-                    UserName         = input.UserName,
-                    Experience       = input.Experience,
-                    PhoneNumber      = input.PhoneNumber,
-                    RoleId           = input.RoleId,
-                    DepartmentId     = input.DepartmentId,
-                    InternalRoleId   = input.InternalRoleId,
-                    IsAvailable      = input.IsAvailable,
-                    ProfilePhoto     = input.ProfilePhoto
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    InternalRoleId = input.InternalRoleId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
                 };
 
                 var createdUser = await _userRepository.CreateAsync(user);
