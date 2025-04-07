@@ -1,0 +1,53 @@
+import google.generativeai as genai
+import os
+import json
+import re
+from dotenv import load_dotenv
+from fastapi import HTTPException
+
+load_dotenv()
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+generation_config = {
+    "temperature": 0.4,
+    "top_p": 0.95,
+    "top_k": 40,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    generation_config=generation_config,
+    system_instruction=(
+        "You are an expert project team recommender. Based on the given project description and employee data, "
+        "recommend the best-fit team. Prioritize employees based on skill match, experience, availability, and budget. "
+        "If the project has a high budget, consider senior roles (e.g., SE2, Tech Lead). If the budget is low, consider SE1-level employees. "
+        "Exclude employees who are BUSY. Output only valid, working team suggestions in JSON format."
+    )
+)
+
+def recommend_team(project_description: str, employee_data: list):
+    # Convert employee objects to plain dictionaries
+    employee_data_dicts = [emp.dict() for emp in employee_data]
+
+    prompt = f"""
+Project Description:
+{project_description}
+
+Employee Data:
+{json.dumps(employee_data_dicts, indent=2)}
+"""
+    try:
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(prompt)
+
+        print("Raw Gemini Response:", response.text)
+
+        clean = re.sub(r"```json|```", "", response.text.strip())
+        team_data = json.loads(clean)
+        return team_data
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error while recommending team: {str(e)}")
