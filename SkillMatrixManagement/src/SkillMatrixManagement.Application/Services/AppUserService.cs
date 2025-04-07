@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.Models;
-using SkillMatrixManagement.Permissions;
 using SkillMatrixManagement.Repositories;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Authorization;
 using Volo.Abp.Identity;
 
 namespace SkillMatrixManagement.Services
 {
-    [Authorize]
     public class AppUserService : ApplicationService, IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -38,7 +34,7 @@ namespace SkillMatrixManagement.Services
             _identityUserManager = identityUserManager;
             _mapper = mapper;
         }
-    [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false)
         {
             try
@@ -56,7 +52,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<int>.Failure($"Failed to retrieve count: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Create)]
+
         public async Task<ServiceResponse<UserDto>> CreateAsync(CreateUserDto input)
         {
             try
@@ -112,7 +108,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserDto>.Failure($"Failed to create user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Delete)]
+
         public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             try
@@ -139,12 +135,6 @@ namespace SkillMatrixManagement.Services
 
         public async Task<ServiceResponse<List<UserDto>>> GetAllAsync(bool includeDeleted = false)
         {
-
-            var canRead = await AuthorizationService.IsGrantedAnyAsync(
-                SkillMatrixManagementPermissions.Admin.Read,
-                SkillMatrixManagementPermissions.HR.Read,
-                SkillMatrixManagementPermissions.Manager.Read);
-            if (!canRead) throw new AbpAuthorizationException("Authorization failed");
             try
             {
                 var query = await _userRepository.WithDetailsAsync();
@@ -228,7 +218,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserDto>.Failure($"Failed to retrieve user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<List<UserLookupDto>>> GetLookupAsync()
         {
             try
@@ -243,7 +233,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<List<UserLookupDto>>.Failure($"Failed to retrieve user lookup: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Read)]
+
         public async Task<ServiceResponse<UserPagedResultDto>> GetPagedListAsync(UserFilterDto input)
         {
             try
@@ -363,7 +353,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserPagedResultDto>.Failure($"Failed to retrieve paged users: {ex.Message}", 200);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Delete)]
+
         public async Task<ServiceResponse> PermanentDeleteAsync(Guid id)
         {
             try
@@ -381,7 +371,7 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse.Failure($"Failed to permanently delete user: {ex.Message}", 500);
             }
         }
-        [Authorize(SkillMatrixManagementPermissions.Admin.Update)]
+
         public async Task<ServiceResponse> RestoreUserAsync(Guid id)
         {
             try
@@ -473,8 +463,7 @@ namespace SkillMatrixManagement.Services
             }
             return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
         }
-[Authorize(SkillMatrixManagementPermissions.Admin.Create)]
-[Authorize(SkillMatrixManagementPermissions.Admin.Update)]
+
         public async Task<ServiceResponse<UserDto>> CreateOrUpdateUserAsync(CreateUserDto input)
         {
             try
