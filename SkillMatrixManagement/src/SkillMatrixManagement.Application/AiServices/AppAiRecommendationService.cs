@@ -14,6 +14,10 @@ using SkillMatrixManagement.Repositories;
 using SkillMatrixManagement.Services;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Content;
+using UglyToad.PdfPig;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SkillMatrixManagement.AiServices
 {
@@ -41,7 +45,7 @@ namespace SkillMatrixManagement.AiServices
             RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
         }
 
-        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>>/*Task<ServiceResponse<string>>*/ GetSkillRecommendation(Guid userId)
         {
             try
             {
@@ -73,7 +77,8 @@ namespace SkillMatrixManagement.AiServices
                 var requestBody = new SkillRecommendationInputDto()
                 {
                     Role = departmentInternalRoleName,
-                    Skills = skills.Count() != 0 ? skills : new List<string>()
+                    Skills = skills.Count() != 0 ? skills : new List<string>(),
+                    Experience = user.Experience.ToString()
                 };
 
                 // Serialize to JSON
@@ -86,9 +91,10 @@ namespace SkillMatrixManagement.AiServices
 
                 // Return response as string
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var recommendationData = JsonSerializer.Deserialize<SkillRecommendationResponseDto>(responseBody);
 
+                var recommendationData = JsonSerializer.Deserialize<SkillRecommendationResponseDto>(responseBody);
                 return ServiceResponse<SkillRecommendationResponseDto>.SuccessResult(recommendationData ?? new SkillRecommendationResponseDto(), 200);
+
             }
             catch (Exception ex)
             {
@@ -96,24 +102,81 @@ namespace SkillMatrixManagement.AiServices
             }
         }
 
-        public async Task<ServiceResponse<ICollection<EmployeeDetailDto>>> GetTeamRecommendationAsync(string projectDescription)
+        [HttpPost("api/app/get-team-recommendation-by-description")]
+        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationAsync([FromBody]string projectDescription)
         {
-            return ServiceResponse<ICollection<EmployeeDetailDto>>.SuccessResult((await GetEmployeeDetails()), 200);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(projectDescription)) throw new ArgumentNullException(nameof(projectDescription), "Project description can not be null");
+                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                {
+                    Employees = await GetEmployeeDetails(),
+                    Description = projectDescription
+                };
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
+            }
         }
 
-        //public ServiceResponse GetTeamRecommendationAsync(IRemoteStreamContent file)
-        //{
-        //    return ServiceResponse.SuccessResult(200, "Team recommendation from file stream");
-        //}
+        [HttpPost("api/app/get-team-description-by-pdf")]
+        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationByPdfAsync(IFormFile pdf)
+        {
+            try
+            {
+                if (pdf == null || pdf.Length == 0)
+                    throw new ArgumentNullException(nameof(pdf), "Pdf byte array can not be null");
+
+                // Check ContentType
+                if (pdf.ContentType != "application/pdf")
+                    throw new ArgumentException("Invalid file type. Only PDF files are allowed.");
+
+                // Check File Extension
+                var extension = Path.GetExtension(pdf.FileName);
+                if (extension == null || extension.ToLower() != ".pdf")
+                    throw new ArgumentException("Invalid file extension. Only .pdf files are allowed.");
+
+                var content = new StringBuilder();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await pdf.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    using (PdfDocument doc = PdfDocument.Open(memoryStream))
+                    {
+                        foreach (var page in doc.GetPages())
+                        {
+                            content.AppendLine(page.Text);
+                        }
+                    }
+                }
+
+                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                {
+                    Employees = await GetEmployeeDetails(),
+                    Description = content.ToString()
+                };
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
+            }
+        }
 
 
         private async Task<ICollection<EmployeeDetailDto>> GetEmployeeDetails()
         {
+
+            // fetching all the db details here
             var users = await _userRepository.GetAllAsync();
             var employeeSkills = await _employeeSkillRepository.GetAllAsync();
             var departments = await _departmentRepository.GetAllAsync();
             var departmentInternalRoles = await _departmentInternalRoleRepository.GetAllAsync();
 
+            // init the Dto object
             var employeeDetailsList = new List<EmployeeDetailDto>();
             foreach(var user in users)
             {
@@ -126,6 +189,13 @@ namespace SkillMatrixManagement.AiServices
                 if (department != null) departmentName = department.Name;
                 if (internalRole != null) internalRoleName = internalRole.RoleName.ToString();
 
+                var skills = new List<Dictionary<string, string>>();
+
+                var skillList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList();
+                var proficiencyList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.SelfAssessedProficiency.ToString()).ToList();
+
+                if (skillList.Count != proficiencyList.Count) continue;
+
                 employeeDetailsList.Add(
                        new EmployeeDetailDto()
                        {
@@ -137,7 +207,8 @@ namespace SkillMatrixManagement.AiServices
                            Experience = user.Experience,
                            Department = departmentName,
                            Designation = internalRoleName,
-                           Skills = new List<string>(employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList()),
+                           Skills = skillList,
+                           Proficiencies = proficiencyList,
                            ProjectStatus = user.IsAvailable.ToString()
                        }
                     );

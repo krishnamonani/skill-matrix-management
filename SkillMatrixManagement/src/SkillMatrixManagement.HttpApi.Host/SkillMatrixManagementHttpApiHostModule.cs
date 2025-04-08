@@ -40,6 +40,9 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.AspNetCore.Mvc.UI;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 namespace SkillMatrixManagement;
 
@@ -140,6 +143,19 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
             
             // Disable libs checking
             options.MinificationIgnoredFiles.Add("/libs/*");
+        });
+
+        // Cookie Settings for SameSite issue
+        Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
+
+        Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
     }
 
