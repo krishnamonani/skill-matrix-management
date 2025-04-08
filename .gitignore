@@ -311,13 +311,7 @@ dist/
 *.egg-info/
 *.egg
 
-# Virtual Environment
-.env
-.venv
-myenv/
-env/
-venv/
-ENV/
+C
 
 # IDE
 .vscode/*
@@ -347,3 +341,15 @@ Thumbs.db
 
 # Jupyter Notebook
 .ipynb_checkpoints
+Skill_Matrix_Gemini/.env
+
+
+# Ignore virtual environment folders
+myenv/
+env/
+.myenv/
+.env/
+venv/
+
+# Ignore environment variable files
+.env
