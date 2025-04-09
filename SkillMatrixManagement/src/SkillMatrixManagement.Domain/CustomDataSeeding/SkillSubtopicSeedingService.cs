@@ -227,8 +227,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                     SkillId = SOFTWARE_ENGINEER_I_FRONTEND_REACT.Id,
                     Description = new Dictionary<string, string>
                     {
-                        { "Git", "Intermediate (Any 1)" },
-                        { "TFVC", "Intermediate (Any 1)" }
+                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
+                        { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
                     }
                 },
 
@@ -248,9 +248,9 @@ namespace SkillMatrixManagement.CustomDataSeeding
                     SkillId = SOFTWARE_ENGINEER_I_FRONTEND_REACT.Id,
                     Description = new Dictionary<string, string>
                     {
-                        { "Jest", "Intermediate (Any 1)" },
-                        { "Mocha", "Intermediate (Any 1)" },
-                        { "Jasmine / Karma", "Intermediate (Any 1)" }
+                        { "Jest", ProficiencyEnum.INTERMEDIATE.ToString() },
+                        { "Mocha", ProficiencyEnum.INTERMEDIATE.ToString() },
+                        { "Jasmine / Karma", ProficiencyEnum.INTERMEDIATE.ToString() }
                     }
                 },
 
@@ -320,8 +320,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                     SkillId = SOFTWARE_ENGINEER_I_FRONTEND_ANGULAR.Id,
                     Description = new Dictionary<string, string>
                     {
-                        { "Git", "Intermediate (Any 1)" },
-                        { "TFVC", "Intermediate (Any 1)" }
+                        { "Git", ProficiencyEnum.INTERMEDIATE.ToString() },
+                        { "TFVC", ProficiencyEnum.INTERMEDIATE.ToString() }
                     }
                 },
 
