@@ -4,10 +4,10 @@ import json
 import re
 from dotenv import load_dotenv
 from fastapi import HTTPException
+from config import GEMINI_API_KEY
 
 load_dotenv()
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=GEMINI_API_KEY)
 
 generation_config = {
     "temperature": 0.4,
@@ -28,25 +28,42 @@ model = genai.GenerativeModel(
     )
 )
 
-def recommend_team(project_description: str, employee_data: list):
-    # Convert employee objects to plain dictionaries
-    employee_data_dicts = [emp.dict() for emp in employee_data]
+def combine_skills_with_proficiencies(skills: list, profs: list) -> dict:
+    return {skills[i]: profs[i] if i < len(profs) else "UNKNOWN" for i in range(len(skills))}
 
-    prompt = f"""
+def recommend_team(project_description: str, employee_data: list):
+    try:
+        employee_data_dicts = [emp.dict() for emp in employee_data]
+
+        # Add skillProfile to each employee
+        for emp in employee_data_dicts:
+            emp["skillProfile"] = combine_skills_with_proficiencies(
+                emp.get("skills", []),
+                emp.get("proficiencies", [])
+            )
+
+        prompt = f"""
 Project Description:
 {project_description}
 
-Employee Data:
+Employee Data (with skill proficiencies):
 {json.dumps(employee_data_dicts, indent=2)}
+
+Instructions:
+- Analyze the project description to extract required skills.
+- Match employees based on skillProfile and availability.
+- Use experience and designation to assign roles.
+- Ignore employees with projectStatus = "BUSY".
+- Return a recommended team with justification for each member.
 """
-    try:
+
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(prompt)
 
         print("Raw Gemini Response:", response.text)
 
-        clean = re.sub(r"```json|```", "", response.text.strip())
-        team_data = json.loads(clean)
+        cleaned_response = re.sub(r"```json|```", "", response.text.strip())
+        team_data = json.loads(cleaned_response)
         return team_data
 
     except Exception as e:
