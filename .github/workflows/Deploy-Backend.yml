@@ -1,9 +1,12 @@
-name: Deploy to On-Prem Server
+name: Deploy Backend to On-Prem Server
 
 on:
   push:
     branches:
       - dev  # Change to the branch you want to deploy
+    paths:
+      - 'SkillMatrixManagement/**'
+      - '.github/workflows/Deploy-Backend.yml'
 
 jobs:
   deploy:
@@ -32,13 +35,9 @@ jobs:
           script: |
             # Deploy backend services
             cd Internship-2025/Skill-Matrix-Management-App/SkillMatrixManagement
+            docker network create skill-matrix-app
             docker compose -f docker-compose-dev.yml up -d --build dbmigrator
+            echo "Sleeping for 30 seconds"
             sleep 30
             docker compose -f docker-compose-dev.yml up -d --build apihost
-            
-            # Deploy AI service
-            cd ../Skill_Matrix_Gemini
-            docker compose -f docker-compose-ai.yml up -d --build
-            
-            # Clean up unused images and containers
             docker system prune -af

@@ -4,6 +4,7 @@ using SkillMatrixManagement.DTOs.CategoryDTO;
 using SkillMatrixManagement.DTOs.DepartmentDTO;
 using SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
+using SkillMatrixManagement.DTOs.ProjectDTO;
 using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillDTO;
@@ -124,6 +125,12 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
             .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+
+        CreateMap<Project, ProjectDto>();
+        CreateMap<CreateProjectDto, Project>();
+        CreateMap<UpdateProjectDto, Project>();
+        CreateMap<Project, ProjectLookupDto>()
+            .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.ProjectName));
 
 
         // Skill Mapping
