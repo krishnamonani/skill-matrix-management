@@ -61,7 +61,6 @@ namespace SkillMatrixManagement.Services
 
                 var employeeBasedSkillDetailsDesctiption = skillSubtopicBasedOnEmployeeSkills.Select(s => s.Description).ToList();
 
-                var departmentSkills = new List<string>();
                 var departmentSkillsProficiency = new List<string>();
                 var employeeSkillsSet = new HashSet<string>();
 
@@ -98,6 +97,57 @@ namespace SkillMatrixManagement.Services
             {
                 return ServiceResponse<SkillGapResponseDto>.Failure(ex.Message, 400);
             }            
+        }
+
+        public async Task<ServiceResponse<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto>> GetCoreSkillGapAnalysisAsync(Guid userId)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+
+                if (user == null) throw new Exception("User not found!");
+                var employeeSkills = (await _employeeSkillRepository.GetAllAsync())
+                    .Where(es => es.UserId == userId)
+                    .Select(es => es.CoreSkillName)
+                    .ToList();
+
+                var skillSubtopis = (await _skillSubtopicRepository.GetAllAsync())
+                    .Where(sst => sst.SkillId == user.SkillId);
+
+                var skillSubtopicsDescriptions = skillSubtopis
+                    .Select(sst => sst.Description)
+                    .ToList();
+
+                var departmentSkillNames = skillSubtopis
+                    .Select(sst => sst.Name)
+                    .ToList();
+
+                var departmentCoreSkillNames = new List<List<string>>();
+
+                foreach (var coreSkills in skillSubtopicsDescriptions)
+                {
+                    if (coreSkills == null) continue;
+                    var departmentCoreSkills = new List<string>();
+                    foreach (var kvp in coreSkills)
+                    {
+                        departmentCoreSkills.Add(kvp.Key);
+                    }
+                    departmentCoreSkillNames.Add(departmentCoreSkills);
+                }
+
+                var coreSkillGap = new SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto()
+                {
+                    DepartmentSkills = departmentSkillNames,
+                    DepartmentCoreSkills = departmentCoreSkillNames,
+                    EmployeeCoreSkills = employeeSkills
+                };
+
+                return ServiceResponse<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto>.SuccessResult(coreSkillGap, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto>.Failure(ex.Message, 400);
+            }
         }
     }
 }

@@ -137,7 +137,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
                     {
                         { "Brand Management", ProficiencyEnum.BEGINNER.ToString() },
                         { "Copywriting", ProficiencyEnum.INTERMEDIATE.ToString() },
-                        { "Graphic Design", "Intermediate (Advanced tools)" }
+                        { "Graphic Design", ProficiencyEnum.INTERMEDIATE.ToString() }
                     }
                 },
 
