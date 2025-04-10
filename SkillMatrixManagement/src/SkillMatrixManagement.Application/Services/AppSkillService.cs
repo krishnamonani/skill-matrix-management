@@ -161,20 +161,12 @@ namespace SkillMatrixManagement.Services
                     return ServiceResponse<SkillPagedResultDto>.Failure("Filter input cannot be null.", 400);
                 }
 
-                var query = await _skillRepository.WithDetailsAsync();
+                var query = (await _skillRepository.WithDetailsAsync()).Where(s => !s.IsDeleted); // by default it will show the active skills 
 
                 // Apply filters
                 if (!string.IsNullOrWhiteSpace(input.Name))
                 {
                     query = query.Where(s => s.Name.Contains(input.Name));
-                }
-                if (input.IsDeleted.HasValue)
-                {
-                    query = query.Where(s => s.IsDeleted == input.IsDeleted.Value);
-                }
-                else
-                {
-                    query = query.Where(s => !s.IsDeleted); // Default to active skills
                 }
                 if (input.CreationTimeStart.HasValue)
                 {

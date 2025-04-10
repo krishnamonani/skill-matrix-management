@@ -52,7 +52,7 @@ namespace SkillMatrixManagement.AiServices
                 var user = await _userRepository.GetByIdAsync(userId);
                 if (user == null) throw new Exception("User Not Found!");
 
-                Guid? departmentInternalRoleId = user.InternalRoleId;
+                Guid? departmentInternalRoleId = user.SkillId;
 
                 var departmentInternalRoleName = "General role";
                 if (departmentInternalRoleId != null)
@@ -181,7 +181,7 @@ namespace SkillMatrixManagement.AiServices
             foreach(var user in users)
             {
                 var department = departments.Where(dept => dept.Id == user.DepartmentId).FirstOrDefault() ?? null;
-                var internalRole = departmentInternalRoles.Where(irole => irole.Id == user.InternalRoleId).FirstOrDefault() ?? null;
+                var internalRole = departmentInternalRoles.Where(irole => irole.Id == user.SkillId).FirstOrDefault() ?? null;
 
                 string? departmentName = null;
                 string? internalRoleName = null;

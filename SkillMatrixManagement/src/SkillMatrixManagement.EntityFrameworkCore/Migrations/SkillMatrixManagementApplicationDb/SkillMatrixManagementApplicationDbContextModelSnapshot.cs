@@ -2345,9 +2345,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("InternalRoleId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("IsAvailable")
                         .IsRequired()
                         .HasColumnType("text");
@@ -2378,6 +2375,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("text");
 
                     b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("SkillId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
@@ -2431,10 +2431,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Id"), "HASH");
 
-                    b.HasIndex("InternalRoleId");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("InternalRoleId"), "HASH");
-
                     b.HasIndex("IsAvailable");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("IsAvailable"), "HASH");
@@ -2466,6 +2462,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("RoleId");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("RoleId"), "HASH");
+
+                    b.HasIndex("SkillId");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SkillId"), "HASH");
 
                     b.HasIndex("UserName");
 
@@ -2726,21 +2726,21 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("SkillMatrixManagement.Models.DepartmentInternalRole", "InternalRole")
-                        .WithMany()
-                        .HasForeignKey("InternalRoleId");
-
                     b.HasOne("SkillMatrixManagement.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SkillMatrixManagement.Models.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillId");
+
                     b.Navigation("Department");
 
-                    b.Navigation("InternalRole");
-
                     b.Navigation("Role");
+
+                    b.Navigation("Skill");
                 });
 
             modelBuilder.Entity("SkillMatrixManagement.Models.Skill", b =>
