@@ -23,6 +23,7 @@ namespace SkillMatrixManagement.Services
         private readonly IDepartmentInternalRoleRepository _roleInternalRepository;
         private readonly IIdentityUserRepository _identityUserRepository;
         private readonly IdentityUserManager _identityUserManager;
+        private readonly ISkillRepository _skillRepository;
         private readonly IMapper _mapper;
 
 
@@ -32,7 +33,8 @@ namespace SkillMatrixManagement.Services
                               IDepartmentInternalRoleRepository roleInternalRepository, 
                               IIdentityUserRepository identityUserRepository, 
                               IdentityUserManager identityUserManager, 
-                              IMapper mapper)
+                              IMapper mapper,
+                              ISkillRepository skillRepository)
         {
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
@@ -40,6 +42,7 @@ namespace SkillMatrixManagement.Services
             _roleInternalRepository = roleInternalRepository;
             _identityUserRepository = identityUserRepository;
             _identityUserManager = identityUserManager;
+            _skillRepository = skillRepository;
             _mapper = mapper;
         }
 
@@ -138,7 +141,7 @@ namespace SkillMatrixManagement.Services
                     PhoneNumber      = input.PhoneNumber,
                     RoleId           = input.RoleId,
                     DepartmentId     = input.DepartmentId,
-                    InternalRoleId   = input.InternalRoleId,
+                    SkillId          = input.SkillId,
                     IsAvailable      = input.IsAvailable,
                     ProfilePhoto     = input.ProfilePhoto
                 };
@@ -196,7 +199,8 @@ namespace SkillMatrixManagement.Services
 
                 var departments = await _departmentRepository.GetAllAsync();
                 var roles = await _roleRepository.GetAllAsync();
-                var internalRoles = await _roleInternalRepository.GetAllRolesAsync();
+                //var internalRoles = await _roleInternalRepository.GetAllRolesAsync();
+                var skills = await _skillRepository.GetAllAsync();
 
                 foreach (var user in users)
                 {
@@ -206,8 +210,11 @@ namespace SkillMatrixManagement.Services
                     var role = roles.Where(role => role.Id == user.RoleId).FirstOrDefault();
                     user.Role = role ?? throw new Exception("User should have a role, Role not found!");
 
-                    var internaleRole = internalRoles.Where(internalRole => internalRole.Id == user.InternalRoleId).FirstOrDefault();
-                    user.InternalRole = internaleRole;
+                    //var internaleRole = internalRoles.Where(internalRole => internalRole.Id == user.InternalRoleId).FirstOrDefault();
+                    //user.InternalRole = internaleRole;
+
+                    var skill = skills.Where(skill => skill.Id == user.SkillId).FirstOrDefault();
+                    user.Skill = skill;
                 }
 
                 var userDtos = _mapper.Map<List<UserDto>>(users);
@@ -245,16 +252,25 @@ namespace SkillMatrixManagement.Services
                 user.Department = null;
             }
 
-            if(user.InternalRoleId != null)
+            //if(user.InternalRoleId != null)
+            //{
+            //    user.InternalRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+            //}
+            //else
+            //{
+            //    user.InternalRole = null;
+            //}
+
+            if (user.SkillId != null)
             {
-                user.InternalRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                user.Skill = await _skillRepository.GetByIdAsync(user.SkillId ?? Guid.NewGuid());
             }
             else
             {
-                user.InternalRole = null;
+                user.Skill = null;
             }
 
-             user.Role = await _roleRepository.GetByIdAsync(user.RoleId);
+            user.Role = await _roleRepository.GetByIdAsync(user.RoleId);
 
             return ServiceResponse<UserDto>.SuccessResult(_mapper.Map<UserDto>(user), 200);
         }
@@ -276,8 +292,12 @@ namespace SkillMatrixManagement.Services
                 var role = await _roleRepository.GetByIdAsync(user.RoleId);
                 user.Role = role;
 
-                var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
-                user.InternalRole = internaleRole;
+                //var internaleRole = await _roleInternalRepository.GetByIdAsync(user.InternalRoleId ?? Guid.NewGuid());
+                //user.InternalRole = internaleRole;
+
+                var skill = await _skillRepository.GetByIdAsync(user.SkillId ?? Guid.NewGuid());
+                user.Skill = skill;
+
                 if (user.IsDeleted)
                 {
                     throw new UserFriendlyException("User is deleted.");
@@ -343,9 +363,13 @@ namespace SkillMatrixManagement.Services
                 {
                     query = query.Where(u => u.DepartmentId == input.DepartmentId.Value);
                 }
-                if (input.InternalRoleId.HasValue)
+                //if (input.InternalRoleId.HasValue)
+                //{
+                //    query = query.Where(u => u.InternalRoleId == input.InternalRoleId.Value);
+                //}
+                if (input.SkillId.HasValue)
                 {
-                    query = query.Where(u => u.InternalRoleId == input.InternalRoleId.Value);
+                    query = query.Where(u => u.SkillId == input.SkillId.Value);
                 }
                 if (input.IsAvailable.HasValue)
                 {
@@ -536,7 +560,8 @@ namespace SkillMatrixManagement.Services
 
                 // optional fields
                 user.DepartmentId   = input.DepartmentId;
-                user.InternalRoleId = input.InternalRoleId;
+                //user.InternalRoleId = input.InternalRoleId;
+                user.SkillId        = input.SkillId;
                 user.ProfilePhoto   = input.ProfilePhoto;
 
                 user.IsAvailable = input.IsAvailable; // default false
@@ -633,7 +658,8 @@ namespace SkillMatrixManagement.Services
                     PhoneNumber      = input.PhoneNumber,
                     RoleId           = input.RoleId,
                     DepartmentId     = input.DepartmentId,
-                    InternalRoleId   = input.InternalRoleId,
+                    //InternalRoleId   = input.InternalRoleId,
+                    SkillId          = input.SkillId,
                     IsAvailable      = input.IsAvailable,
                     ProfilePhoto     = input.ProfilePhoto
                 };

@@ -13,7 +13,6 @@ namespace SkillMatrixManagement.DTOs.SkillDTO
         public Guid? CategoryId { get; set; }
         public string? Description { get; set; }
         public Guid? InternalRoleId { get; set; }
-        public bool? IsDeleted { get; set; }
         public DateTime? CreationTimeStart { get; set; }
         public DateTime? CreationTimeEnd { get; set; }
         public DateTime? LastModificationTimeStart { get; set; }
