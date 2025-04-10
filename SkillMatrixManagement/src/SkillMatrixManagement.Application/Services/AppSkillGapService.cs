@@ -35,7 +35,7 @@ namespace SkillMatrixManagement.Services
             {
                 // retrieving the employee detials
                 var employee = await _userRepository.GetByIdAsync(userId);
-                var employeeInternalRoleId = employee.SkillId;
+                var employeeSkillId = employee.SkillId;
 
                 // retrieving the employee skill details
                 var employeeDetails = (await _employeeSkillRepository.GetAllAsync())
@@ -50,7 +50,7 @@ namespace SkillMatrixManagement.Services
                     .ToList();
 
                 // retrieving based on employee internal role
-                var skillsBasedOnEmployeeInternalRole = (await _skillRepository.GetAllAsync()).Where(skill => skill.InternalRoleId == employeeInternalRoleId).ToList();
+                var skillsBasedOnEmployeeInternalRole = (await _skillRepository.GetAllAsync()).Where(skill => skill.Id == employeeSkillId).ToList();
                 var skillSubtopicBasedOnEmployeeSkills = new List<SkillSubtopic>();
 
                 foreach (var skill in skillsBasedOnEmployeeInternalRole)

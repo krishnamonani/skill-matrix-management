@@ -25,20 +25,20 @@ namespace SkillMatrixManagement.AiServices
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserRepository _userRepository;
-        private readonly IDepartmentInternalRoleRepository _departmentInternalRoleRepository;
+        private readonly ISkillRepository _skillRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly string RECOMMENDATION_END_POINT;
 
         public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
-                                          IUserRepository userRepository, 
-                                          IDepartmentInternalRoleRepository departmentInternalRoleRepository, 
+                                          IUserRepository userRepository,
+                                          ISkillRepository skillRepository, 
                                           IEmployeeSkillRepository employeeSkillRepository, 
                                           IDepartmentRepository departmentRepository,
                                           IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
-            _departmentInternalRoleRepository = departmentInternalRoleRepository;
+            _skillRepository = skillRepository;
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
             _departmentRepository = departmentRepository;
@@ -52,14 +52,14 @@ namespace SkillMatrixManagement.AiServices
                 var user = await _userRepository.GetByIdAsync(userId);
                 if (user == null) throw new Exception("User Not Found!");
 
-                Guid? departmentInternalRoleId = user.SkillId;
+                Guid? skillId = user.SkillId;
 
-                var departmentInternalRoleName = "General role";
-                if (departmentInternalRoleId != null)
+                var skillName = "General role";
+                if (skillId != null)
                 {
-                    var departmentInternalRole = await _departmentInternalRoleRepository.GetByIdAsync(departmentInternalRoleId ?? throw new Exception("Department Role not found!"));
-                    if (departmentInternalRole == null) throw new Exception("Department Role not found!");
-                    departmentInternalRoleName = departmentInternalRole.RoleName.ToString();
+                    var skill = await _skillRepository.GetByIdAsync(skillId ?? throw new Exception("Designation not found!"));
+                    if (skill == null) throw new Exception("Department Role not found!");
+                    skillName = skill.Name;
                 }                
 
                 var employeeSkills = await _employeeSkillRepository.GetAllAsync();
@@ -76,7 +76,7 @@ namespace SkillMatrixManagement.AiServices
                 // Define the request body
                 var requestBody = new SkillRecommendationInputDto()
                 {
-                    Role = departmentInternalRoleName,
+                    Role = skillName,
                     Skills = skills.Count() != 0 ? skills : new List<string>(),
                     Experience = user.Experience.ToString()
                 };
@@ -174,20 +174,20 @@ namespace SkillMatrixManagement.AiServices
             var users = await _userRepository.GetAllAsync();
             var employeeSkills = await _employeeSkillRepository.GetAllAsync();
             var departments = await _departmentRepository.GetAllAsync();
-            var departmentInternalRoles = await _departmentInternalRoleRepository.GetAllAsync();
+            var departmentSkills = await _skillRepository.GetAllAsync();
 
             // init the Dto object
             var employeeDetailsList = new List<EmployeeDetailDto>();
             foreach(var user in users)
             {
                 var department = departments.Where(dept => dept.Id == user.DepartmentId).FirstOrDefault() ?? null;
-                var internalRole = departmentInternalRoles.Where(irole => irole.Id == user.SkillId).FirstOrDefault() ?? null;
+                var skill = departmentSkills.Where(irole => irole.Id == user.SkillId).FirstOrDefault() ?? null;
 
                 string? departmentName = null;
-                string? internalRoleName = null;
+                string? skillName = null;
 
                 if (department != null) departmentName = department.Name;
-                if (internalRole != null) internalRoleName = internalRole.RoleName.ToString();
+                if (skill != null) skillName = skill.Name;
 
                 var skills = new List<Dictionary<string, string>>();
 
@@ -206,7 +206,7 @@ namespace SkillMatrixManagement.AiServices
                            Email = user.Email,
                            Experience = user.Experience,
                            Department = departmentName,
-                           Designation = internalRoleName,
+                           Designation = skillName,
                            Skills = skillList,
                            Proficiencies = proficiencyList,
                            ProjectStatus = user.IsAvailable.ToString()
