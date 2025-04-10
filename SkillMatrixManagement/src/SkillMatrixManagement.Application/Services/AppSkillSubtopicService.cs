@@ -194,5 +194,31 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse.Failure(ex.Message, 500);
             }
         }
+
+        public async Task<ServiceResponse<HashSet<string>>> GetSkillSetAsync()
+        {
+            try
+            {
+                var set = new HashSet<string>();
+                var skillDetails = (await _skillSubtopicRepository.GetAllAsync())
+                    .Select(s => s.Description)
+                    .ToList();
+
+                foreach (var skills in skillDetails)
+                {
+                    if (skills == null) continue;
+                    foreach (var kvp in skills)
+                    {
+                        set.Add(kvp.Key);
+                    }
+                }
+
+                return ServiceResponse<HashSet<string>>.SuccessResult(set, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<HashSet<string>>.Failure($"Something went wrong while fetching the skills, {ex.Message}", 500);
+            }
+        }
     }
 }

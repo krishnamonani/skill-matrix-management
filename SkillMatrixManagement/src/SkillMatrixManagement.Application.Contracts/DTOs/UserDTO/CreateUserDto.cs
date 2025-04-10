@@ -40,7 +40,8 @@ namespace SkillMatrixManagement.DTOs.UserDTO
 
         public Guid? DepartmentId { get; set; }
 
-        public Guid? InternalRoleId { get; set; }
+        //public Guid? InternalRoleId { get; set; } // it may required for further use
+        public Guid? SkillId { get; set; }
 
         public ProjectStatusEnum IsAvailable { get; set; }
 
