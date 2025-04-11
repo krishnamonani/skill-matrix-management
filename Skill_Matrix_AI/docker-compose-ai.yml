@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  skill-gemini-ai:
+    build:
+      context: .
+      dockerfile: ai.Dockerfile
+    container_name: skill-gemini-ai
+    ports:
+      - "8002:8002"
+    volumes:
+      - .:/app
+    environment:
+      - TZ=UTC
+      - ENVIRONMENT=development
+      - HOST=0.0.0.0
+      - PORT=8002
+      - CORS_ORIGINS=http://181.214.44.15:5173,https://localhost:44302,https://smm-fe.krishnamonani.publicvm.com,https://smm-be.krishnamonani.publicvm.com
+    networks:
+      - skill-matrix-app
+    restart: always
+
+networks:
+  skill-matrix-app:
+    external: true
