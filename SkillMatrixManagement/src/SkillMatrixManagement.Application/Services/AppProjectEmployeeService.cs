@@ -16,11 +16,13 @@ namespace SkillMatrixManagement.Services
     {
         private readonly IProjectEmployeeRepository _projectEmployeeRepository;
         private readonly IMapper _mapper;
+        private readonly IProjectRepository _projectRepository;
 
-        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper)
+        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper, IProjectRepository projectRepository)
         {
             _projectEmployeeRepository = projectEmployeeRepository;
             _mapper = mapper;
+            _projectRepository = projectRepository;
         }
 
         // Create a new ProjectEmployee
@@ -248,6 +250,39 @@ namespace SkillMatrixManagement.Services
             catch (Exception ex)
             {
                 return ServiceResponse<List<ProjectEmployeeLookupDto>>.Failure($"Error retrieving lookup data: {ex.Message}", 500);
+            }
+        }
+
+        // Get all fields where UserId matches the given one
+        public async Task<ServiceResponse<List<ProjectEmployeeDto>>> GetAllFieldsByUserIdAsync(Guid userId)
+        {
+            try
+            {
+                if (userId == Guid.Empty)
+                {
+                    return ServiceResponse<List<ProjectEmployeeDto>>.Failure("User ID cannot be empty.", 400);
+                }
+
+                // Fetch all project employees where UserId matches
+                var projectEmployees = await _projectEmployeeRepository.GetByUserIdAsync(userId);
+                var projects = await _projectRepository.GetAllAsync();
+                foreach (var pe in projectEmployees)
+                {
+                    pe.Project = projects.Where(p => p.Id == pe.ProjectId).FirstOrDefault();
+                }
+
+                if (!projectEmployees.Any())
+                {
+                    return ServiceResponse<List<ProjectEmployeeDto>>.Failure("No records found for the given User ID.", 404);
+                }
+
+                // Map the result to DTOs
+                var projectEmployeeDtos = _mapper.Map<List<ProjectEmployeeDto>>(projectEmployees);
+                return ServiceResponse<List<ProjectEmployeeDto>>.SuccessResult(projectEmployeeDtos, 200, "Records retrieved successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<List<ProjectEmployeeDto>>.Failure($"Error retrieving records: {ex.Message}", 500);
             }
         }
     }
