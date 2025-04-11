@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.DTOs.UserDTO;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Identity;
 
 namespace SkillMatrixManagement.Services
 {
@@ -21,5 +22,6 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse> RestoreUserAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<UserLookupDto>>> GetLookupAsync();
+        Task<IdentityUserDto> CreateEmployeeAsync(CreateEmployeeDto input);
     }
 }

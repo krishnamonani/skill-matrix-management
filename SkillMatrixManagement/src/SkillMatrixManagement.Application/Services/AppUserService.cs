@@ -12,6 +12,8 @@ using SkillMatrixManagement.Repositories;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Identity;
+using SkillMatrixManagement.Utils;
+using SkillMatrixManagement.Services;
 
 namespace SkillMatrixManagement.Services
 {
@@ -24,6 +26,7 @@ namespace SkillMatrixManagement.Services
         private readonly IIdentityUserRepository _identityUserRepository;
         private readonly IdentityUserManager _identityUserManager;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
 
         public AppUserService(IUserRepository userRepository,
@@ -32,7 +35,8 @@ namespace SkillMatrixManagement.Services
                               IDepartmentInternalRoleRepository roleInternalRepository, 
                               IIdentityUserRepository identityUserRepository, 
                               IdentityUserManager identityUserManager, 
-                              IMapper mapper)
+                              IMapper mapper,
+                              IEmailService emailService)
         {
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
@@ -41,6 +45,7 @@ namespace SkillMatrixManagement.Services
             _identityUserRepository = identityUserRepository;
             _identityUserManager = identityUserManager;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public async Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false)
@@ -647,6 +652,49 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<UserDto>.Failure($"Failed to create or update user: {ex.Message}", 500);
             }
         }
- 
+
+        public async Task<IdentityUserDto> CreateEmployeeAsync(CreateEmployeeDto input)
+        {
+            // Generate a secure random password
+            var password = PasswordGenerator.GenerateRandomPassword(10);
+            
+            // Create a new user
+            var user = new IdentityUser(
+                GuidGenerator.Create(),
+                input.UserName,
+                input.Email,
+                CurrentTenant.Id
+            );
+            
+            // Set additional properties if needed
+            
+            // Create user
+            var result = await _identityUserManager.CreateAsync(user, password);
+            
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Could not create user: {string.Join(", ", result.Errors)}");
+            }
+            
+            // Assign roles if needed
+            
+            // Send welcome email
+            var resetPasswordLink = $"{GetAppUrl()}/reset-password?userId={user.Id}";
+            
+            await _emailService.SendWelcomeEmailAsync(
+                input.Email,
+                input.UserName,
+                password,
+                resetPasswordLink
+            );
+            
+            return ObjectMapper.Map<IdentityUser, IdentityUserDto>(user);
+        }
+        
+        private string GetAppUrl()
+        {
+            // Get this from configuration or settings
+            return "http://localhost:5173";
+        }
     }
 }

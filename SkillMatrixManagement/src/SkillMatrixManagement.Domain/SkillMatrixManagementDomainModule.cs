@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SkillMatrixManagement.Localization;
 using SkillMatrixManagement.MultiTenancy;
+using SkillMatrixManagement.Emailing;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
@@ -20,6 +21,9 @@ using Volo.Abp.TenantManagement;
 using SkillMatrixManagement.CustomDataSeeding;
 using Volo.Abp.Data;
 using System.ComponentModel.Design.Serialization;
+using Volo.Abp.TextTemplating;
+using Volo.Abp.TextTemplating.Razor;
+using Volo.Abp.VirtualFileSystem;
 
 namespace SkillMatrixManagement;
 
@@ -36,7 +40,8 @@ namespace SkillMatrixManagement;
     typeof(AbpIdentityDomainModule),
     typeof(AbpOpenIddictDomainModule),
     typeof(AbpTenantManagementDomainModule),
-    typeof(BlobStoringDatabaseDomainModule)
+    typeof(BlobStoringDatabaseDomainModule),
+    typeof(AbpTextTemplatingRazorModule)
     )]
 public class SkillMatrixManagementDomainModule : AbpModule
 {
@@ -81,9 +86,24 @@ public class SkillMatrixManagementDomainModule : AbpModule
             options.Languages.Add(new LanguageInfo("sv", "sv", "Svenska"));
         });
 
+        Configure<AbpVirtualFileSystemOptions>(options =>
+        {
+            options.FileSets.AddEmbedded<SkillMatrixManagementDomainModule>("SkillMatrixManagement");
+        });
+
+        Configure<AbpTextTemplatingOptions>(options =>
+        {
+            options.DefaultRenderingEngine = "Razor";
+        });
+
+        Configure<AbpTextTemplatingOptions>(options =>
+        {
+            options.DefinitionProviders.Add<EmailTemplateDefinitionProvider>();
+        });
 
 #if DEBUG
-        context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
+        // Comment out this line to enable real email sending in development mode
+        // context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
     }
 }
