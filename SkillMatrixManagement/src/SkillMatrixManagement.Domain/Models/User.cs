@@ -40,9 +40,13 @@ namespace SkillMatrixManagement.Models
         public Guid? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        [ForeignKey("RoleId")]
-        public Guid? InternalRoleId { get; set; }
-        public virtual DepartmentInternalRole InternalRole { get; set; }
+        //[ForeignKey("RoleId")]
+        //public Guid? InternalRoleId { get; set; }
+        //public virtual DepartmentInternalRole InternalRole { get; set; }
+
+        [ForeignKey("SkillId")]
+        public Guid? SkillId { get; set; }
+        public virtual Skill Skill { get; set; }
 
         public ProjectStatusEnum IsAvailable { get; set; }
         public string? ProfilePhoto { get; set; }

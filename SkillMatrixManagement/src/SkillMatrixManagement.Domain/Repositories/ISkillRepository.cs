@@ -22,5 +22,7 @@ namespace SkillMatrixManagement.Repositories
         Task SoftDeleteAsync(Guid skillId); // Soft delete a skill
         Task RestoreSkillAsync(Guid skillId); // Restore a soft-deleted skill
 
+        Task<IQueryable<Skill>> WithDetailsAsync();
+
     }
 }

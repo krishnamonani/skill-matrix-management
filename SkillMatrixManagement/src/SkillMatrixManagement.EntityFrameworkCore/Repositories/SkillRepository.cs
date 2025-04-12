@@ -7,9 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SkillMatrixManagement.EntityFrameworkCore;
-using SkillMatrixManagement.Models;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -112,6 +109,11 @@ namespace SkillMatrixManagement.Repositories.Implementations
 
             skill.IsDeleted = false;
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IQueryable<Skill>> WithDetailsAsync()
+        {
+            return (await _dbContextProvider.GetDbContextAsync()).Set<Skill>();
         }
     }
 }

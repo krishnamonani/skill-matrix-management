@@ -18,7 +18,8 @@ namespace SkillMatrixManagement.DTOs.UserDTO
         public string? PhoneNumber { get; set; }
         public Guid? RoleId { get; set; }
         public Guid? DepartmentId { get; set; }
-        public Guid? InternalRoleId { get; set; }
+        //public Guid? InternalRoleId { get; set; }
+        public Guid? SkillId { get; set; }
         public ProjectStatusEnum? IsAvailable { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? CreationTimeStart { get; set; }
