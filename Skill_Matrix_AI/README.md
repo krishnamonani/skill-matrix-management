@@ -74,8 +74,18 @@ python -m venv venv
 ```bash
 pip install -r requirements.txt
 ```
+### 3. Create .env File
+Create a .env file in the root directory with the following content:
 
-### 3. Run the FastAPI Application
+
+GOOGLE_API_KEY=your_google_gemini_api_key_here
+
+GEMINI_API_KEY=your_google_gemini_api_key_here
+
+Replace your_google_gemini_api_key_here with your actual API key from Google AI Studio.
+
+
+### 4. Run the FastAPI Application
 
 Once your virtual environment is set up and dependencies are installed, you can run the FastAPI application.
 
