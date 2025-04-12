@@ -145,18 +145,22 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
             options.MinificationIgnoredFiles.Add("/libs/*");
         });
 
-        // Cookie Settings for SameSite issue
-        Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
-        {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
+        // Cookie Settings for SameSite issue and expiration
+        //Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+        //{
+        //    options.Cookie.SameSite = SameSiteMode.None;
+        //    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // it will ensure the cookie is transfer only through the https
+        //    options.ExpireTimeSpan = TimeSpan.FromDays(14); // Set expiration to 14 days
+        //    options.SlidingExpiration = true; // Optional: Renews the cookie if accessed within the expiration window
+        //});
 
-        Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>
-        {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
+        //Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>
+        //{
+        //    options.Cookie.SameSite = SameSiteMode.None;
+        //    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // it will ensure the cookie is transfer only through the https
+        //    options.ExpireTimeSpan = TimeSpan.FromDays(30); // Set expiration to 30 days for "Remember Me"
+        //    options.SlidingExpiration = true; // Optional: Renews the cookie if accessed within the expiration window
+        //});
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
