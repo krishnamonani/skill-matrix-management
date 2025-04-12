@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SkillMatrixManagement.DTOs.AiSkillRecommendationDTO
 {
-    public class SkillRecommendationRequestDto
+    public class SkillRecommendationInputDto
     {
         [Required]
         public string? Role { get; set; }
