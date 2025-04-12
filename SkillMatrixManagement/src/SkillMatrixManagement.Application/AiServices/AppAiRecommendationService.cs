@@ -141,7 +141,7 @@ namespace SkillMatrixManagement.AiServices
         }
 
         [HttpPost("api/app/get-team-description-by-pdf")]
-        public async Task<ServiceResponse<TeamRecommendationRequestDto>> GetTeamRecommendationByPdfAsync(IFormFile pdf)
+        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationByPdfAsync(IFormFile pdf)
         {
             try
             {
@@ -172,16 +172,31 @@ namespace SkillMatrixManagement.AiServices
                     }
                 }
 
-                var teamRecommendationResponse = new TeamRecommendationRequestDto()
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
                 {
-                    Employees = await GetEmployeeDetails(),
-                    Description = content.ToString()
+                    Description = content.ToString(),
+                    Employees = await GetEmployeeDetails()
                 };
-                return ServiceResponse<TeamRecommendationRequestDto>.SuccessResult(teamRecommendationResponse, 200);
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var apiJsonContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, apiJsonContent);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<TeamRecommendationRequestDto>.Failure(ex.Message, 400);
+                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
             }
         }
 
