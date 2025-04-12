@@ -28,8 +28,7 @@ namespace SkillMatrixManagement.AiServices
         private readonly ISkillRepository _skillRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly string SKILL_RECOMMENDATION_END_POINT;
-        private readonly string TEAM_RECOMMENDATION_END_POINT;
+        private readonly string RECOMMENDATION_END_POINT;
 
         public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
                                           IUserRepository userRepository,
@@ -43,11 +42,10 @@ namespace SkillMatrixManagement.AiServices
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
             _departmentRepository = departmentRepository;
-            SKILL_RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
-            TEAM_RECOMMENDATION_END_POINT = configuration["AiServices:TeamRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Team recommendation end point is not configured in appsettings.json");
+            RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
         }
 
-        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>>/*Task<ServiceResponse<string>>*/ GetSkillRecommendation(Guid userId)
         {
             try
             {
@@ -76,7 +74,7 @@ namespace SkillMatrixManagement.AiServices
                 var client = _httpClientFactory.CreateClient();
 
                 // Define the request body
-                var requestBody = new SkillRecommendationRequestDto()
+                var requestBody = new SkillRecommendationInputDto()
                 {
                     Role = skillName,
                     Skills = skills.Count() != 0 ? skills : new List<string>(),
@@ -88,7 +86,7 @@ namespace SkillMatrixManagement.AiServices
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                 // Send POST request
-                HttpResponseMessage response = await client.PostAsync(SKILL_RECOMMENDATION_END_POINT, content);
+                HttpResponseMessage response = await client.PostAsync(RECOMMENDATION_END_POINT, content);
                 response.EnsureSuccessStatusCode();
 
                 // Return response as string
@@ -110,29 +108,12 @@ namespace SkillMatrixManagement.AiServices
             try
             {
                 if (string.IsNullOrWhiteSpace(projectDescription)) throw new ArgumentNullException(nameof(projectDescription), "Project description can not be null");
-                var teamRecommendationRequest = new TeamRecommendationRequestDto()
+                var teamRecommendationResponse = new TeamRecommendationResponseDto()
                 {
-                    Description = projectDescription,
-                    Employees = await GetEmployeeDetails()
+                    Employees = await GetEmployeeDetails(),
+                    Description = projectDescription
                 };
-
-
-                var client = _httpClientFactory.CreateClient();
-
-                // Serialize to JSON
-                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
-                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                // Send POST request
-                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, content);
-                response.EnsureSuccessStatusCode();
-
-                // Return response as string
-                var responseBody = await response.Content.ReadAsStringAsync();
-
-                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
-
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
             }
             catch (Exception ex)
             {
@@ -172,27 +153,12 @@ namespace SkillMatrixManagement.AiServices
                     }
                 }
 
-                var teamRecommendationRequest = new TeamRecommendationRequestDto()
+                var teamRecommendationResponse = new TeamRecommendationResponseDto()
                 {
-                    Description = content.ToString(),
-                    Employees = await GetEmployeeDetails()
+                    Employees = await GetEmployeeDetails(),
+                    Description = content.ToString()
                 };
-
-                var client = _httpClientFactory.CreateClient();
-
-                // Serialize to JSON
-                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
-                var apiJsonContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                // Send POST request
-                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, apiJsonContent);
-                response.EnsureSuccessStatusCode();
-
-                // Return response as string
-                var responseBody = await response.Content.ReadAsStringAsync();
-
-                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
             }
             catch (Exception ex)
             {
