@@ -53,9 +53,9 @@ Instructions:
 - Analyze the project description to extract required skills.
 - Match employees based on skillProfile and availability.
 - Use experience and designation to assign roles.
-- Ignore employees with projectStatus = "BUSY".
+- Ignore employees with projectStatus = "Busy".
 - Return a recommended team with justification for each member.
-- Wrap the response in an object with key 'team'
+- Wrap the response in an object with key 'Team'
 
 Example Format:
 {{
