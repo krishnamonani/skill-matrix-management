@@ -28,7 +28,8 @@ namespace SkillMatrixManagement.AiServices
         private readonly ISkillRepository _skillRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly string RECOMMENDATION_END_POINT;
+        private readonly string SKILL_RECOMMENDATION_END_POINT;
+        private readonly string TEAM_RECOMMENDATION_END_POINT;
 
         public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
                                           IUserRepository userRepository,
@@ -42,10 +43,11 @@ namespace SkillMatrixManagement.AiServices
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
             _departmentRepository = departmentRepository;
-            RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
+            SKILL_RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
+            TEAM_RECOMMENDATION_END_POINT = configuration["AiServices:TeamRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Team recommendation end point is not configured in appsettings.json");
         }
 
-        public async Task<ServiceResponse<SkillRecommendationResponseDto>>/*Task<ServiceResponse<string>>*/ GetSkillRecommendation(Guid userId)
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
         {
             try
             {
@@ -86,7 +88,7 @@ namespace SkillMatrixManagement.AiServices
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                 // Send POST request
-                HttpResponseMessage response = await client.PostAsync(RECOMMENDATION_END_POINT, content);
+                HttpResponseMessage response = await client.PostAsync(SKILL_RECOMMENDATION_END_POINT, content);
                 response.EnsureSuccessStatusCode();
 
                 // Return response as string
@@ -108,12 +110,29 @@ namespace SkillMatrixManagement.AiServices
             try
             {
                 if (string.IsNullOrWhiteSpace(projectDescription)) throw new ArgumentNullException(nameof(projectDescription), "Project description can not be null");
-                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
                 {
-                    Employees = await GetEmployeeDetails(),
-                    Description = projectDescription
+                    Description = projectDescription,
+                    Employees = await GetEmployeeDetails()
                 };
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, content);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
+
             }
             catch (Exception ex)
             {
@@ -122,7 +141,7 @@ namespace SkillMatrixManagement.AiServices
         }
 
         [HttpPost("api/app/get-team-description-by-pdf")]
-        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationByPdfAsync(IFormFile pdf)
+        public async Task<ServiceResponse<TeamRecommendationRequestDto>> GetTeamRecommendationByPdfAsync(IFormFile pdf)
         {
             try
             {
@@ -153,16 +172,16 @@ namespace SkillMatrixManagement.AiServices
                     }
                 }
 
-                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                var teamRecommendationResponse = new TeamRecommendationRequestDto()
                 {
                     Employees = await GetEmployeeDetails(),
                     Description = content.ToString()
                 };
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+                return ServiceResponse<TeamRecommendationRequestDto>.SuccessResult(teamRecommendationResponse, 200);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
+                return ServiceResponse<TeamRecommendationRequestDto>.Failure(ex.Message, 400);
             }
         }
 
