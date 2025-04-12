@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SkillMatrixManagement.Localization;
 using SkillMatrixManagement.MultiTenancy;
-using SkillMatrixManagement.Emailing;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
@@ -96,10 +95,7 @@ public class SkillMatrixManagementDomainModule : AbpModule
             options.DefaultRenderingEngine = "Razor";
         });
 
-        Configure<AbpTextTemplatingOptions>(options =>
-        {
-            options.DefinitionProviders.Add<EmailTemplateDefinitionProvider>();
-        });
+    
 
 #if DEBUG
         // Comment out this line to enable real email sending in development mode

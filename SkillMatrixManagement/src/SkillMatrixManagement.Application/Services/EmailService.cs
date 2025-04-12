@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SkillMatrixManagement.Emailing;
 using SkillMatrixManagement.Services;
+using SkillMatrixManagement.Emailing.Models;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Emailing;
 using Volo.Abp.TextTemplating;
@@ -36,15 +37,16 @@ namespace SkillMatrixManagement.Services
                 _logger.LogInformation("Attempting to send welcome email to {Email}", targetEmailAddress);
                 
                 var subject = "Welcome to Skill Matrix Management System";
-                var body = await _templateRenderer.RenderAsync(
-                    "Welcome", 
-                    new WelcomeEmailModel
-                    {
-                        Username = username,
-                        Password = password,
-                        ResetPasswordLink = resetPasswordLink
-                    }
-                );
+                
+                // Create a simple anonymous object if WelcomeEmailModel is not available
+                var model = new 
+                {
+                    Username = username,
+                    Password = password,
+                    ResetPasswordLink = resetPasswordLink
+                };
+                
+                var body = await _templateRenderer.RenderAsync("Welcome", model);
 
                 await _emailSender.SendAsync(
                     targetEmailAddress,
