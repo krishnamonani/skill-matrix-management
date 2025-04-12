@@ -76,7 +76,7 @@ namespace SkillMatrixManagement.AiServices
                 var client = _httpClientFactory.CreateClient();
 
                 // Define the request body
-                var requestBody = new SkillRecommendationInputDto()
+                var requestBody = new SkillRecommendationRequestDto()
                 {
                     Role = skillName,
                     Skills = skills.Count() != 0 ? skills : new List<string>(),
