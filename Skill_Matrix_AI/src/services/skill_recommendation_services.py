@@ -29,14 +29,14 @@ def generate_skill_recommendation(skill: Skill_req):
         "top_p": 0.95,
         "top_k": 40,
         "max_output_tokens": 8192,
-        "response_mime_type": "text/plain",
+        
     }
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",
         generation_config=generation_config,
-        system_instruction=(
-            ''' You are a professional career and technical skill recommender.
+    )
+    system_instruction=''' You are a professional career and technical skill recommender.
 
 The system will receive the following inputs:
 1. Number of new Required Skills – Number of additional technical skills the user wants to learn.
@@ -68,8 +68,7 @@ Your task is to recommend ONLY technical, hands-on, advanced skills that align w
   ]
 }
  '''
-        ),
-    )
+       
 
     chat_session = model.start_chat(
   history=[
@@ -197,7 +196,7 @@ Your task is to recommend ONLY technical, hands-on, advanced skills that align w
 )
 
     skills_str = ", ".join(skill.skills)
-    chat_session = model.start_chat(history=[])
+    
 
     prompt = f"""
 Number of new Required Skills: {skill.number}
@@ -208,6 +207,9 @@ Focus on NEW areas of expertise that align with the user's role and experience.
 
 Role: {skill.role}
 Experience: {skill.experience}
+IMPORTANT:
+- Write all reasons in the second person (e.g., "You should learn...").
+- Each reason must begin with "You should learn [Skill] because..."
 """
 
 
