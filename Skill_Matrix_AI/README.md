@@ -90,7 +90,7 @@ Replace your_google_gemini_api_key_here with your actual API key from Google AI 
 Once your virtual environment is set up and dependencies are installed, you can run the FastAPI application.
 
 ```bash
-uvicorn src.api.main:app --reload
+uvicorn src.main:app --reload
 ```
 
 This will start the FastAPI server at `http://localhost:8000`.
