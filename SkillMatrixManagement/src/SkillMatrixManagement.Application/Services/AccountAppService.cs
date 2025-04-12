@@ -8,6 +8,8 @@ using SkillMatrixManagement.Domain;
 using Volo.Abp.Account.Emailing;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using SkillMatrixManagement.DTOs.Shared;
+using Volo.Abp;
 
 namespace SkillMatrixManagement.Application
 {
@@ -32,19 +34,28 @@ namespace SkillMatrixManagement.Application
         public override async Task<IdentityUserDto> RegisterAsync(RegisterDto input)
         {
             // Call base method to register user in AbpUsers
-            var identityUserDto = await base.RegisterAsync(input);
+            try
+            {
 
-            // Create entry in CustomUsers
-            var customUser = new CustomUser(
-         id: Guid.NewGuid(), // Generate a new ID for CustomUser
-         identityUserId: identityUserDto.Id, // Link to the registered user
-         userName: identityUserDto.UserName, // Use the username from the registered user
-         email: identityUserDto.Email, // Use the email from the registered user
-         isActive: false // Set the initial status to inactive
-     );
-            await _customUserRepository.InsertAsync(customUser);
 
-            return identityUserDto;
+                var identityUserDto = await base.RegisterAsync(input);
+
+                // Create entry in CustomUsers
+                var customUser = new CustomUser(
+             id: Guid.NewGuid(), // Generate a new ID for CustomUser
+             identityUserId: identityUserDto.Id, // Link to the registered user
+             userName: identityUserDto.UserName, // Use the username from the registered user
+             email: identityUserDto.Email, // Use the email from the registered user
+             isActive: false // Set the initial status to inactive
+         );
+                await _customUserRepository.InsertAsync(customUser);
+
+                return identityUserDto;
+            }
+            catch (Exception ex)
+            {
+                throw new UserFriendlyException($"{ex.Message}");
+            }
         }
     }
 }
