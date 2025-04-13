@@ -1145,6 +1145,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("AppProject", (string)null);
@@ -1161,9 +1165,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)")
                         .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone")
@@ -1211,10 +1212,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("ConcurrencyStamp");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ConcurrencyStamp"), "HASH");
-
-                    b.HasIndex("CreatedBy");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("CreatedBy"), "HASH");
 
                     b.HasIndex("CreationTime");
 

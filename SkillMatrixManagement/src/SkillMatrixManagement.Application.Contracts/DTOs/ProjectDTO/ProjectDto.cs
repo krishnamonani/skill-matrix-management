@@ -13,6 +13,8 @@ namespace SkillMatrixManagement.DTOs.ProjectDTO
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime ExpectedEndDate { get; set; }
+        public string Status { get; set; }
+
         public bool IsDelayed { get; set; }
         public bool IsOngoing { get; set; }
         public bool IsDeleted { get; set; }

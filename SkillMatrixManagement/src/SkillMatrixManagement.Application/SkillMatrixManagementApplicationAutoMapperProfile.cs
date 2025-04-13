@@ -116,15 +116,14 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
 
         CreateMap<CreateProjectEmployeeDto, ProjectEmployee>()
         .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-        .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
-        .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+        .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId));
+
 
 
 
         CreateMap<ProjectEmployee, ProjectEmployeeDto>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-            .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
-            .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+            .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId));
 
         CreateMap<Project, ProjectDto>();
         CreateMap<CreateProjectDto, Project>();
