@@ -30,8 +30,8 @@ namespace SkillMatrixManagement.Repositories
             Check.NotNull(skillHistory, nameof(skillHistory));
             if (skillHistory.UserId == Guid.Empty)
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.USER_ID_CAN_NOT_BE_EMPTY, "UserId cannot be empty");
-            if (skillHistory.SkillId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY, "SkillId cannot be empty");
+            if (string.IsNullOrEmpty(skillHistory.CoreSkillName))
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY, "Skill name cannot be empty");
             if (!Enum.IsDefined(typeof(ProficiencyEnum), skillHistory.ChangedProficiencyLevel))
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.INVALID_PROFICIENCY_LEVEL, "Invalid proficiency level specified");
 
@@ -71,8 +71,8 @@ namespace SkillMatrixManagement.Repositories
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_HISTORY_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "SkillHistory ID cannot be empty");
             if (skillHistory.UserId == Guid.Empty)
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.USER_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "UserId cannot be empty");
-            if (skillHistory.SkillId == Guid.Empty)
-                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "SkillId cannot be empty");
+            if (string.IsNullOrEmpty(skillHistory.CoreSkillName))
+                throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.SKILL_ID_CAN_NOT_BE_EMPTY_FOR_UPDATE, "Skill name cannot be empty");
             if (!Enum.IsDefined(typeof(ProficiencyEnum), skillHistory.ChangedProficiencyLevel))
                 throw new BusinessException(SkillMatrixManagementDomainErrorCodes.SkillHistory.INVALID_PROFICIENCY_LEVEL_FOR_UPDATE, "Invalid proficiency level specified");
 
@@ -155,9 +155,7 @@ namespace SkillMatrixManagement.Repositories
         public override async Task<IQueryable<SkillHistory>> WithDetailsAsync()
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            return dbContext.Set<SkillHistory>()
-                .Include(x => x.User)
-                .Include(x => x.Skill);
+            return dbContext.Set<SkillHistory>();
         }
     }
 }

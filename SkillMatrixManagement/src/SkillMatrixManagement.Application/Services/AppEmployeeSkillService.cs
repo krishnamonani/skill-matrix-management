@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
 using SkillMatrixManagement.DTOs.Shared;
+using SkillMatrixManagement.DTOs.SkillHistoryDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
@@ -21,12 +22,14 @@ namespace SkillMatrixManagement.Services
     {
 
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
+        private readonly AppSkillHistoryService _appSkillHistoryService;
         private readonly IMapper _mapper;
 
-        public AppEmployeeSkillService(IEmployeeSkillRepository mployeeSkillRepository, IMapper mapper)
+        public AppEmployeeSkillService(IEmployeeSkillRepository mployeeSkillRepository, IMapper mapper, AppSkillHistoryService appSkillHistoryService)
         {
             _employeeSkillRepository = mployeeSkillRepository;
             _mapper = mapper;
+            _appSkillHistoryService = appSkillHistoryService;
         }
 
         public async Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false)
@@ -64,6 +67,15 @@ namespace SkillMatrixManagement.Services
                 };
             EmployeeSkill= await _employeeSkillRepository.CreateAsync(EmployeeSkill);
             var res= _mapper.Map<EmployeeSkillDto>(EmployeeSkill);
+
+            // adding to the skill history table
+            await _appSkillHistoryService.CreateAsync(new CreateSkillHistoryDto()
+            {
+                UserId = input.UserId,
+                CoreSkillName = input.CoreSkillName,
+                ChangedProficiencyLevel = input.SelfAssessedProficiency
+            });
+
             return ServiceResponse<EmployeeSkillDto>.SuccessResult(res, 201);
             }
             catch(BusinessException ex)
@@ -298,6 +310,14 @@ namespace SkillMatrixManagement.Services
 
                 // Save changes
                 await _employeeSkillRepository.UpdateAsync(existingEmployeeSkill);
+
+                // adding to the skill history table
+                await _appSkillHistoryService.CreateAsync(new CreateSkillHistoryDto()
+                {
+                    UserId = input.UserId,
+                    CoreSkillName = input.CoreSkillName,
+                    ChangedProficiencyLevel = input.SelfAssessedProficiency
+                });
 
                 return ServiceResponse.SuccessResult(200);
             }

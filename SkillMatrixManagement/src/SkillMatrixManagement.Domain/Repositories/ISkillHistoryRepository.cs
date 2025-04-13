@@ -21,5 +21,6 @@ namespace SkillMatrixManagement.Repositories
         // Soft Delete & Restore
         Task SoftDeleteAsync(Guid skillHistoryId); // Soft delete a skill history
         Task RestoreSkillHistoryAsync(Guid skillHistoryId); // Restore a soft-deleted skill history
+        Task<IQueryable<SkillHistory>> WithDetailsAsync();
     }
 }

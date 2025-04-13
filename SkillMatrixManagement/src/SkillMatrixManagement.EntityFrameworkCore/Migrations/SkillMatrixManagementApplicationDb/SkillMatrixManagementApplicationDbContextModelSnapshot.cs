@@ -1733,7 +1733,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("text");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -1742,6 +1741,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)")
                         .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("CoreSkillName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone")
@@ -1778,9 +1781,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -1800,6 +1800,10 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("ConcurrencyStamp");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ConcurrencyStamp"), "HASH");
+
+                    b.HasIndex("CoreSkillName");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("CoreSkillName"), "HASH");
 
                     b.HasIndex("CreationTime");
 
@@ -1836,10 +1840,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("LastModifierId");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("LastModifierId"), "HASH");
-
-                    b.HasIndex("SkillId");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SkillId"), "HASH");
 
                     b.HasIndex("UserId");
 
@@ -2665,19 +2665,11 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
             modelBuilder.Entity("SkillMatrixManagement.Models.SkillHistory", b =>
                 {
-                    b.HasOne("SkillMatrixManagement.Models.Skill", "Skill")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SkillMatrixManagement.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Skill");
 
                     b.Navigation("User");
                 });

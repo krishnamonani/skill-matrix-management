@@ -17,14 +17,11 @@ namespace SkillMatrixManagement.Models
 
         public virtual User User { get; set; }
 
-        [ForeignKey("SkillId")]
-        public Guid SkillId { get; set; }
-
-        public virtual Skill Skill { get; set; }
+        public string CoreSkillName { get; set; }
 
         public ProficiencyEnum ChangedProficiencyLevel { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public int UserIdBasedVersion { get; set; }
 

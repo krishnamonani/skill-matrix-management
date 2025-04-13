@@ -14,15 +14,10 @@ namespace SkillMatrixManagement.DTOs.SkillHistoryDTO
         public Guid UserId { get; set; }
 
         [Required]
-        public Guid SkillId { get; set; }
+        public string CoreSkillName { get; set; }
 
         [Required]
         public ProficiencyEnum ChangedProficiencyLevel { get; set; }
 
-        [StringLength(500)] // Optional limit for comment
-        public string Comment { get; set; }
-
-        [Required]
-        public int UserIdBasedVersion { get; set; }
     }
 }

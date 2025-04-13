@@ -15,11 +15,11 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse<SkillHistoryDto>> GetByIdAsync(Guid id);
         Task<ServiceResponse<List<SkillHistoryDto>>> GetAllAsync(bool includeDeleted = false);
         Task<ServiceResponse<SkillHistoryPagedResultDto>> GetPagedListAsync(SkillHistoryFilterDto input);
-        Task<ServiceResponse> UpdateAsync(Guid id, UpdateSkillHistoryDto input);
         Task<ServiceResponse> DeleteAsync(Guid id);
         Task<ServiceResponse> PermanentDeleteAsync(Guid id);
         Task<ServiceResponse> RestoreSkillHistoryAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<SkillHistoryLookupDto>>> GetLookupAsync();
+        Task<ServiceResponse<List<SkillHistoryLookupDto>>> GetLookUpByUserIdAsync(Guid userId);
     }
 }

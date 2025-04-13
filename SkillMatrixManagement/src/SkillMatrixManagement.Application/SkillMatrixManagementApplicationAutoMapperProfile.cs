@@ -8,6 +8,7 @@ using SkillMatrixManagement.DTOs.ProjectDTO;
 using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillDTO;
+using SkillMatrixManagement.DTOs.SkillHistoryDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.Models;
@@ -136,5 +137,10 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         // Skill Mapping
         CreateMap<Skill, SkillDto>();
         CreateMap<Skill, SkillLookupDto>();
+
+        // Skill History Mapping
+        CreateMap<CreateSkillHistoryDto, SkillHistory>().ReverseMap();
+        CreateMap<SkillHistory, SkillHistoryDto>();
+        CreateMap<SkillHistory, SkillHistoryLookupDto>();
     }
 }

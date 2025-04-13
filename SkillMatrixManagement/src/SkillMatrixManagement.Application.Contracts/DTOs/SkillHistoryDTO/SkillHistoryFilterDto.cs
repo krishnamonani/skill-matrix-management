@@ -11,11 +11,8 @@ namespace SkillMatrixManagement.DTOs.SkillHistoryDTO
     public class SkillHistoryFilterDto : PagedAndSortedResultRequestDto
     {
         public Guid? UserId { get; set; }
-        public Guid? SkillId { get; set; }
-        public ProficiencyEnum? ChangedProficiencyLevel { get; set; }
+        public string? CoreSkillName { get; set; }
         public string? Comment { get; set; }
-        public int? UserIdBasedVersion { get; set; }
-        public bool? IsDeleted { get; set; }
         public DateTime? CreationTimeStart { get; set; }
         public DateTime? CreationTimeEnd { get; set; }
         public DateTime? LastModificationTimeStart { get; set; }

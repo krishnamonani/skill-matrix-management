@@ -15,13 +15,8 @@ namespace SkillMatrixManagement.DTOs.SkillHistoryDTO
         public Guid UserId { get; set; }
         public UserDto? User { get; set; } // Optional inclusion of User details
 
-        public Guid SkillId { get; set; }
-        public SkillDto? Skill { get; set; } // Optional inclusion of Skill details
+        public string CoreSkillName { get; set; }
 
         public ProficiencyEnum ChangedProficiencyLevel { get; set; }
-
-        public string Comment { get; set; }
-
-        public int UserIdBasedVersion { get; set; }
     }
 }
