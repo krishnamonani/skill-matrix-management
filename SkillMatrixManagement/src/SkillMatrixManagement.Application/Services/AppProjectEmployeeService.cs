@@ -372,7 +372,7 @@ namespace SkillMatrixManagement.Services
                     return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
                
             }
-            }
+        }
         
 
         public async Task<ServiceResponse<int>> GetCountOfAssignedUserByProjectIdAsync(Guid projectId)
