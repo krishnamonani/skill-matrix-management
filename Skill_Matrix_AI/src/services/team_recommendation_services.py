@@ -9,6 +9,7 @@ from src.config import GEMINI_API_KEY
 load_dotenv()
 genai.configure(api_key=GEMINI_API_KEY)
 
+
 generation_config = {
     "temperature": 0.7,
     "top_p": 0.95,

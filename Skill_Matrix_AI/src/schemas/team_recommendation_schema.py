@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import List
 
+
+
 class Employee(BaseModel):
     Id: str
     FirstName: str
