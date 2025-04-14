@@ -48,7 +48,7 @@ Your task is to recommend ONLY technical, hands-on, advanced skills that align w
 
  DO NOT recommend:
 - Soft skills (e.g., communication, time management)
-- Cloud basics or DevOps tools (unless explicitly relevant to role)
+- Cloud basics or DevOps tools (unless explicitly relevant to role),please do not recommend devops skills.
 - Skills already known or closely related/nested ones (e.g., TypeScript if user knows JavaScript)
 
  For Each Recommended Skill:
@@ -210,6 +210,8 @@ Experience: {skill.experience}
 IMPORTANT:
 - Write all Reasons in the second person (e.g., "You should learn...").
 - Each reason must begin with "You should learn [Skill] because..."
+-please do not recommend devops related skills untill it is explicityly mentioned.
+strictly recommend skills based on user role.
 """
 
 
