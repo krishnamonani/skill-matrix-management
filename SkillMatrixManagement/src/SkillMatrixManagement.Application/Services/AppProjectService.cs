@@ -207,5 +207,6 @@ namespace SkillMatrixManagement.Services
                 return ServiceResponse<List<ProjectLookupDto>>.Failure($"Error retrieving lookup data: {ex.Message}", 500);
             }
         }
+
     }
 }

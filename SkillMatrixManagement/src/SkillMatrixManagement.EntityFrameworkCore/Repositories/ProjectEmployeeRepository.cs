@@ -14,11 +14,13 @@ namespace SkillMatrixManagement.Repositories
     public class ProjectEmployeeRepository : EfCoreRepository<SkillMatrixManagementApplicationDbContext, ProjectEmployee, Guid>, IProjectEmployeeRepository
     {
         private readonly IDbContextProvider<SkillMatrixManagementApplicationDbContext> _dbContextProvider;
+        private readonly IUserRepository _userRepository;
 
-        public ProjectEmployeeRepository(IDbContextProvider<SkillMatrixManagementApplicationDbContext> dbContextProvider)
+        public ProjectEmployeeRepository(IDbContextProvider<SkillMatrixManagementApplicationDbContext> dbContextProvider, IUserRepository userRepository)
             : base(dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
+            _userRepository = userRepository;
         }
 
         // Create a new project employee assignment
@@ -131,15 +133,24 @@ namespace SkillMatrixManagement.Repositories
         }
 
         // Get all employees assigned to a specific project
-        public async Task<List<ProjectEmployee>> GetByProjectIdAsync(Guid projectId)
+        public async Task<List<User>> GetByProjectIdAsync(Guid projectId)
         {
             if (projectId == Guid.Empty)
                 throw new ArgumentException("Project ID cannot be empty", nameof(projectId));
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            return await dbContext.Set<ProjectEmployee>()
+            var ProjectEmployeeList= await dbContext.Set<ProjectEmployee>()
                 .Where(pe => pe.ProjectId == projectId && !pe.IsDeleted)
                 .ToListAsync();
+
+            var userList = new List<User>();
+            var users = await _userRepository.GetAllAsync();
+            foreach(var pr in ProjectEmployeeList)
+            {
+                userList.Add(users.Where(user => user.Id == pr.UserId).FirstOrDefault() ?? new User());
+            }
+
+            return userList;
         }
 
         // Get all projects assigned to a specific user

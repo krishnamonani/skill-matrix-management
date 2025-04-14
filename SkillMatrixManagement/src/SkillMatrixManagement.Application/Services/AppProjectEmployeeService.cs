@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.Shared;
+using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using System;
@@ -291,13 +292,13 @@ namespace SkillMatrixManagement.Services
 
         }
 
-        public async Task<ServiceResponse> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds)
+        public async Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds)
         {
-            
 
 
-                var project = await _projectRepository.GetAsync(projectId);
-                if (project == null) throw new BusinessException("Project not found");
+
+            var project = await _projectRepository.GetAsync(projectId);
+            if (project == null) throw new BusinessException("Project not found");
 
             using (var uow = _unitOfWorkManager.Begin())
             {
@@ -335,11 +336,11 @@ namespace SkillMatrixManagement.Services
                     // Remove existing assignments by marking as deleted
                     foreach (var projectEmployee in employeesToRemove)
                     {
-                       await _projectEmployeeRepository.DeleteAsync(projectEmployee.Id);
+                        await _projectEmployeeRepository.DeleteAsync(projectEmployee.Id);
                     }
 
                     await uow.CompleteAsync();
-                    return ServiceResponse.SuccessResult(200, "Successfully assigned project to the selected developers and updated assignments");
+                    return ServiceResponse<List<Guid>>.SuccessResult(employeesToAdd, 200);
                 }
                 catch (Exception ex)
                 {
@@ -347,7 +348,45 @@ namespace SkillMatrixManagement.Services
                 }
             }
 
+        }
+
+
+
+        public async Task<ServiceResponse<List<UserDto>>> GetByProjectIdAsync(Guid projectId)
+        {
+            try
+            {
+
+
+
+                var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
+                var employeeListDto = _mapper.Map<List<UserDto>>(EmployeeList);
+                if (EmployeeList == null)
+                {
+                    return ServiceResponse<List<UserDto>>.Failure("No one is assigned to this project", 400);
+                }
+                return ServiceResponse<List<UserDto>>.SuccessResult(employeeListDto, 201);
             }
+            catch(Exception ex)
+            {
+                    return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
+               
+            }
+            }
+        
+
+        public async Task<ServiceResponse<int>> GetCountOfAssignedUserByProjectIdAsync(Guid projectId)
+        {
+
+            var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
+            var count= EmployeeList.Count();
+            if (EmployeeList == null)
+            {
+                return ServiceResponse<int>.Failure("No one is Assigned to This project", 404);
+            }
+            return ServiceResponse<int>.SuccessResult(count, 201);
         }
     }
+}
+
 
