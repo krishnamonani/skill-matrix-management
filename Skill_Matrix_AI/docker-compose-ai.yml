@@ -10,6 +10,7 @@ services:
       - "8002:8002"
     volumes:
       - .:/app
+      - sm_vector_db_data:/app/vector_db
     environment:
       - TZ=UTC
       - ENVIRONMENT=development
@@ -23,3 +24,7 @@ services:
 networks:
   skill-matrix-app:
     external: true
+
+
+volumes:
+  sm_vector_db_data:
