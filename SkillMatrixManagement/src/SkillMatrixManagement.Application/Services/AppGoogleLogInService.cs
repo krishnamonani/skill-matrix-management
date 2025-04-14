@@ -41,7 +41,7 @@ namespace SkillMatrixManagement.Services
                 {
                     return ServiceResponse.Failure("Oops! We couldn't find an account associated with this email address. Please check for any typos or try a different email.", 404);
                 }
-                var InActiveUser = await _icustomUserRepository.GetUsersByStatusAsync(false);
+                var InActiveUser = await _customUserRepository.GetUsersByStatusAsync(false);
                 var CustomUser =InActiveUser.FirstOrDefault(u => u.Id == user.Id);
                 if (CustomUser!=null)
                 {
