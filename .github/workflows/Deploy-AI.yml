@@ -5,7 +5,7 @@ on:
     branches:
       - dev  # Change to the branch you want to deploy
     paths:
-      - 'Skill_Matrix_Gemini/**'
+      - 'Skill_Matrix_AI/**'
       - '.github/workflows/Deploy-AI.yml'
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Deploy ai services
-            cd Internship-2025/Skill-Matrix-Management-App/Skill_Matrix_Gemini
+            cd Internship-2025/Skill-Matrix-Management-App/Skill_Matrix_AI
             docker network create skill-matrix-app
             docker compose -f docker-compose-ai.yml up -d --build
             docker system prune -af
