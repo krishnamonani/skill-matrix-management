@@ -13,9 +13,9 @@ namespace SkillMatrixManagement.DTOs.ProjectEmployeeDTO
         public Guid UserId { get; set; }
 
         [Required]
-        public Guid ProjectId { get; set; }
+        public Guid ProjectId { get; set; } 
 
-        [Required]
-        public Guid CreatedBy { get; set; }
+        //[Required]
+        //public Guid CreatedBy { get; set; }
     }
 }

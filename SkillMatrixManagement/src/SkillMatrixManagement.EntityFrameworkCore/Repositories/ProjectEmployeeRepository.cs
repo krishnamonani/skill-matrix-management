@@ -154,6 +154,7 @@ namespace SkillMatrixManagement.Repositories
                 .ToListAsync();
         }
 
+
         public async Task<List<ProjectEmployee>> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false)
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
@@ -166,6 +167,18 @@ namespace SkillMatrixManagement.Repositories
         Task<ProjectEmployee> IProjectEmployeeRepository.GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted)
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task<Boolean> IsExistTheUserIdProjectIdAsync(Guid userId, Guid projectId)
+        {
+            if (userId == Guid.Empty || projectId==Guid.Empty)
+                throw new ArgumentException("User ID cannot be empty", nameof(userId));
+
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+            return  await dbContext.Set<ProjectEmployee>()
+            .AnyAsync(pe => pe.ProjectId == projectId && pe.UserId == userId && !pe.IsDeleted);
+
         }
     }
 }

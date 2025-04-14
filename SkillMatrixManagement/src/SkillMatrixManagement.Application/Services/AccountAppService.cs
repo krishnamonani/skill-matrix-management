@@ -8,7 +8,6 @@ using SkillMatrixManagement.Domain;
 using Volo.Abp.Account.Emailing;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
-using SkillMatrixManagement.DTOs.Shared;
 using Volo.Abp;
 
 namespace SkillMatrixManagement.Application
@@ -33,12 +32,10 @@ namespace SkillMatrixManagement.Application
 
         public override async Task<IdentityUserDto> RegisterAsync(RegisterDto input)
         {
-            // Call base method to register user in AbpUsers
             try
             {
 
-
-                var identityUserDto = await base.RegisterAsync(input);
+            var identityUserDto = await base.RegisterAsync(input);
 
                 // Create entry in CustomUsers
                 var customUser = new CustomUser(
@@ -50,12 +47,14 @@ namespace SkillMatrixManagement.Application
          );
                 await _customUserRepository.InsertAsync(customUser);
 
-                return identityUserDto;
-            }
-            catch (Exception ex)
-            {
-                throw new UserFriendlyException($"{ex.Message}");
-            }
+            return identityUserDto;
         }
+            catch(Exception ex)
+            {
+                throw new UserFriendlyException($"Registration failed: {ex.Message}");
+            }
+            }
+        
+            // Call base method to register user in AbpUsers
     }
 }
