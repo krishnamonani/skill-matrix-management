@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.Shared;
+using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using System;
@@ -9,6 +10,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Uow;
+
 
 namespace SkillMatrixManagement.Services
 {
@@ -17,12 +20,14 @@ namespace SkillMatrixManagement.Services
         private readonly IProjectEmployeeRepository _projectEmployeeRepository;
         private readonly IMapper _mapper;
         private readonly IProjectRepository _projectRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper, IProjectRepository projectRepository)
+        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper, IProjectRepository projectRepository, IUnitOfWorkManager unitOfWorkManager)
         {
             _projectEmployeeRepository = projectEmployeeRepository;
             _mapper = mapper;
             _projectRepository = projectRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         // Create a new ProjectEmployee
@@ -110,10 +115,7 @@ namespace SkillMatrixManagement.Services
                 {
                     query = query.Where(pe => pe.ProjectId == input.ProjectId.Value).ToList();
                 }
-                if (input.CreatedBy.HasValue)
-                {
-                    query = query.Where(pe => pe.CreatedBy == input.CreatedBy.Value).ToList();
-                }
+
                 if (input.IsDeleted.HasValue)
                 {
                     query = query.Where(pe => pe.IsDeleted == input.IsDeleted.Value).ToList();
@@ -284,6 +286,107 @@ namespace SkillMatrixManagement.Services
             {
                 return ServiceResponse<List<ProjectEmployeeDto>>.Failure($"Error retrieving records: {ex.Message}", 500);
             }
+
+
+
+
+        }
+
+        public async Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds)
+        {
+
+
+
+            var project = await _projectRepository.GetAsync(projectId);
+            if (project == null) throw new BusinessException("Project not found");
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                try
+                {
+                    // Get all existing assignments
+                    var existingAssignments = await _projectEmployeeRepository.GetAllAsync();
+                    existingAssignments = existingAssignments.FindAll(p => p.ProjectId == projectId);
+
+                    // Employees to add: those in employeeIds but not in existing assignments
+                    var employeesToAdd = employeeIds
+                        .Where(eId => !existingAssignments.Any(pe => pe.UserId == eId && !pe.IsDeleted))
+                        .ToList();
+
+                    // Employees to remove: those in existing assignments but not in employeeIds
+                    var employeesToRemove = existingAssignments
+                        .Where(pe => !employeeIds.Contains(pe.UserId) && !pe.IsDeleted)
+                        .ToList();
+
+                    // Add new assignments
+                    foreach (var employeeId in employeesToAdd)
+                    {
+                        var existing = await _projectEmployeeRepository.IsExistTheUserIdProjectIdAsync(employeeId, projectId);
+                        if (!existing)
+                        {
+                            var projectEmployee = new ProjectEmployee
+                            {
+                                ProjectId = projectId,
+                                UserId = employeeId,
+                            };
+                            await _projectEmployeeRepository.CreateAsync(projectEmployee);
+                        }
+                    }
+
+                    // Remove existing assignments by marking as deleted
+                    foreach (var projectEmployee in employeesToRemove)
+                    {
+                        await _projectEmployeeRepository.DeleteAsync(projectEmployee.Id);
+                    }
+
+                    await uow.CompleteAsync();
+                    return ServiceResponse<List<Guid>>.SuccessResult(employeesToAdd, 200);
+                }
+                catch (Exception ex)
+                {
+                    throw new BusinessException("Failed to assign employees to project", ex.Message);
+                }
+            }
+
+        }
+
+
+
+        public async Task<ServiceResponse<List<UserDto>>> GetByProjectIdAsync(Guid projectId)
+        {
+            try
+            {
+
+
+
+                var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
+                var employeeListDto = _mapper.Map<List<UserDto>>(EmployeeList);
+                if (EmployeeList == null)
+                {
+                    return ServiceResponse<List<UserDto>>.Failure("No one is assigned to this project", 400);
+                }
+                return ServiceResponse<List<UserDto>>.SuccessResult(employeeListDto, 201);
+            }
+            catch(Exception ex)
+            {
+                    return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
+               
+            }
+        }
+        
+
+        public async Task<ServiceResponse<int>> GetCountOfAssignedUserByProjectIdAsync(Guid projectId)
+        {
+
+            var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
+            var count= EmployeeList.Count();
+            if (EmployeeList == null)
+            {
+                return ServiceResponse<int>.Failure("No one is Assigned to This project", 404);
+            }
+            return ServiceResponse<int>.SuccessResult(count, 201);
         }
     }
 }
+
+

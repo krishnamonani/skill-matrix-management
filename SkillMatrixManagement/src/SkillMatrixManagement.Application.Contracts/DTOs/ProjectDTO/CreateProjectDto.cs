@@ -21,6 +21,7 @@ namespace SkillMatrixManagement.DTOs.ProjectDTO
 
         [Required]
         public DateTime ExpectedEndDate { get; set; }
+        public string Status { get; set; }
 
         public bool IsDelayed { get; set; } = false;
         public bool IsOngoing { get; set; } = true;

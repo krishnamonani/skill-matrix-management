@@ -1,0 +1,56 @@
+# Python Virtual Environments
+myenv/
+.env
+venv/
+env/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.so
+*.pyc
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+Skill_Matrix_AI\vector_db\__pycache__\
+
+Skill_Matrix_AI\vector_db
+Skill_Matrix_AI\vector_db\chroma.sqlite3\79d51678-214a-45c2-b718-ca735a1a3b9d
+# Ignore the vector_db folder
+vector_db/
+
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment folder
+venv/
+myenv/
+
+# Ignore IDE configuration files
+.idea/
+.vscode/
+
+# Ignore other common files and folders
+*.log
+*.sqlite3
+*.db
+*.bak
+*.swp
+*.swo
