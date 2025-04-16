@@ -19,8 +19,8 @@ namespace SkillMatrixManagement.Models
         public Guid ProjectId { get; set; }
         public virtual Project Project { get; set; }
 
-        [ForeignKey("UserId")]
-        public Guid CreatedBy { get; set; }
+        //[ForeignKey("UserId")]
+        //public Guid CreatedBy { get; set; }   
         public virtual User Creator { get; set; }
     }
 
