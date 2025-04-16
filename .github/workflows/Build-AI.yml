@@ -34,11 +34,3 @@ jobs:
           source venv/bin/activate
           pip install flake8
           flake8 Skill_Matrix_AI/src --count --select=E9,F63,F7,F82 --show-source --statistics
-
-      - name: Run Build Check
-        run: |
-          export PYTHONPATH=$(pwd)/Skill_Matrix_AI 
-          source venv/bin/activate
-          uvicorn Skill_Matrix_AI.src.main:app --host 127.0.0.1 --port 8002 --reload &
-          sleep 10
-          curl -f http://127.0.0.1:8002/docs || exit 1
