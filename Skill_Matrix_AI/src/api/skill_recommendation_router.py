@@ -1,7 +1,6 @@
 from fastapi import APIRouter
-from app.models import SkillRequest
-from app.services import generate_skill_recommendation
-from .models import Skill_req
+from ..schemas.skill_recommendation_schema import SkillRequest, Skill_req
+from ..services.skill_recommendation_services import generate_skill_recommendation
 
 router = APIRouter()
 
