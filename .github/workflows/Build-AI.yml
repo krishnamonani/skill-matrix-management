@@ -1,0 +1,44 @@
+name: AI Build Check
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r Skill_Matrix_AI/requirements.txt
+
+
+      - name: Lint code with Flake8
+        run: |
+          source venv/bin/activate
+          pip install flake8
+          flake8 Skill_Matrix_AI/src --count --select=E9,F63,F7,F82 --show-source --statistics
+
+
+      - name: Run Build Check
+        run: |
+          source venv/bin/activate
+          uvicorn Skill_Matrix_AI.src.main:app --host 127.0.0.1 --port 8002 --reload &
+          sleep 10
+          curl -f http://127.0.0.1:8002/docs || exit 1
