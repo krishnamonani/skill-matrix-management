@@ -80,7 +80,7 @@ def search_chroma(question, pdf_name):
     query_embedding = embedding_model.embed_query(question)
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=5,
+        n_results=10,
         where={"source": pdf_name}
     )
 
