@@ -148,7 +148,7 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
         // Cookie Settings for SameSite issue and expiration
         Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
         {
-            options.Cookie.SameSite = SameSiteMode.Strict; // Only send in same-site requests
+            options.Cookie.SameSite = SameSiteMode.Lax; 
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
             options.Cookie.HttpOnly = true; // Prevent client-side access (e.g., via JavaScript)
             options.Cookie.Domain = "smm-be.krishnamonani.publicvm.com"; // Explicitly scope to backend domain
@@ -158,7 +158,7 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
 
         Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>
         {
-            options.Cookie.SameSite = SameSiteMode.Strict; // Only send in same-site requests
+            options.Cookie.SameSite = SameSiteMode.Lax; 
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
             options.Cookie.HttpOnly = true; // Prevent client-side access (e.g., via JavaScript)
             options.Cookie.Domain = "smm-be.krishnamonani.publicvm.com"; // Explicitly scope to backend domain
