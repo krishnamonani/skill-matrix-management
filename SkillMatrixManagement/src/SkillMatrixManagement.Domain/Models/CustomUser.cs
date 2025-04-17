@@ -1,9 +1,11 @@
 using System;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace SkillMatrixManagement.Domain
 {
-    public class CustomUser : AggregateRoot<Guid>
+    public class CustomUser : FullAuditedAggregateRoot<Guid> , ISoftDelete
     {
         public Guid IdentityUserId { get; set; } // Links to AbpUsers table
         public string UserName { get; set; }
