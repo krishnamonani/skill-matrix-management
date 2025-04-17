@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkillMatrixManagement.EntityFrameworkCore;
@@ -13,9 +14,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 {
     [DbContext(typeof(SkillMatrixManagementApplicationDbContext))]
-    partial class SkillMatrixManagementApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250417145639_AddRoleDepartmentAndDepartmentSkill")]
+    partial class AddRoleDepartmentAndDepartmentSkill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -474,68 +477,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.ToTable("AppDepartmentManager", (string)null);
                 });
 
-            modelBuilder.Entity("SkillMatrixManagement.Models.DepartmentRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CreationTime");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("DeleterId");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("DeletionTime");
-
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ExtraProperties")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<Guid>("InternalRoleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("LastModificationTime");
-
-                    b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("LastModifierId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("InternalRoleId");
-
-                    b.ToTable("DepartmentRoles");
-                });
-
             modelBuilder.Entity("SkillMatrixManagement.Models.DepartmentSkill", b =>
                 {
                     b.Property<Guid>("Id")
@@ -654,6 +595,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("departmentId");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("departmentId"), "HASH");
+
+                    b.HasIndex("DeleterId", "SkillId")
+                        .IsUnique();
 
                     b.ToTable("AppDepartmentSkill", (string)null);
                 });
@@ -1652,6 +1596,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.HasIndex("RoleName");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("RoleName"), "HASH");
+
+                    b.HasIndex("RoleId", "DepartmentId")
+                        .IsUnique();
 
                     b.ToTable("AppRoleDepartment", (string)null);
                 });
@@ -2693,36 +2640,16 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("SkillMatrixManagement.Models.DepartmentRole", b =>
+            modelBuilder.Entity("SkillMatrixManagement.Models.DepartmentSkill", b =>
                 {
                     b.HasOne("SkillMatrixManagement.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeleterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("SkillMatrixManagement.Models.DepartmentInternalRole", "InternalRole")
-                        .WithMany()
-                        .HasForeignKey("InternalRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("InternalRole");
-                });
-
-            modelBuilder.Entity("SkillMatrixManagement.Models.DepartmentSkill", b =>
-                {
                     b.HasOne("SkillMatrixManagement.Models.Skill", "Skill")
                         .WithMany()
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SkillMatrixManagement.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("departmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

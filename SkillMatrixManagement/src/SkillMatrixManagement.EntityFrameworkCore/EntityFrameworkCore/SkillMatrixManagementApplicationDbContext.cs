@@ -44,17 +44,17 @@ namespace SkillMatrixManagement.EntityFrameworkCore
         public DbSet<User> Users { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Permission> Permissions { get; set; }
-        public DbSet<DepartmentRole> DepartmentRoles { get; set; }
+        public DbSet<RoleDepartment> RoleDepartments { get; set; }
+        public DbSet<DepartmentSkill> DepartmentSkills { get; set; }
         public DbSet<DepartmentInternalRole> DepartmentInternalRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
-
+        public DbSet<DepartmentRole> DepartmentRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             /* Include modules to your migration db context */
-
 
             /* Configure your own tables/entities inside here */
 
@@ -166,10 +166,6 @@ namespace SkillMatrixManagement.EntityFrameworkCore
 
                 b.Property(e => e.EndorsedBy)
                 .IsRequired(false); // Explicitly make it nullable
-
-
-                //b.Property(e => e.SkillDescription)
-                //.HasColumnType("jsonb");
             });
 
             // Configure SkillMatrix entity
@@ -268,7 +264,6 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ConfigureByConvention();
             });
 
-
             // Configure Department entity
             builder.Entity<Department>(b =>
             {
@@ -293,11 +288,26 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 );
             });
 
-            // Configure DepartmentRole entity
-            builder.Entity<DepartmentRole>(b =>
+            // Configure RoleDepartment entity
+            builder.Entity<RoleDepartment>(b =>
             {
-                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "DepartmentRole", SkillMatrixManagementConsts.DbSchema);
+                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "RoleDepartment", SkillMatrixManagementConsts.DbSchema);
                 b.ConfigureByConvention();
+
+                b.Property(r => r.RoleName)
+                    .HasConversion(
+                        v => v.ToString(), // Convert enum to string when saving
+                        v => (RoleEnum)Enum.Parse(typeof(RoleEnum), v) // Convert string back to enum when reading
+                    );
+
+            });
+
+            // Configure DepartmentSkill entity
+            builder.Entity<DepartmentSkill>(b =>
+            {
+                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "DepartmentSkill", SkillMatrixManagementConsts.DbSchema);
+                b.ConfigureByConvention();
+
             });
 
             // Configure DepartmentInternalRole entity
@@ -328,7 +338,6 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ConfigureByConvention();
             });
 
-
             /* implementing hash index for the columns used frequently */
             AddHashIndexesForAllColumns<User>(builder);
             AddHashIndexesForAllColumns<SkillSubtopic>(builder);
@@ -343,14 +352,13 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             AddHashIndexesForAllColumns<Permission>(builder);
             AddHashIndexesForAllColumns<Notification>(builder);
             AddHashIndexesForAllColumns<EmployeeSkill>(builder);
-            AddHashIndexesForAllColumns<DepartmentRole>(builder);
+            AddHashIndexesForAllColumns<RoleDepartment>(builder); // Added for RoleDepartment
+            AddHashIndexesForAllColumns<DepartmentSkill>(builder); // Added for DepartmentSkill
             AddHashIndexesForAllColumns<DepartmentManager>(builder);
             AddHashIndexesForAllColumns<DepartmentInternalRole>(builder);
             AddHashIndexesForAllColumns<Department>(builder);
             AddHashIndexesForAllColumns<Category>(builder);
             AddHashIndexesForAllColumns<Role>(builder);
-
-
         }
 
         private void AddHashIndexesForAllColumns<TEntity>(ModelBuilder builder) where TEntity : class
@@ -366,6 +374,5 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                     .HasMethod("HASH");
             }
         }
-
     }
 }
