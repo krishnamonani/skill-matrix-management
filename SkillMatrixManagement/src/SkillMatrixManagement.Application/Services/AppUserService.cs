@@ -14,6 +14,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Identity;
 using SkillMatrixManagement.Utils;
 using SkillMatrixManagement.Services;
+using SkillMatrixManagement.Domain;
 
 namespace SkillMatrixManagement.Services
 {
@@ -21,6 +22,7 @@ namespace SkillMatrixManagement.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly ICustomUserRepository _customUserRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IDepartmentInternalRoleRepository _roleInternalRepository;
         private readonly IIdentityUserRepository _identityUserRepository;
@@ -32,7 +34,8 @@ namespace SkillMatrixManagement.Services
 
         public AppUserService(IUserRepository userRepository,
                               IDepartmentRepository departmentRepository, 
-                              IRoleRepository roleRepository, 
+                              IRoleRepository roleRepository,
+                              ICustomUserRepository customUserRepository, 
                               IDepartmentInternalRoleRepository roleInternalRepository, 
                               IIdentityUserRepository identityUserRepository, 
                               IdentityUserManager identityUserManager,
@@ -42,6 +45,7 @@ namespace SkillMatrixManagement.Services
         {
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
+            _customUserRepository = customUserRepository;
             _roleRepository = roleRepository;
             _roleInternalRepository = roleInternalRepository;
             _identityUserRepository = identityUserRepository;
@@ -161,27 +165,78 @@ namespace SkillMatrixManagement.Services
             }
         }
 
-        public async Task<ServiceResponse> DeleteAsync(Guid id)
+       public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             try
             {
                 if (id == Guid.Empty)
                 {
-                    throw new UserFriendlyException("User ID cannot be empty.");
+                    return ServiceResponse.Failure(
+                        "User ID cannot be empty.",
+                        "INVALID_USER_ID",
+                        400);
                 }
 
-                var userEmail = (await _userRepository.GetByIdAsync(id)).Email;
-                var abpUser   = await _identityUserManager.FindByEmailAsync(userEmail);
+                // Find AppUser
+                var appUser = await _userRepository.GetByIdAsync(id);
+                if (appUser == null)
+                {
+                    return ServiceResponse.Failure(
+                        $"User with ID {id} not found in AppUsers.",
+                        "USER_NOT_FOUND",
+                        404);
+                }
 
-                if (abpUser == null) return ServiceResponse.Failure("User not found!", 400);
-                await _identityUserRepository.DeleteAsync(abpUser.Id, autoSave: true);
+                var userEmail = appUser.Email;
 
-                await _userRepository.SoftDeleteAsync(id); 
-                return ServiceResponse.SuccessResult(200, "User deleted successfully.");
+                // Find AbpUser by Email
+                var abpUser = await _identityUserManager.FindByEmailAsync(userEmail);
+                if (abpUser == null)
+                {
+                    return ServiceResponse.Failure(
+                        $"User with email {userEmail} not found in AbpUsers.",
+                        "USER_NOT_FOUND",
+                        404);
+                }
+
+                // Find CustomUser by Email
+                var customUser = await _customUserRepository.FindByEmailAsync(userEmail);
+
+                // Soft delete AppUser
+                await _userRepository.SoftDeleteAsync(id);
+
+                // Soft delete AbpUser
+                abpUser.IsDeleted = true;
+                var updateResult = await _identityUserManager.UpdateAsync(abpUser);
+                if (!updateResult.Succeeded)
+                {
+                    var errors = updateResult.Errors.Select(e => e.Description).ToList();
+                    return ServiceResponse.Failure(
+                        $"Failed to soft delete user in AbpUsers: {string.Join(", ", errors)}",
+                        "USER_DELETION_FAILED",
+                        400);
+                }
+
+                // Soft delete CustomUser if exists
+                if (customUser != null)
+                {
+                    await _customUserRepository.SoftDeleteAsync(customUser.Id);
+                }
+
+                return ServiceResponse.SuccessResult(
+                    200,
+                    "User soft deleted successfully from all relevant tables.");
+            }
+            catch (BusinessException ex)
+            {
+                return ServiceResponse.Failure(ex.Message, ex.Code, 400);
             }
             catch (Exception ex)
             {
-                return ServiceResponse.Failure($"Failed to delete user: {ex.Message}", 500);
+                return ServiceResponse.Failure(
+                    $"Failed to soft delete user: {ex.Message}",
+                    "INTERNAL_SERVER_ERROR",
+                    500);
             }
         }
 
