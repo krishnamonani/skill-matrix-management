@@ -148,18 +148,22 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
         // Cookie Settings for SameSite issue and expiration
         Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
         {
-            options.Cookie.SameSite = SameSiteMode.Strict;
-            //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // it will ensure the cookie is transfer only through the https
+            options.Cookie.SameSite = SameSiteMode.Strict; // Only send in same-site requests
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+            options.Cookie.HttpOnly = true; // Prevent client-side access (e.g., via JavaScript)
+            options.Cookie.Domain = "smm-be.krishnamonani.publicvm.com"; // Explicitly scope to backend domain
             options.ExpireTimeSpan = TimeSpan.FromDays(14); // Set expiration to 14 days
-            options.SlidingExpiration = true; // Optional: Renews the cookie if accessed within the expiration window
+            options.SlidingExpiration = true; // Renews the cookie if accessed within the expiration window
         });
 
         Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorRememberMeScheme, options =>
         {
-            options.Cookie.SameSite = SameSiteMode.Strict;
-            //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // it will ensure the cookie is transfer only through the https
+            options.Cookie.SameSite = SameSiteMode.Strict; // Only send in same-site requests
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+            options.Cookie.HttpOnly = true; // Prevent client-side access (e.g., via JavaScript)
+            options.Cookie.Domain = "smm-be.krishnamonani.publicvm.com"; // Explicitly scope to backend domain
             options.ExpireTimeSpan = TimeSpan.FromDays(30); // Set expiration to 30 days for "Remember Me"
-            options.SlidingExpiration = true; // Optional: Renews the cookie if accessed within the expiration window
+            options.SlidingExpiration = true; // Renews the cookie if accessed within the expiration window
         });
     }
 
