@@ -16,6 +16,7 @@ namespace SkillMatrixManagement.DTOs.AiTeamRecommendationDTO
     }
     public class TeamRecommendationResponseDto
     {
+        public List<string> RequiredSkills { get; set; }
         public ICollection<EmployeeResponse> Team { get; set; }
     }
 }

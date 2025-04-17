@@ -229,7 +229,7 @@ namespace SkillMatrixManagement.Services
             try
             {
                 var employeeSkills = (await _employeeSkillRepository.GetAllAsync())
-                .Where(es => es.UserId == userId).Select(user => user.CoreSkillName).ToList();
+                .Where(es => es.UserId == userId).Select(user => user.CoreSkillName.ToLower().Trim()).ToList();
 
                 var set = new HashSet<string>();
                 var skillDetails = (await _skillSubtopicRepository.GetAllAsync())
@@ -243,9 +243,9 @@ namespace SkillMatrixManagement.Services
                     {
                         var key = kvp.Key;
                         if (key == null) continue;
-                        if (!employeeSkills.Contains(key))
+                        if (!employeeSkills.Contains(key.ToLower()))
                         {
-                            set.Add(key);
+                            set.Add(key.Trim());
                         }
                     }
                 }
