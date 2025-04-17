@@ -145,6 +145,43 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
             options.MinificationIgnoredFiles.Add("/libs/*");
         });
 
+        context.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.Path = "/skill-matrix";
+            options.Cookie.Name = "SkillMatrix.ApiCookie";
+            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.IsEssential = false;
+
+            // disables cookies from being issued
+            options.ExpireTimeSpan = TimeSpan.Zero;
+            options.SlidingExpiration = false;
+            options.SessionStore = null;
+        });
+
+        context.Services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        {
+            options.Cookie.Path = "/skill-matrix";
+            options.Cookie.Name = "SkillMatrix.ApiCookie";
+
+            options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.IsEssential = false;
+            options.ExpireTimeSpan = TimeSpan.Zero;
+            options.SlidingExpiration = false;
+        });
+
+        context.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = null; // Don't use cookies for sign-in
+            options.DefaultSignOutScheme = null; // Don't use cookies for sign-out
+        });
+
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -292,6 +329,7 @@ public class SkillMatrixManagementHttpApiHostModule : AbpModule
 
             var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+            options.UseRequestInterceptor("(req) => { req.credentials = 'omit'; return req; }");
         });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
