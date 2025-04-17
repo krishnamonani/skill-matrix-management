@@ -27,7 +27,7 @@ llm = ChatGoogleGenerativeAI(
     convert_system_message_to_human=True
 )
 
-# Initialize ChromaDB
+#Initialize ChromaDB
 VECTOR_DB_DIR = Path("vector_db")
 VECTOR_DB_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -86,6 +86,7 @@ def search_chroma(question, pdf_name):
 
     retrieved_chunks = [doc for doc in results['documents'][0]] if results["documents"] else []
     print(f" Retrieved {len(retrieved_chunks)} chunks from '{pdf_name}' for question: {question}")
+    print(" Retrieved Chunks:\n", retrieved_chunks)
 
     return retrieved_chunks
 
@@ -107,6 +108,7 @@ Only return the final answer. Do not include page numbers or matched chunks.
 
 If the answer is not found in the context, reply:  
 **'No relevant information was found for this question.'**
+try to farme your answer based on chunks.and try not to give No relevant information was found for this question unless the question is completely out of context.
 
 Context:  
 {context}
@@ -126,6 +128,5 @@ Question:
         "question": question,
         "answer": final_answer
     }
-
 
 
