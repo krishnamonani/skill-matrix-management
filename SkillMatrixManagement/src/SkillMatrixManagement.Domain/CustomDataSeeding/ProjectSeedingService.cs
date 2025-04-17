@@ -29,6 +29,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 1 description",
                 StartDate = DateTime.Now.AddMonths(-3),
                 ExpectedEndDate = DateTime.Now.AddDays(-15),
+                Status= "In Progress",
                 IsDelayed = false,
                 IsOngoing = true
 
@@ -39,6 +40,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 2 description",
                 StartDate = DateTime.Now.AddMonths(-3),
                 ExpectedEndDate = DateTime.Now.AddDays(-10),
+                Status= "In Progress",
                 IsDelayed = false,
                 IsOngoing = false
             };
@@ -48,6 +50,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 3 description",
                 StartDate = DateTime.Now.AddMonths(-2),
                 ExpectedEndDate = DateTime.Now.AddDays(-5),
+                Status= "In Progress",
                 IsDelayed = false,
                 IsOngoing = false
             };
@@ -57,6 +60,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 4 description",
                 StartDate = DateTime.Now.AddMonths(-2),
                 ExpectedEndDate = DateTime.Now.AddDays(-5),
+                Status = "In Progress",
+
                 IsDelayed = false,
                 IsOngoing = false
             };
@@ -65,6 +70,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 ProjectName = "Project 5",
                 Description = "Project 5 description",
                 StartDate = DateTime.Now.AddMonths(-1),
+                Status = "In Progress",
+
                 ExpectedEndDate = DateTime.Now.AddMonths(1),
                 IsDelayed = false,
                 IsOngoing = true
@@ -75,6 +82,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 6 description",
                 StartDate = DateTime.Now.AddDays(-5),
                 ExpectedEndDate = DateTime.Now.AddMonths(2),
+                Status = "In Progress",
+
                 IsDelayed = false,
                 IsOngoing = true
             };
@@ -85,6 +94,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 StartDate = DateTime.Now.AddDays(-5),
                 ExpectedEndDate = DateTime.Now.AddMonths(2),
                 IsDelayed = true,
+                Status = "In Progress",
+
                 IsOngoing = true
             };
             var project8 = new Project()
@@ -94,6 +105,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 StartDate = DateTime.Now.AddDays(-2),
                 ExpectedEndDate = DateTime.Now.AddMonths(3),
                 IsDelayed = false,
+                Status = "In Progress",
+
                 IsOngoing = true
             };
             var project9 = new Project()
@@ -102,6 +115,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 Description = "Project 9 description",
                 StartDate = DateTime.Now,
                 ExpectedEndDate = DateTime.Now.AddMonths(3),
+                Status = "In Progress",
+
                 IsDelayed = true,
                 IsOngoing = true
             };
@@ -109,6 +124,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
             {
                 ProjectName = "Project 10",
                 Description = "Project 10 description",
+                Status= "In Progress",
                 StartDate = DateTime.Now,
                 ExpectedEndDate = DateTime.Now.AddMonths(3),
                 IsDelayed = false,

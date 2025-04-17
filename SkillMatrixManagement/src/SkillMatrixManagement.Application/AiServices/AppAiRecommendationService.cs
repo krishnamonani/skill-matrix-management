@@ -18,6 +18,8 @@ using UglyToad.PdfPig;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
+using SkillMatrixManagement.DTOs.AiPDFQuestionAnswersDTO;
 
 namespace SkillMatrixManagement.AiServices
 {
@@ -28,7 +30,10 @@ namespace SkillMatrixManagement.AiServices
         private readonly ISkillRepository _skillRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly string RECOMMENDATION_END_POINT;
+        private readonly string SKILL_RECOMMENDATION_END_POINT;
+        private readonly string TEAM_RECOMMENDATION_END_POINT;
+        private readonly string UPLOAD_PDF_FOR_QNA;
+        private readonly string ASK_QUESTION;
 
         public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
                                           IUserRepository userRepository,
@@ -42,10 +47,13 @@ namespace SkillMatrixManagement.AiServices
             _userRepository = userRepository;
             _employeeSkillRepository = employeeSkillRepository;
             _departmentRepository = departmentRepository;
-            RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
+            SKILL_RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
+            TEAM_RECOMMENDATION_END_POINT = configuration["AiServices:TeamRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Team recommendation end point is not configured in appsettings.json");
+            UPLOAD_PDF_FOR_QNA = configuration["AiServices:UploadPdfToVectorDbForQnA"] ?? throw new ArgumentNullException(nameof(configuration), "Pdf upload end point is not configured in appsettings.json");
+            ASK_QUESTION = configuration["AiServices:AskQuestions"] ?? throw new ArgumentNullException(nameof(configuration), "Ask questions end point is not configured in appsettings.json");
         }
 
-        public async Task<ServiceResponse<SkillRecommendationResponseDto>>/*Task<ServiceResponse<string>>*/ GetSkillRecommendation(Guid userId)
+        public async Task<ServiceResponse<SkillRecommendationResponseDto>> GetSkillRecommendation(Guid userId)
         {
             try
             {
@@ -74,7 +82,7 @@ namespace SkillMatrixManagement.AiServices
                 var client = _httpClientFactory.CreateClient();
 
                 // Define the request body
-                var requestBody = new SkillRecommendationInputDto()
+                var requestBody = new SkillRecommendationRequestDto()
                 {
                     Role = skillName,
                     Skills = skills.Count() != 0 ? skills : new List<string>(),
@@ -86,7 +94,7 @@ namespace SkillMatrixManagement.AiServices
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                 // Send POST request
-                HttpResponseMessage response = await client.PostAsync(RECOMMENDATION_END_POINT, content);
+                HttpResponseMessage response = await client.PostAsync(SKILL_RECOMMENDATION_END_POINT, content);
                 response.EnsureSuccessStatusCode();
 
                 // Return response as string
@@ -108,12 +116,29 @@ namespace SkillMatrixManagement.AiServices
             try
             {
                 if (string.IsNullOrWhiteSpace(projectDescription)) throw new ArgumentNullException(nameof(projectDescription), "Project description can not be null");
-                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
                 {
-                    Employees = await GetEmployeeDetails(),
-                    Description = projectDescription
+                    Description = projectDescription,
+                    Employees = await GetEmployeeDetails()
                 };
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, content);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
+
             }
             catch (Exception ex)
             {
@@ -153,18 +178,103 @@ namespace SkillMatrixManagement.AiServices
                     }
                 }
 
-                var teamRecommendationResponse = new TeamRecommendationResponseDto()
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
                 {
-                    Employees = await GetEmployeeDetails(),
-                    Description = content.ToString()
+                    Description = content.ToString(),
+                    Employees = await GetEmployeeDetails()
                 };
-                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(teamRecommendationResponse, 200);
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var apiJsonContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, apiJsonContent);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
             }
             catch (Exception ex)
             {
                 return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
             }
         }
+
+        [HttpPost("api/app/qna-pdf-upload")]
+        public async Task<ServiceResponse<string>> UploadPdfToVectorDbAsync(IFormFile pdf, string pdfName)
+        {
+            try
+            {
+                if (pdf == null || pdf.Length == 0)
+                    throw new ArgumentNullException(nameof(pdf), "Pdf file cannot be null");
+
+                if (pdf.ContentType != "application/pdf")
+                    throw new ArgumentException("Invalid file type. Only PDF files are allowed.");
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Create multipart form content
+                using var content = new MultipartFormDataContent();
+
+                // Read file stream
+                using var stream = pdf.OpenReadStream();
+                var fileContent = new StreamContent(stream);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+
+                // Add file
+                content.Add(fileContent, "file", pdf.FileName);
+                // Add pdfName as form field
+                content.Add(new StringContent(pdfName), "pdf_name");
+
+                // Send request
+                HttpResponseMessage response = await client.PostAsync(UPLOAD_PDF_FOR_QNA, content);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var pdfUploadStatus = JsonSerializer.Deserialize<PdfUploadResponseDto>(responseBody);
+                return ServiceResponse<string>.SuccessResult(pdfUploadStatus?.message ?? "", 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<string>.Failure(ex.Message, 400);
+            }
+        }
+
+        [HttpPost("api/app/question-answer")]
+        public async Task<ServiceResponse<AnswerResponseDto>> GetQuestionAnswerAsync(QuestionRequestDto questionWithPdfName)
+        {
+            try
+            {
+                if (questionWithPdfName == null) throw new ArgumentNullException("Details should be provided");
+                if(string.IsNullOrEmpty(questionWithPdfName.question) || string.IsNullOrEmpty(questionWithPdfName.pdf_name))
+                {
+                    throw new ArgumentNullException("Question or pdf name should be filled");
+                }
+                // Send request
+                var client = _httpClientFactory.CreateClient();
+                var jsonBody = JsonSerializer.Serialize(questionWithPdfName);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(ASK_QUESTION, content);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var questionAnswer = JsonSerializer.Deserialize<AnswerResponseDto>(responseBody);
+                return ServiceResponse<AnswerResponseDto>.SuccessResult(questionAnswer ?? new AnswerResponseDto(), 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<AnswerResponseDto>.Failure(ex.Message, 400);
+            }
+        }
+
 
 
         private async Task<ICollection<EmployeeDetailDto>> GetEmployeeDetails()

@@ -17,11 +17,13 @@ namespace SkillMatrixManagement.Services
     public class AppSkillSubtopicService:ApplicationService, ISkillSubtopicService
     {
         private readonly ISkillSubtopicRepository _skillSubtopicRepository;
+        private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IMapper _mapper;
 
-        public AppSkillSubtopicService(ISkillSubtopicRepository skillSubtopicRepository, IMapper mapper)
+        public AppSkillSubtopicService(ISkillSubtopicRepository skillSubtopicRepository, IEmployeeSkillRepository employeeSkillRepository, IMapper mapper)
         {
             _skillSubtopicRepository = skillSubtopicRepository;
+            _employeeSkillRepository = employeeSkillRepository;
             _mapper = mapper;
         }
 
@@ -219,6 +221,42 @@ namespace SkillMatrixManagement.Services
             {
                 return ServiceResponse<HashSet<string>>.Failure($"Something went wrong while fetching the skills, {ex.Message}", 500);
             }
+        }
+
+        public async Task<ServiceResponse<HashSet<string>>> GetSkillSetBasedOnEmployeeSkillAsync(Guid userId)
+        {
+
+            try
+            {
+                var employeeSkills = (await _employeeSkillRepository.GetAllAsync())
+                .Where(es => es.UserId == userId).Select(user => user.CoreSkillName).ToList();
+
+                var set = new HashSet<string>();
+                var skillDetails = (await _skillSubtopicRepository.GetAllAsync())
+                    .Select(s => s.Description)
+                    .ToList();
+
+                foreach (var skills in skillDetails)
+                {
+                    if (skills == null) continue;
+                    foreach (var kvp in skills)
+                    {
+                        var key = kvp.Key;
+                        if (key == null) continue;
+                        if (!employeeSkills.Contains(key))
+                        {
+                            set.Add(key);
+                        }
+                    }
+                }
+
+                return ServiceResponse<HashSet<string>>.SuccessResult(set, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<HashSet<string>>.Failure($"Something went wrong while fetching the skills, {ex.Message}", 500);
+            }
+
         }
     }
 }

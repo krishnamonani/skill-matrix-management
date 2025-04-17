@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SkillMatrixManagement.Constants;
+using SkillMatrixManagement.Domain;
 using SkillMatrixManagement.Models;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -47,7 +48,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
         public DbSet<DepartmentRole> DepartmentRoles { get; set; }
         public DbSet<DepartmentInternalRole> DepartmentInternalRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
-
+        public DbSet<CustomUser> CustomUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -328,7 +329,16 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                 b.ConfigureByConvention();
             });
 
-
+            builder.Entity<CustomUser>(b =>
+                        {
+                            b.ToTable("CustomUsers");
+                            b.ConfigureByConvention();
+                            b.HasKey(x => x.Id);
+                            b.Property(x => x.IdentityUserId).IsRequired();
+                            b.Property(x => x.UserName).IsRequired().HasMaxLength(256);
+                            b.Property(x => x.Email).IsRequired().HasMaxLength(256);
+                            b.Property(x => x.IsActive).IsRequired();
+                        });
             /* implementing hash index for the columns used frequently */
             AddHashIndexesForAllColumns<User>(builder);
             AddHashIndexesForAllColumns<SkillSubtopic>(builder);

@@ -7,6 +7,7 @@ using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.DTOs.Shared;
 using Volo.Abp.Application.Services;
 
+
 namespace SkillMatrixManagement.Services
 {
     public interface IProjectEmployeeService : IApplicationService
@@ -21,5 +22,8 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse> RestoreProjectEmployeeAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<ProjectEmployeeLookupDto>>> GetLookupAsync();
+
+        Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds);
+
     }
 }
