@@ -6,10 +6,12 @@ using Volo.Abp.Application.Services;
 
 namespace SkillMatrixManagement.Application.Contracts.Admin
 {
-    public interface IAdminUserAppService : IApplicationService
+   public interface IAdminUserAppService : IApplicationService
     {
         Task<List<CustomUserDto>> GetAllUsersAsync();
         Task<ServiceResponse> AssignRoleAndActivateAsync(Guid identityUserId, string roleName);
+      Task<ServiceResponse> SoftDeleteUserAsync(string email);
+        Task<ServiceResponse> ChangeUserStatusAsync(Guid identityUserId, bool isActive);
     }
 
     public class CustomUserDto

@@ -232,5 +232,17 @@ public static class SkillMatrixManagementDomainErrorCodes
         public const string SKILL_NOT_FOUND_OR_NOT_DELETED = "SKILL-006";
         public const string SKILL_NOT_FOUND_FOR_RESTORED = "SKILL-007";
     }
+    public static class CustomUser
+        {
+            public const string USER_ALREADY_EXISTS = "CustomUser:AlreadyExists";
+            public const string USER_NOT_FOUND = "CustomUser:NotFound";
+            public const string USER_NOT_FOUND_FOR_UPDATE = "CustomUser:NotFoundForUpdate";
+            public const string USER_NOT_FOUND_FOR_SOFT_DELETE = "CustomUser:NotFoundForSoftDelete";
+            public const string USER_NOT_FOUND_FOR_PERMANENT_DELETE = "CustomUser:NotFoundForPermanentDelete";
+            public const string USER_NOT_FOUND_OR_DELETED = "CustomUser:NotFoundOrDeleted";
+            public const string USER_DUPLICATE_NAME = "CustomUser:DuplicateName";
+            public const string USER_DUPLICATE_EMAIL = "CustomUser:DuplicateEmail";
+            public const string USER_NOT_FOUND_BY_NAME_OR_EMAIL = "CustomUser:NotFoundByNameOrEmail";
+        }
 
 }

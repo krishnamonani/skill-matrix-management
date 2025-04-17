@@ -332,6 +332,7 @@ namespace SkillMatrixManagement.EntityFrameworkCore
             builder.Entity<CustomUser>(b =>
                         {
                             b.ToTable("CustomUsers");
+                            b.ConfigureByConvention();
                             b.HasKey(x => x.Id);
                             b.Property(x => x.IdentityUserId).IsRequired();
                             b.Property(x => x.UserName).IsRequired().HasMaxLength(256);
