@@ -12,4 +12,11 @@ namespace SkillMatrixManagement.DTOs.SkillGapDTO
         public List<List<string>> DepartmentCoreSkills { get; set; }
         public List<string> EmployeeCoreSkills { get; set; }
     }
+
+    public class SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto : SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto
+    {
+        public Guid UserId { get; set; }
+        public string UserName { get; set; }
+        public string UserEmail { get; set; }
+    }
 }
