@@ -36,6 +36,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
             var internalRoles = await _internalRoleRepository.GetListAsync();
 
 
+
             // Map specific IDs by role and category names
             var technicalSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.TECHNICAL_SKILL)?.Id ?? Guid.NewGuid();
             var transferableSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.TRANSFERABLE_SKILL)?.Id ?? Guid.NewGuid();
@@ -49,11 +50,11 @@ namespace SkillMatrixManagement.CustomDataSeeding
             var digitalSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.DIGITAL_SKILL)?.Id ?? Guid.NewGuid();
             var managementSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.MANAGEMENT_SKILL)?.Id ?? Guid.NewGuid();
             var softSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.SOFT_SKILL)?.Id ?? Guid.NewGuid();
+            var HrSkillId = categories.FirstOrDefault(c => c.CategoryName == CategoryEnum.LEADERSHIP_SKILL)?.Id ?? Guid.NewGuid();
 
 
 
-
-
+            var HRId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.MARKETING_EXECUTIVE)?.Id ?? Guid.NewGuid();
             var softwareEngineerTraineeId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_TRAINEE)?.Id ?? Guid.NewGuid();
             var softwareEngineerIId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_I)?.Id ?? Guid.NewGuid();
             var softwareEngineerIIId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.SOFTWARE_ENGINEER_II)?.Id ?? Guid.NewGuid();
@@ -109,6 +110,16 @@ namespace SkillMatrixManagement.CustomDataSeeding
             var marketingManagerId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.MARKETING_MANAGER)?.Id ?? Guid.NewGuid();
             var ctoId = internalRoles.FirstOrDefault(r => r.RoleName == DepartmentRoleEnum.CTO)?.Id ?? Guid.NewGuid();
 
+
+            var HR = new Skill
+            {
+                Name = "HUMAN_RESOURSES",
+                Description = "Human Resources (HR) is a department or function within an organization responsible for managing the employee lifecycle and fostering a productive work environment",
+                CategoryId = HrSkillId,
+                InternalRoleId = HRId
+
+
+            };
             var brandDesigner = new Skill
             {
                 Name = "BRAND_DESIGNER",
