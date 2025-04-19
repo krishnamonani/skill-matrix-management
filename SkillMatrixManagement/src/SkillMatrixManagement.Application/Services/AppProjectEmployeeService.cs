@@ -292,11 +292,9 @@ namespace SkillMatrixManagement.Services
 
         }
 
+
         public async Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds)
         {
-
-
-
             var project = await _projectRepository.GetAsync(projectId);
             if (project == null) throw new BusinessException("Project not found");
 
@@ -304,18 +302,13 @@ namespace SkillMatrixManagement.Services
             {
                 try
                 {
-                    // Get all existing assignments
+                    // Get all existing assignments for the project
                     var existingAssignments = await _projectEmployeeRepository.GetAllAsync();
-                    existingAssignments = existingAssignments.FindAll(p => p.ProjectId == projectId);
+                    existingAssignments = existingAssignments.FindAll(p => p.ProjectId == projectId && !p.IsDeleted);
 
                     // Employees to add: those in employeeIds but not in existing assignments
                     var employeesToAdd = employeeIds
-                        .Where(eId => !existingAssignments.Any(pe => pe.UserId == eId && !pe.IsDeleted))
-                        .ToList();
-
-                    // Employees to remove: those in existing assignments but not in employeeIds
-                    var employeesToRemove = existingAssignments
-                        .Where(pe => !employeeIds.Contains(pe.UserId) && !pe.IsDeleted)
+                        .Where(eId => !existingAssignments.Any(pe => pe.UserId == eId))
                         .ToList();
 
                     // Add new assignments
@@ -333,12 +326,6 @@ namespace SkillMatrixManagement.Services
                         }
                     }
 
-                    // Remove existing assignments by marking as deleted
-                    foreach (var projectEmployee in employeesToRemove)
-                    {
-                        await _projectEmployeeRepository.DeleteAsync(projectEmployee.Id);
-                    }
-
                     await uow.CompleteAsync();
                     return ServiceResponse<List<Guid>>.SuccessResult(employeesToAdd, 200);
                 }
@@ -347,7 +334,38 @@ namespace SkillMatrixManagement.Services
                     throw new BusinessException("Failed to assign employees to project", ex.Message);
                 }
             }
+        }
 
+        public async Task<ServiceResponse<bool>> RemoveEmployeeFromProjectAsync(Guid projectId, Guid employeeId)
+        {
+            var project = await _projectRepository.GetAsync(projectId);
+            if (project == null) throw new BusinessException("Project not found");
+
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                try
+                {
+                    // Get existing assignment for the specific employee and project
+                    var existingAssignments = await _projectEmployeeRepository.GetAllAsync();
+                    var projectEmployeeData = existingAssignments
+                        .FirstOrDefault(pe => pe.ProjectId == projectId && pe.UserId == employeeId && !pe.IsDeleted);
+
+                    if (projectEmployeeData == null)
+                    {
+                        throw new BusinessException("Employee is not assigned to this project");
+                    }
+
+                    // Remove the assignment by marking as deleted
+                    projectEmployeeData.IsDeleted = true;
+
+                    await uow.SaveChangesAsync();
+                    return ServiceResponse<bool>.SuccessResult(true, 200);
+                }
+                catch (Exception ex)
+                {
+                    throw new BusinessException("Failed to remove employee from project", ex.Message);
+                }
+            }
         }
 
 
@@ -367,19 +385,19 @@ namespace SkillMatrixManagement.Services
                 }
                 return ServiceResponse<List<UserDto>>.SuccessResult(employeeListDto, 201);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                    return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
-               
+                return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
+
             }
         }
-        
+
 
         public async Task<ServiceResponse<int>> GetCountOfAssignedUserByProjectIdAsync(Guid projectId)
         {
 
             var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
-            var count= EmployeeList.Count();
+            var count = EmployeeList.Count();
             if (EmployeeList == null)
             {
                 return ServiceResponse<int>.Failure("No one is Assigned to This project", 404);
