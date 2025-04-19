@@ -6,6 +6,7 @@ using SkillMatrixManagement.DTOs.DepartmentInternalRoleDTO;
 using SkillMatrixManagement.DTOs.EmployeeSkillDTO;
 using SkillMatrixManagement.DTOs.ProjectDTO;
 using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
+using SkillMatrixManagement.DTOs.RoleDepartmentDTO;
 using SkillMatrixManagement.DTOs.RoleDTO;
 using SkillMatrixManagement.DTOs.SkillDTO;
 using SkillMatrixManagement.DTOs.SkillSubtopicDTO;
@@ -135,5 +136,8 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         // Skill Mapping
         CreateMap<Skill, SkillDto>();
         CreateMap<Skill, SkillLookupDto>();
+
+
+        CreateMap<RoleDepartment, RoleDepartmentDTO>();
     }
 }

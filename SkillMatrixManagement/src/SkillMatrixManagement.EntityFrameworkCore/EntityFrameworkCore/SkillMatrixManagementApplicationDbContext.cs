@@ -49,6 +49,9 @@ namespace SkillMatrixManagement.EntityFrameworkCore
         public DbSet<DepartmentInternalRole> DepartmentInternalRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<CustomUser> CustomUsers { get; set; }
+        public DbSet<DepartmentSkill> DepartmentSkills { get; set; }
+        public DbSet<RoleDepartment> RoleDepartments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -339,6 +342,26 @@ namespace SkillMatrixManagement.EntityFrameworkCore
                             b.Property(x => x.Email).IsRequired().HasMaxLength(256);
                             b.Property(x => x.IsActive).IsRequired();
                         });
+
+            builder.Entity<RoleDepartment>(b =>
+            {
+                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "RoleDepartment", SkillMatrixManagementConsts.DbSchema);
+                b.ConfigureByConvention();
+
+                b.Property(r => r.RoleName)
+                    .HasConversion(
+                        v => v.ToString(), // Convert enum to string when saving
+                        v => (RoleEnum)Enum.Parse(typeof(RoleEnum), v) // Convert string back to enum when reading
+                    );
+
+            });
+
+            builder.Entity<DepartmentSkill>(b =>
+            {
+                b.ToTable(SkillMatrixManagementConsts.DbTablePrefix + "DepartmentSkill", SkillMatrixManagementConsts.DbSchema);
+                b.ConfigureByConvention();
+
+            });
             /* implementing hash index for the columns used frequently */
             AddHashIndexesForAllColumns<User>(builder);
             AddHashIndexesForAllColumns<SkillSubtopic>(builder);
