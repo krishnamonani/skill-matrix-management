@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace SkillMatrixManagement.Services
 {
@@ -147,6 +148,76 @@ namespace SkillMatrixManagement.Services
             catch (Exception ex)
             {
                 return ServiceResponse<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseDto>.Failure(ex.Message, 400);
+            }
+        }
+
+        public async Task<ServiceResponse<ICollection<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>>> GetAllUsersCoreSkillGapAnalysisAsync()
+        {
+            try
+            {
+                var users = await _userRepository.GetAllAsync();
+                if(users == null) throw new Exception("Users not found!");
+
+                var employeeSkills = await _employeeSkillRepository.GetAllAsync();
+                var skills = await _skillRepository.GetAllAsync();
+                var skillSubtopis = await _skillSubtopicRepository.GetAllAsync();
+
+                var skillSuggestionsBasedOnDepartmentCurrentSkillResponseDtos = new List<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>();
+                foreach (var user in users)
+                {
+                    var userEmployeeSkills = employeeSkills
+                        .Where(es => es.UserId == user.Id)
+                        .Select(es => es.CoreSkillName)
+                        .ToList();
+
+                    var userSkillSubtopis = skillSubtopis
+                        .Where(sst => sst.SkillId == user.SkillId);
+
+                    var userSkillSubtopicsDescriptions = userSkillSubtopis
+                        .Select(sst => sst.Description)
+                        .ToList();
+
+                    var userDepartmentSkillNames = userSkillSubtopis
+                        .Select(sst => sst.Name)
+                        .ToList();
+
+                    var userSkillName = skills
+                        .Where(s => s.Id == user.SkillId)
+                        .Select(s => s.Name)
+                        .FirstOrDefault();
+
+                    var userDepartmentCoreSkillNames = new List<List<string>>();
+
+                    foreach (var coreSkills in userSkillSubtopicsDescriptions)
+                    {
+                        if (coreSkills == null) continue;
+                        var departmentCoreSkills = new List<string>();
+                        foreach (var kvp in coreSkills)
+                        {
+                            departmentCoreSkills.Add(kvp.Key);
+                        }
+                        userDepartmentCoreSkillNames.Add(departmentCoreSkills);
+                    }
+
+                    var skillSuggestionsBasedOnDepartmentCurrentSkillResponseDto = new SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto()
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName,
+                        UserEmail = user.Email,
+                        Designation = userSkillName ?? "",
+                        DepartmentSkills = userDepartmentSkillNames,
+                        DepartmentCoreSkills = userDepartmentCoreSkillNames,
+                        EmployeeCoreSkills = userEmployeeSkills
+                    };
+
+                    skillSuggestionsBasedOnDepartmentCurrentSkillResponseDtos.Add(skillSuggestionsBasedOnDepartmentCurrentSkillResponseDto);
+                }
+
+                return ServiceResponse<ICollection<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>>.SuccessResult(skillSuggestionsBasedOnDepartmentCurrentSkillResponseDtos, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<ICollection<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>>.Failure(ex.Message, 400);
             }
         }
     }
