@@ -102,7 +102,16 @@ namespace SkillMatrixManagement.CustomDataSeeding
             var SKILL_UX_DESIGNER_TRAINEE = SKILL.FirstOrDefault(skill => skill.Name == "UX_DESIGNER_TRAINEE");
             var SKILL_UX_DESIGN_LEAD = SKILL.FirstOrDefault(skill => skill.Name == "UX_DESIGN_LEAD");
             var SKILL_VP_OF_ENGINEERING_COMMON = SKILL.FirstOrDefault(skill => skill.Name == "VP_OF_ENGINEERING_COMMON");
+            var SKILL_HR = SKILL.FirstOrDefault(skill => skill.Name == "HUMAN_RESOURSES");
 
+
+            var DEPT_HR_HUMAN_RESOURSES = new DepartmentSkill
+            {
+                departmentId = DEPT_HUMAN_RESOURCES.Id,
+                DepartmentName = DEPT_HUMAN_RESOURCES.Name,
+                SkillId = SKILL_HR.Id,
+                SkillName = SKILL_HR.Name,
+            };
             var DEPT_AIML_SOFTWARE_ENGINEER_I_AI_ML = new DepartmentSkill
             {
                 departmentId = DEPT_AIML.Id,
@@ -617,7 +626,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 DEPT_TECH_SOLUTION_ARCHITECT_COMMON,
                 DEPT_TECH_TECH_LEAD,
                 DEPT_TECH_TECH_LEAD_COMMON,
-                DEPT_TECH_VP_OF_ENGINEERING_COMMON
+                DEPT_TECH_VP_OF_ENGINEERING_COMMON,
+                DEPT_HR_HUMAN_RESOURSES
             };
 
             await _departmentSkillRepositry.InsertManyAsync(departmentSkills);

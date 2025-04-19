@@ -113,7 +113,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
 
             var HR = new Skill
             {
-                Name = "HUMAN_RESOURSES",
+                Name = "HUMAN_RESOURSE",
                 Description = "Human Resources (HR) is a department or function within an organization responsible for managing the employee lifecycle and fostering a productive work environment",
                 CategoryId = HrSkillId,
                 InternalRoleId = HRId
@@ -632,7 +632,8 @@ namespace SkillMatrixManagement.CustomDataSeeding
                 uxDesigner,
                 uxDesignerTrainee,
                 uxDesignLead,
-                vpOfEngineeringCommon
+                vpOfEngineeringCommon,
+                HR
 
             });
         }
