@@ -159,6 +159,7 @@ namespace SkillMatrixManagement.Services
                 if(users == null) throw new Exception("Users not found!");
 
                 var employeeSkills = await _employeeSkillRepository.GetAllAsync();
+                var skills = await _skillRepository.GetAllAsync();
                 var skillSubtopis = await _skillSubtopicRepository.GetAllAsync();
 
                 var skillSuggestionsBasedOnDepartmentCurrentSkillResponseDtos = new List<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>();
@@ -180,6 +181,11 @@ namespace SkillMatrixManagement.Services
                         .Select(sst => sst.Name)
                         .ToList();
 
+                    var userSkillName = skills
+                        .Where(s => s.Id == user.SkillId)
+                        .Select(s => s.Name)
+                        .FirstOrDefault();
+
                     var userDepartmentCoreSkillNames = new List<List<string>>();
 
                     foreach (var coreSkills in userSkillSubtopicsDescriptions)
@@ -198,6 +204,7 @@ namespace SkillMatrixManagement.Services
                         UserId = user.Id,
                         UserName = user.UserName,
                         UserEmail = user.Email,
+                        Designation = userSkillName ?? "",
                         DepartmentSkills = userDepartmentSkillNames,
                         DepartmentCoreSkills = userDepartmentCoreSkillNames,
                         EmployeeCoreSkills = userEmployeeSkills
