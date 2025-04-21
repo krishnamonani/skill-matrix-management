@@ -102,7 +102,7 @@ namespace SkillMatrixManagement.CustomDataSeeding
             var SKILL_UX_DESIGNER_TRAINEE = SKILL.FirstOrDefault(skill => skill.Name == "UX_DESIGNER_TRAINEE");
             var SKILL_UX_DESIGN_LEAD = SKILL.FirstOrDefault(skill => skill.Name == "UX_DESIGN_LEAD");
             var SKILL_VP_OF_ENGINEERING_COMMON = SKILL.FirstOrDefault(skill => skill.Name == "VP_OF_ENGINEERING_COMMON");
-            var SKILL_HR = SKILL.FirstOrDefault(skill => skill.Name == "HUMAN_RESOURSES");
+            var SKILL_HR = SKILL.FirstOrDefault(skill => skill.Name == "HUMAN_RESOURSE");
 
 
             var DEPT_HR_HUMAN_RESOURSES = new DepartmentSkill
