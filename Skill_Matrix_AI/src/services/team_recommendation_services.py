@@ -40,48 +40,8 @@ def recommend_team(project_description: str, employee_data: list):
                 emp.get("Proficiencies", [])
             )
 
-        # Step 1: Use Gemini to validate the project description
-        validation_prompt = f"""
-You are a strict validator for software project descriptions.
-
-Task:
-Determine whether the text below is a valid technical software project description.
-
-Respond ONLY with:
-- "Yes" (if the project is clearly about building a software system or app)
-- "No" (if the project is too vague, non-technical, or not software-related)
-
-Do not add any explanation.
-
-Examples:
-- "We are building a web application using React and Node.js." → Yes
-- "An AI-based mentor-mentee matching system using NLP." → Yes
-- "Developing a mobile app for e-commerce using Flutter and Firebase." → Yes
-- "Alice Smith engineering" → No
-- "Project for testing only" → No
-- "N/A" → No
-- "Test" → No
-
-Now answer this:
-
-Project Description:
-{project_description}
-"""
-
-        validation_response = model.generate_content(validation_prompt)
-        response_text = validation_response.text.strip().lower()
-        response_text = re.sub(r'[^\w]', '', response_text)  
-
-        print("Gemini validation response:", response_text)
-
-        if response_text != "yes":
-            raise HTTPException(
-                status_code=400,
-                detail="The project description is not valid or technical enough. Please provide a proper software project requirement."
-            )
-
-        # Step 2: Proceed with recommendation prompt
         prompt = f"""
+
 System Instruction: 
 {system_instruction}
 
@@ -92,10 +52,11 @@ Employee Data (with skill proficiencies):
 {json.dumps(employee_data_dicts, indent=2)}
 
 Instructions:
-1. Analyze the project description carefully and extract **only technical skills** required for this project under a key called "RequiredSkills".
-   - Only include programming languages, frameworks, libraries, databases, cloud platforms, DevOps tools, APIs, and other software-related technologies.
-   - Do NOT include soft skills or general attributes like "communication", "teamwork", "problem solving", etc.
-   - Ensure all skill names are standardized and technology-specific (e.g., "JavaScript" not "JS", "PostgreSQL" not "SQL database").
+1. Analyze the project description carefully and extract **all relevant technical and soft skills** required for this project under a key called "RequiredSkills".
+   - These should include **programming languages, tools, frameworks, cloud platforms, databases, libraries, DevOps tools, testing tools, and domain-specific knowledge**.
+   - Consider both **explicitly mentioned** and **implicitly needed** skills for the project.
+   - If integration, architecture, or team coordination is implied, include skills like "API Integration", "System Design", "Agile", or "Team Collaboration".
+   - Ensure all skills are standardized (e.g., use "JavaScript" not "JS").
 
 2. Then, recommend a Team of best-fit employees under a key called "Team":
    - Match employees based on skillProfile and availability.
@@ -127,6 +88,7 @@ Format the response as valid JSON with the following structure:
 Please follow the format strictly and return only valid JSON.
 """
 
+
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(prompt)
 
@@ -143,7 +105,5 @@ Please follow the format strictly and return only valid JSON.
             "Team": team_data
         }
 
-    except HTTPException as http_err:
-        raise http_err  # Allow already-raised HTTPExceptions to propagate
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error while recommending Team: {str(e)}")
