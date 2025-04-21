@@ -206,6 +206,102 @@ namespace SkillMatrixManagement.AiServices
             }
         }
 
+        [HttpPost("api/app/get-team-recommendation-by-description/v2")]
+        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationV2Async([FromBody] string projectDescription)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(projectDescription)) throw new ArgumentNullException(nameof(projectDescription), "Project description can not be null");
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
+                {
+                    Description = projectDescription,
+                    Employees = await GetEmployeeDetails()
+                };
+
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, content);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
+
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
+            }
+        }
+
+        [HttpPost("api/app/get-team-description-by-pdf/v2")]
+        public async Task<ServiceResponse<TeamRecommendationResponseDto>> GetTeamRecommendationByPdfV1Async(IFormFile pdf)
+        {
+            try
+            {
+                if (pdf == null || pdf.Length == 0)
+                    throw new ArgumentNullException(nameof(pdf), "Pdf byte array can not be null");
+
+                // Check ContentType
+                if (pdf.ContentType != "application/pdf")
+                    throw new ArgumentException("Invalid file type. Only PDF files are allowed.");
+
+                // Check File Extension
+                var extension = Path.GetExtension(pdf.FileName);
+                if (extension == null || extension.ToLower() != ".pdf")
+                    throw new ArgumentException("Invalid file extension. Only .pdf files are allowed.");
+
+                var content = new StringBuilder();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await pdf.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    using (PdfDocument doc = PdfDocument.Open(memoryStream))
+                    {
+                        foreach (var page in doc.GetPages())
+                        {
+                            content.AppendLine(page.Text);
+                        }
+                    }
+                }
+
+                var teamRecommendationRequest = new TeamRecommendationRequestDto()
+                {
+                    Description = content.ToString(),
+                    Employees = await GetEmployeeDetails()
+                };
+
+                var client = _httpClientFactory.CreateClient();
+
+                // Serialize to JSON
+                string jsonBody = JsonSerializer.Serialize(teamRecommendationRequest);
+                var apiJsonContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Send POST request
+                HttpResponseMessage response = await client.PostAsync(TEAM_RECOMMENDATION_END_POINT, apiJsonContent);
+                response.EnsureSuccessStatusCode();
+
+                // Return response as string
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var recommendationData = JsonSerializer.Deserialize<TeamRecommendationResponseDto>(responseBody);
+                return ServiceResponse<TeamRecommendationResponseDto>.SuccessResult(recommendationData ?? new TeamRecommendationResponseDto(), 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<TeamRecommendationResponseDto>.Failure(ex.Message, 400);
+            }
+        }
+
         [HttpPost("api/app/qna-pdf-upload")]
         public async Task<ServiceResponse<string>> UploadPdfToVectorDbAsync(IFormFile pdf, string pdfName)
         {
