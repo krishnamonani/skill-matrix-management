@@ -6,6 +6,9 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using SkillMatrixManagement.Application.Services;
+using SkillMatrixManagement.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SkillMatrixManagement;
 
@@ -27,5 +30,8 @@ public class SkillMatrixManagementApplicationModule : AbpModule
         {
             options.AddMaps<SkillMatrixManagementApplicationModule>();
         });
+
+        // Register the PasswordResetService
+        context.Services.AddTransient<IPasswordResetService, PasswordResetService>();
     }
 }
