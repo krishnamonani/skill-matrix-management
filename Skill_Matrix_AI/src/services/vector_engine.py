@@ -14,8 +14,9 @@ from langchain.schema import AIMessage
 from langchain.chains import RetrievalQA
 
 # Load API Key
-#load_dotenv()
-GOOGLE_API_KEY = GEMINI_API_KEY
+load_dotenv()
+# GOOGLE_API_KEY = GEMINI_API_KEY
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Initialize Embeddings & LLM
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
