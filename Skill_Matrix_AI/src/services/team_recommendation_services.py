@@ -52,19 +52,19 @@ Employee Data (with skill proficiencies):
 {json.dumps(employee_data_dicts, indent=2)}
 
 Instructions:
-1. Analyze the project description carefully and extract **all relevant technical and soft skills** required for this project under a key called "RequiredSkills".
-   - These should include **programming languages, tools, frameworks, cloud platforms, databases, libraries, DevOps tools, testing tools, and domain-specific knowledge**.
-   - Consider both **explicitly mentioned** and **implicitly needed** skills for the project.
-   - If integration, architecture, or team coordination is implied, include skills like "API Integration", "System Design", "Agile", or "Team Collaboration".
-   - Ensure all skills are standardized (e.g., use "JavaScript" not "JS").
+1. Analyze the project description carefully and extract **all relevant technical skills ONLY** under the key "RequiredSkills".
+   - These should include **programming languages, frameworks, libraries, databases, tools, cloud platforms, DevOps tools, testing frameworks, system design concepts, and domain-specific technologies**.
+   - DO NOT include generic terms or non-technical skills like **soft skills, PDF processing, documentation, communication, teamwork, Agile, resume parsing**, or similar.
+   - Ignore any project description that is **not technical in nature**, or if it's about non-development tasks (e.g., data entry, resume screening, HR workflows).
+   - Do NOT extract generic practices, abstract roles, or unneeded platform-specific tools unless clearly mentioned.
 
 2. Then, recommend a Team of best-fit employees under a key called "Team":
-   - Match employees based on skillProfile and availability.
-   - Use experience and designation to assign roles.
-   - Ignore employees with ProjectStatus = "Busy".
-   - Provide a justification for each Team member's selection.
+   - Match based on `skillProfile`, availability, experience, and budget considerations.
+   - Prioritize strong technical alignment with RequiredSkills.
+   - Ignore employees with `ProjectStatus` = "Busy".
+   - Include a short justification per selected member.
 
-Format the response as valid JSON with the following structure:
+Format your response strictly as a valid JSON:
 {{
   "RequiredSkills": ["Python", "React", "Docker", "AWS"],
   "Team": [
@@ -85,8 +85,10 @@ Format the response as valid JSON with the following structure:
   ]
 }}
 
-Please follow the format strictly and return only valid JSON.
+Only include technical skills relevant to the project. Ensure JSON is valid and does not contain markdown formatting like ```json.
 """
+
+
 
 
         chat_session = model.start_chat(history=[])
