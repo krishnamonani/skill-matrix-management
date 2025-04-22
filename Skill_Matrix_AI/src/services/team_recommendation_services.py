@@ -39,6 +39,7 @@ def recommend_team(project_description: str, employee_data: list):
                 emp.get("Skills", []),
                 emp.get("Proficiencies", [])
             )
+            emp["Name"] = f"{emp.get('firstName', '')} {emp.get('lastName', '')}".strip()
 
         prompt = f"""
 
@@ -62,6 +63,7 @@ Instructions:
    - Match based on `skillProfile`, availability, experience, and budget considerations.
    - Prioritize strong technical alignment with RequiredSkills.
    - Ignore employees with `ProjectStatus` = "Busy".
+   - Use the `Name` field for employee full name in the output.
    - Include a short justification per selected member.
 
 Format your response strictly as a valid JSON:
@@ -87,9 +89,6 @@ Format your response strictly as a valid JSON:
 
 Only include technical skills relevant to the project. Ensure JSON is valid and does not contain markdown formatting like ```json.
 """
-
-
-
 
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(prompt)
