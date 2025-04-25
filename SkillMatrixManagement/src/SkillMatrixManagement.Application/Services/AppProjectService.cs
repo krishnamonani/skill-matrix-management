@@ -16,11 +16,13 @@ namespace SkillMatrixManagement.Services
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
+        private readonly IProjectEmployeeRepository _projectEmployeeRepositry;
 
-        public AppProjectService(IProjectRepository projectRepository, IMapper mapper)
+        public AppProjectService(IProjectRepository projectRepository, IMapper mapper, IProjectEmployeeRepository projectEmployeeRepositry)
         {
             _projectRepository = projectRepository;
             _mapper = mapper;
+            _projectEmployeeRepositry = projectEmployeeRepositry;
         }
 
         public async Task<ServiceResponse<ProjectDto>> CreateAsync(CreateProjectDto input)
@@ -141,6 +143,12 @@ namespace SkillMatrixManagement.Services
             try
             {
                 await _projectRepository.SoftDeleteAsync(id);
+                var ProjectEmployeeList =await _projectEmployeeRepositry.GetAllAsync();
+                var DeletedProject = ProjectEmployeeList.Where(pe => pe.ProjectId == id);
+                foreach (var item in DeletedProject)
+                {
+                    item.IsDeleted = true;
+                }
                 return ServiceResponse.SuccessResult(204, "Project soft deleted successfully.");
             }
             catch (Exception ex)
