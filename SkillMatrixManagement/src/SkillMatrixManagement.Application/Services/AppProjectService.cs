@@ -145,10 +145,12 @@ namespace SkillMatrixManagement.Services
                 await _projectRepository.SoftDeleteAsync(id);
                 var ProjectEmployeeList =await _projectEmployeeRepositry.GetAllAsync();
                 var DeletedProject = ProjectEmployeeList.Where(pe => pe.ProjectId == id);
-                foreach (var item in DeletedProject)
+                
+                foreach(var project in DeletedProject)
                 {
-                    item.IsDeleted = true;
+                    await _projectEmployeeRepositry.DeleteAsync(project.Id);
                 }
+               
                 return ServiceResponse.SuccessResult(204, "Project soft deleted successfully.");
             }
             catch (Exception ex)
