@@ -1,4 +1,6 @@
-﻿using SkillMatrixManagement.DTOs.Shared;
+﻿using AutoMapper;
+using SkillMatrixManagement.DTOs.ProjectDTO;
+using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.DTOs.SkillGapDTO;
 using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
@@ -16,18 +18,27 @@ namespace SkillMatrixManagement.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ISkillRepository _skillRepository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IProjectEmployeeRepository _projectEmployeeRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly ISkillSubtopicRepository _skillSubtopicRepository;
+        private readonly IMapper _mapper;
 
         public AppSkillGapService(IEmployeeSkillRepository employeeSkillRepository, 
                                   ISkillSubtopicRepository skillSubtopicRepository,
                                   IUserRepository userRepository,
-                                  ISkillRepository skillRepository)
+                                  ISkillRepository skillRepository,
+                                  IProjectRepository projectRepository,
+                                  IProjectEmployeeRepository projectEmployeeRepository,
+                                  IMapper mapper)
         {
             _employeeSkillRepository = employeeSkillRepository;
             _skillSubtopicRepository = skillSubtopicRepository;
             _userRepository = userRepository;
             _skillRepository = skillRepository;
+            _projectRepository = projectRepository;
+            _projectEmployeeRepository = projectEmployeeRepository;
+            _mapper = mapper;
         }
 
         public async Task<ServiceResponse<SkillGapResponseDto>> GetSkillGapsAsync(Guid userId)
@@ -161,6 +172,8 @@ namespace SkillMatrixManagement.Services
                 var employeeSkills = await _employeeSkillRepository.GetAllAsync();
                 var skills = await _skillRepository.GetAllAsync();
                 var skillSubtopis = await _skillSubtopicRepository.GetAllAsync();
+                var projects = await _projectRepository.GetAllAsync();
+                var projectEmployees = await _projectEmployeeRepository.GetAllAsync();
 
                 var skillSuggestionsBasedOnDepartmentCurrentSkillResponseDtos = new List<SkillSuggestionsBasedOnDepartmentCurrentSkillResponseWithEmployeeNmaesDto>();
                 foreach (var user in users)
@@ -186,6 +199,23 @@ namespace SkillMatrixManagement.Services
                         .Select(s => s.Name)
                         .FirstOrDefault();
 
+                    var userProjectIds = projectEmployees
+                        .Where(pe => pe.UserId == user.Id)
+                        .Select(pe => pe.ProjectId)
+                        .ToList();
+
+                    var userProjects = new List<ProjectDto>();
+                    foreach(var projectId in userProjectIds)
+                    {
+                        var project = projects
+                            .Where(p => p.Id == projectId)
+                            .FirstOrDefault();
+
+                        if(project == null) continue;
+
+                        userProjects.Add(_mapper.Map<ProjectDto>(project));
+                    }
+
                     var userDepartmentCoreSkillNames = new List<List<string>>();
 
                     foreach (var coreSkills in userSkillSubtopicsDescriptions)
@@ -205,6 +235,7 @@ namespace SkillMatrixManagement.Services
                         UserName = user.UserName,
                         UserEmail = user.Email,
                         Designation = userSkillName ?? "",
+                        Projects = userProjects,
                         DepartmentSkills = userDepartmentSkillNames,
                         DepartmentCoreSkills = userDepartmentCoreSkillNames,
                         EmployeeCoreSkills = userEmployeeSkills
