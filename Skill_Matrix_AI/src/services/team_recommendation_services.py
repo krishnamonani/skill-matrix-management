@@ -23,7 +23,7 @@ model = genai.GenerativeModel(
 system_instruction = '''You are an expert project Team recommender. Based on the given project description and employee data, 
 recommend the best-fit Team. Prioritize employees based on skill match, experience, availability, and budget. 
 If the project has a high budget, consider senior roles (e.g., SE2, Tech Lead). If the budget is low, consider SE1-level employees. 
-Exclude employees who are BUSY. Output only valid, working Team suggestions in JSON format wrapped inside an object with key 'Team'. 
+Exclude employees who are Busy Output only valid, working Team suggestions in JSON format wrapped inside an object with key 'Team'. 
 Also extract the required skills from the project description and include them in a key called 'RequiredSkills'.
 '''
 
@@ -35,14 +35,26 @@ def recommend_team(project_description: str, employee_data: list):
         employee_data_dicts = [emp.dict() for emp in employee_data]
 
         for emp in employee_data_dicts:
+            emp["Name"] = f"{emp.get('FirstName', '').strip().title()} {emp.get('LastName', '').strip().title()}"
             emp["skillProfile"] = combine_skills_with_proficiencies(
                 emp.get("Skills", []),
                 emp.get("Proficiencies", [])
             )
 
+        irrelevant_keywords = [
+            "data entry", "recruitment", "human resource", "excel sheet", 
+            "admin task", "timesheet", "resume screening", "attendance", 
+            "payroll", "pdf extraction", "meeting scheduler", "interview coordination"
+        ]
+        if any(keyword in project_description.lower() for keyword in irrelevant_keywords):
+            return {
+                "RequiredSkills": [],
+                "Team": []
+            }
+
         prompt = f"""
 
-System Instruction: 
+System Instruction:
 {system_instruction}
 
 Project Description:
@@ -52,50 +64,48 @@ Employee Data (with skill proficiencies):
 {json.dumps(employee_data_dicts, indent=2)}
 
 Instructions:
-1. Analyze the project description carefully and extract **all relevant technical skills ONLY** under the key "RequiredSkills".
-   - These should include **programming languages, frameworks, libraries, databases, tools, cloud platforms, DevOps tools, testing frameworks, system design concepts, and domain-specific technologies**.
-   - DO NOT include generic terms or non-technical skills like **soft skills, PDF processing, documentation, communication, teamwork, Agile, resume parsing**, or similar.
-   - Ignore any project description that is **not technical in nature**, or if it's about non-development tasks (e.g., data entry, resume screening, HR workflows).
-   - Do NOT extract generic practices, abstract roles, or unneeded platform-specific tools unless clearly mentioned.
+1. **First**, determine if the project description is **valid and technical**.
+   - A valid description must **logically make sense**, involve **software development tasks**, and **clearly describe technical goals or problems**.
+   - If the description is **unclear, unrealistic, humorous, vague, or non-technical** (e.g., making maggie with HTML, office parties, resume processing), then consider it invalid.
 
-2. Then, recommend a Team of best-fit employees under a key called "Team":
-   - Match based on `skillProfile`, availability, experience, and budget considerations.
-   - Prioritize strong technical alignment with RequiredSkills.
-   - Ignore employees with `ProjectStatus` = "Busy".
-   - Include a short justification per selected member.
+2. If the project description is INVALID:
+   - Return: 
+     {{
+       "RequiredSkills": [],
+       "Team": []
+     }}
 
-Format your response strictly as a valid JSON:
+3. If the project description is VALID:
+   - Extract relevant technical skills ONLY under the key `"RequiredSkills"`.
+     - Include: programming languages, frameworks, libraries, tools, cloud platforms, DevOps, databases, testing tools, system design terms, domain tech.
+     - DO NOT include: soft skills, PDF parsing, resume screening, Agile, teamwork, food, parties, or vague business terms.
+
+   - Recommend a team under key `"Team"`:
+     - Match employee skills to RequiredSkills.
+     - Only choose employees with `"ProjectStatus": "Available"`.
+     - Add justification showing skill alignment.
+     - Use the employee `"Name"` field in output.
+
+4. Format the output STRICTLY as:
 {{
   "RequiredSkills": ["Python", "React", "Docker", "AWS"],
   "Team": [
     {{
-      "Id": "E101",
-      "Name": "Alice Johnson",
-      "Role": "Backend Developer",
-      "ProjectStatus": "Available",
-      "Justification": "Alice has strong proficiency in Python and Django..."
-    }},
-    {{
-      "Id": "E202",
-      "Name": "Bob Smith",
-      "Role": "Frontend Developer",
-      "ProjectStatus": "Available",
-      "Justification": "Bob has experience in React and TypeScript..."
+      "Id": "...",
+      "Name": "...",
+      "Role": "...",
+      "ProjectStatus": "...",
+      "Justification": "..."
     }}
   ]
 }}
 
-Only include technical skills relevant to the project. Ensure JSON is valid and does not contain markdown formatting like ```json.
+Only return valid technical responses. No markdown, no explanations. Ensure JSON is valid.
 """
-
-
 
 
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(prompt)
-
-        print("Raw Gemini Response:", response.text)
-
         cleaned_response = re.sub(r"```json|```", "", response.text.strip())
         parsed_response = json.loads(cleaned_response)
 
@@ -107,5 +117,12 @@ Only include technical skills relevant to the project. Ensure JSON is valid and 
             "Team": team_data
         }
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error while recommending Team: {str(e)}")
+    except Exception:
+        return {
+            "RequiredSkills": [],
+            "Team": []
+        }
+
+
+
+

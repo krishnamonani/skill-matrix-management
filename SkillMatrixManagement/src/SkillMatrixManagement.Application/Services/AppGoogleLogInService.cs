@@ -31,15 +31,15 @@ namespace SkillMatrixManagement.Services
 
                 var user = await _identityUserManager.FindByEmailAsync(email);
                 var InActiveUSerList =await _customUserRepository.GetUsersByStatusAsync(false);
+                if (user == null)
+                {
+                    return ServiceResponse.Failure("Oops! We couldn't find an account associated with this email address. Please check for any typos or try a different email.", 404);
+                }
                 var IsInActive = InActiveUSerList.FirstOrDefault(u => u.Email.ToLower()==user.Email.ToLower());
                 if (IsInActive != null)
                 {
                     return ServiceResponse.Failure("Your account is inactive and requires administrator activation or role assignment", 404);
 
-                }
-                if (user == null)
-                {
-                    return ServiceResponse.Failure("Oops! We couldn't find an account associated with this email address. Please check for any typos or try a different email.", 404);
                 }
                 var InActiveUser = await _customUserRepository.GetUsersByStatusAsync(false);
                 var CustomUser =InActiveUser.FirstOrDefault(u => u.Id == user.Id);
