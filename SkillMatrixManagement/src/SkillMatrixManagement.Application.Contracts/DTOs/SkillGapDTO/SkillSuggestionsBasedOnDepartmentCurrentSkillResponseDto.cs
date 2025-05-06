@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SkillMatrixManagement.DTOs.ProjectDTO;
 
 namespace SkillMatrixManagement.DTOs.SkillGapDTO
 {
@@ -19,5 +20,6 @@ namespace SkillMatrixManagement.DTOs.SkillGapDTO
         public string UserName { get; set; }
         public string UserEmail { get; set; }
         public string Designation { get; set; }
+        public List<ProjectDto> Projects { get; set; }
     }
 }

@@ -2,7 +2,7 @@ import os
 import chromadb
 import re
 import json
-from src.config import GEMINI_API_KEY
+from src.config import GOOGLE_API_KEY 
 import re
 import json
 from typing import Dict
@@ -12,17 +12,23 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import AIMessage  
 from langchain.chains import RetrievalQA
+from dotenv import load_dotenv
 
 # Load API Key
 #load_dotenv()
-GOOGLE_API_KEY = GEMINI_API_KEY
+# GOOGLE_API_KEY = GEMINI_API_KEY
+
+# Load API Key
+load_dotenv()
+# GOOGLE_API_KEY = GEMINI_API_KEY
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Initialize Embeddings & LLM
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
 embedding_model = SentenceTransformerEmbeddings(model_name=model_name)
 # llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002", google_api_key=GOOGLE_API_KEY)
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro-002",
+    model="gemini-2.0-flash",
     google_api_key=GOOGLE_API_KEY,
     convert_system_message_to_human=True
 )
@@ -80,7 +86,7 @@ def search_chroma(question, pdf_name):
     query_embedding = embedding_model.embed_query(question)
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=10,
+        n_results=5,
         where={"source": pdf_name}
     )
 
@@ -102,7 +108,7 @@ def get_answer(question, relevant_chunks: list) -> Dict:
     context = "\n".join(relevant_chunks)
 
     prompt = f"""
-You are an intelligent AI assistant. Answer the question strictly based on the provided context.
+You are an intelligent AI assistant. Answer the question strictly based on the provided context.Try to frame your answer based on chunks.give meaningful answer based on the context and question.
 
 Only return the final answer. Do not include page numbers or matched chunks.
 
