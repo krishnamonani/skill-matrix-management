@@ -1259,6 +1259,12 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("AssignibilityPercentage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BillablePercentage")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -1301,13 +1307,27 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<DateTime>("ProjectEndDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ProjectStartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignibilityPercentage");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AssignibilityPercentage"), "HASH");
+
+                    b.HasIndex("BillablePercentage");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("BillablePercentage"), "HASH");
 
                     b.HasIndex("ConcurrencyStamp");
 
@@ -1349,9 +1369,17 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("LastModifierId"), "HASH");
 
+                    b.HasIndex("ProjectEndDate");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ProjectEndDate"), "HASH");
+
                     b.HasIndex("ProjectId");
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ProjectId"), "HASH");
+
+                    b.HasIndex("ProjectStartDate");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("ProjectStartDate"), "HASH");
 
                     b.HasIndex("UserId");
 
@@ -2507,6 +2535,15 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("AssignibilityPerncentage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AvailabilityPerncentage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BillablePerncentage")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -2591,6 +2628,18 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignibilityPerncentage");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AssignibilityPerncentage"), "HASH");
+
+                    b.HasIndex("AvailabilityPerncentage");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AvailabilityPerncentage"), "HASH");
+
+                    b.HasIndex("BillablePerncentage");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("BillablePerncentage"), "HASH");
 
                     b.HasIndex("ConcurrencyStamp");
 

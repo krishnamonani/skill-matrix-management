@@ -35,6 +35,7 @@ public class SkillMatrixManagementApplicationAutoMapperProfile : Profile
         CreateMap<User, UserDto>();
         CreateMap<User, UserLookupDto>();
         CreateMap<CreateUserDto, UpdateUserDto>();
+        CreateMap<User, UserProjectAssignibilityStatusDto>();
 
         // mapping department table
         CreateMap<Department, DepartmentDto>();

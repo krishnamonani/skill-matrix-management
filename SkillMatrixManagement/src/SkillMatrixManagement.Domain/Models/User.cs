@@ -51,6 +51,13 @@ namespace SkillMatrixManagement.Models
         public ProjectStatusEnum IsAvailable { get; set; }
         public string? ProfilePhoto { get; set; }
 
+        [Range(0, 100)]
+        public int AssignibilityPerncentage { get; set; } = 0;
+        [Range(0, 100)]
+        public int BillablePerncentage { get; set; } = 0;
+        [Range(0, 100)]
+        public int AvailabilityPerncentage { get; set; } = 100;
+
 
         public virtual ICollection<EmployeeSkill> EmployeeSkills { get; set; }
 
