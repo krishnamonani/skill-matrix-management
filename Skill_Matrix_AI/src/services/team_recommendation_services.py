@@ -45,9 +45,9 @@ def combine_skills_with_proficiencies(skills: list, profs: list) -> dict:
     return {skills[i]: profs[i] if i < len(profs) else "UNKNOWN" for i in range(len(skills))}
 
 def calculate_availability_and_status(emp):
-    billable = emp.get("BillablePercentage", 0)
+    billable = emp.get("BillablePerncentage", 0)
     availability = 100 - billable
-    emp["AvailabilityPercentage"] = availability
+    emp["AvailabilityPerncentage"] = availability
 
     if availability == 100:
         emp["ProjectStatus"] = "AVAILABLE"

@@ -14,9 +14,9 @@ class Employee(BaseModel):
     Skills: List[str]
     Proficiencies: List[str]
     ProjectStatus: str  
-    AssignibilityPercentage: int
-    BillablePercentage: int
-    AvailabilityPercentage: int  
+    AssignibilityPerncentage: int
+    BillablePerncentage: int
+    AvailabilityPerncentage: int  
 
 class TeamRecommendationRequest(BaseModel):
     Description: str
