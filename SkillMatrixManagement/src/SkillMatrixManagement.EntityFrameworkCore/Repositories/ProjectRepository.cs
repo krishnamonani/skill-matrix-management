@@ -134,12 +134,46 @@ namespace SkillMatrixManagement.Repositories
                 .ToListAsync();
         }
 
-        // Get all ongoing projects (projects where EndDate is in the future)
+        // Get all ongoing projects (projects where EndDate is in the future or status is In Progress)
         public async Task<List<Project>> GetOngoingProjectsAsync()
         {
             var dbContext = await _dbContextProvider.GetDbContextAsync();
             return await dbContext.Set<Project>()
-                .Where(p => !p.IsDeleted && p.ExpectedEndDate >= DateTime.UtcNow)
+                .Where(p => !p.IsDeleted && 
+                           ((p.ExpectedEndDate >= DateTime.UtcNow) || 
+                            (p.Status == ProjectConstants.Status.InProgress)))
+                .ToListAsync();
+        }
+
+        // Update project status
+        public async Task UpdateProjectStatusAsync(Guid projectId, string status)
+        {
+            Check.NotNull(projectId, nameof(projectId));
+            Check.NotNullOrWhiteSpace(status, nameof(status));
+
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+            var project = await dbContext.Set<Project>().FirstOrDefaultAsync(p => p.Id == projectId && !p.IsDeleted)
+                ?? throw new BusinessException(SkillMatrixManagementDomainErrorCodes.Project.PROJECT_NOT_FOUND_FOR_UPDATE, "Project not found for status update");
+
+            project.Status = status;
+            
+            // If project is marked as completed, also set IsOngoing to false
+            if (status == ProjectConstants.Status.Completed || status == ProjectConstants.Status.OnHold)
+            {
+                project.IsOngoing = false;
+            }
+            
+            await dbContext.SaveChangesAsync();
+        }
+
+        // Get all expired projects that are not completed
+        public async Task<List<Project>> GetExpiredProjectsAsync()
+        {
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+            return await dbContext.Set<Project>()
+                .Where(p => !p.IsDeleted && 
+                            p.ExpectedEndDate < DateTime.UtcNow && 
+                            p.Status != ProjectConstants.Status.Completed)
                 .ToListAsync();
         }
     }
