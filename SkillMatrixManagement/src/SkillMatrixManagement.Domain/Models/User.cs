@@ -60,7 +60,7 @@ namespace SkillMatrixManagement.Models
 
 
         public virtual ICollection<EmployeeSkill> EmployeeSkills { get; set; }
-
+        public int BillablePercentage { get; internal set; }
     }
 
 }

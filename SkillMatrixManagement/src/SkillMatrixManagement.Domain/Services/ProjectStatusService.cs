@@ -77,26 +77,43 @@ namespace SkillMatrixManagement.Services
                     return;
                 }
 
-                foreach (var user in usersAssigned)
+                foreach (var assignedUser in usersAssigned)
                 {
                     try
                     {
+                        // Get the user ID from the UserResponseData property
+                        if (assignedUser.UserResponseData == null)
+                        {
+                            _logger.LogWarning($"User data is null for a user assigned to project {projectId}");
+                            continue;
+                        }
+                        
+                        var userId = assignedUser.UserResponseData.Id; // Access Id through UserResponseData
+                        
+                        // We need to fetch the actual User entity to update its properties
+                        var userEntity = await _userRepository.GetByIdAsync(userId);
+                        if (userEntity == null)
+                        {
+                            _logger.LogWarning($"User with ID {userId} not found when releasing from project {projectId}");
+                            continue;
+                        }
+                        
                         // Reset the user's percentages
-                        user.AssignibilityPerncentage = 0;
-                        user.BillablePerncentage = 0;
-                        user.AvailabilityPerncentage = 100;
+                        userEntity.AssignibilityPerncentage = 0;
+                        userEntity.BillablePercentage = 0;
+                        userEntity.AvailabilityPerncentage = 100;
                         
                         // Use the correct enum value for IsAvailable
-                        user.IsAvailable = SkillMatrixManagement.Constants.ProjectStatusEnum.AVAILABLE;
+                        userEntity.IsAvailable = SkillMatrixManagement.Constants.ProjectStatusEnum.AVAILABLE;
                         
                         // Update the user
-                        await _userRepository.UpdateAsync(user);
+                        await _userRepository.UpdateAsync(userEntity);
                         
-                        _logger.LogInformation($"Released user {user.Id} from project {projectId}");
+                        _logger.LogInformation($"Released user {userId} from project {projectId}");
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error releasing user {user.Id} from project {projectId}");
+                        _logger.LogError(ex, $"Error releasing user from project {projectId}");
                     }
                 }
             }
