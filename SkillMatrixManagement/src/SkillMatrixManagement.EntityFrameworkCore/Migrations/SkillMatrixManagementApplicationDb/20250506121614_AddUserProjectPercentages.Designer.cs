@@ -2524,7 +2524,7 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AssignibilityPerncentage")
+                    b.Property<int>("AssignibilityPercentage")
                         .HasColumnType("integer");
 
                     b.Property<int>("AvailabilityPerncentage")
@@ -2618,9 +2618,9 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignibilityPerncentage");
+                    b.HasIndex("AssignibilityPercentage");
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AssignibilityPerncentage"), "HASH");
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AssignibilityPercentage"), "HASH");
 
                     b.HasIndex("AvailabilityPerncentage");
 
