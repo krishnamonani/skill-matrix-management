@@ -23,7 +23,7 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<ProjectEmployeeLookupDto>>> GetLookupAsync();
 
-        Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds);
+        Task<ServiceResponse<List<BulkProjectAssignDTO>>> AssignEmployeesToProjectAsync(List<BulkProjectAssignDTO> ProjectEmployeeDetails);
 
     }
 }
