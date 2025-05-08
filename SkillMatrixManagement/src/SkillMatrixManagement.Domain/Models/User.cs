@@ -52,11 +52,11 @@ namespace SkillMatrixManagement.Models
         public string? ProfilePhoto { get; set; }
 
         [Range(0, 100)]
-        public int AssignibilityPerncentage { get; set; } = 0;
+        public int AssignibilityPercentage { get; set; } = 0;
         [Range(0, 100)]
-        public int BillablePerncentage { get; set; } = 0;
+        public int BillablePercentage { get; set; } = 0;
         [Range(0, 100)]
-        public int AvailabilityPerncentage { get; set; } = 100;
+        public int AvailabilityPercentage { get; set; } = 100;
 
 
         public virtual ICollection<EmployeeSkill> EmployeeSkills { get; set; }
