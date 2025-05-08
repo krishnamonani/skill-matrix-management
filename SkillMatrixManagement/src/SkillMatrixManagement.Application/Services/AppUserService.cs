@@ -15,6 +15,8 @@ using Volo.Abp.Identity;
 using SkillMatrixManagement.Utils;
 using SkillMatrixManagement.Services;
 using SkillMatrixManagement.Domain;
+using SkillMatrixManagement.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace SkillMatrixManagement.Services
 {
@@ -33,11 +35,11 @@ namespace SkillMatrixManagement.Services
 
 
         public AppUserService(IUserRepository userRepository,
-                              IDepartmentRepository departmentRepository, 
+                              IDepartmentRepository departmentRepository,
                               IRoleRepository roleRepository,
-                              ICustomUserRepository customUserRepository, 
-                              IDepartmentInternalRoleRepository roleInternalRepository, 
-                              IIdentityUserRepository identityUserRepository, 
+                              ICustomUserRepository customUserRepository,
+                              IDepartmentInternalRoleRepository roleInternalRepository,
+                              IIdentityUserRepository identityUserRepository,
                               IdentityUserManager identityUserManager,
                               IMapper mapper,
                               ISkillRepository skillRepository,
@@ -101,19 +103,19 @@ namespace SkillMatrixManagement.Services
                 {
                     throw new UserFriendlyException("UserName does not exist");
                 }
-                if(input.Experience > 100 || input.Experience < 0)
+                if (input.Experience > 100 || input.Experience < 0)
                 {
                     throw new UserFriendlyException("Experience should be greated than equals to 0 and less than 100 Years");
                 }
-                if(input.PhoneNumber.Contains(' '))
+                if (input.PhoneNumber.Contains(' '))
                 {
                     throw new UserFriendlyException("Phone number should not contain any space.");
                 }
-                if(input.UserName.Contains(' '))
+                if (input.UserName.Contains(' '))
                 {
                     throw new UserFriendlyException("User name should not contain any space.");
                 }
-                if(input.PhoneNumber.Length > 10 || input.PhoneNumber.Length < 0)
+                if (input.PhoneNumber.Length > 10 || input.PhoneNumber.Length < 0)
                 {
                     throw new UserFriendlyException("Invalid Phone number");
                 }
@@ -124,35 +126,35 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException($"A user with email '{input.Email}' already exists.");
                 }
 
-                if(await query.AnyAsync(u => u.UserName == input.UserName && !u.IsDeleted))
+                if (await query.AnyAsync(u => u.UserName == input.UserName && !u.IsDeleted))
                 {
                     throw new UserFriendlyException($"A User with userNmae '{input.UserName}' already exists");
                 }
-                
-                if(input.FirstName.Contains(' ') || input.LastName.Contains(' '))
+
+                if (input.FirstName.Contains(' ') || input.LastName.Contains(' '))
                 {
                     throw new UserFriendlyException("FirstName and Lastname should not contain any space!");
                 }
 
                 var abpUsers = await _identityUserRepository.GetListAsync();
-                if(!(abpUsers.Any(user => user.UserName == input.UserName && user.Email.ToUpper() == input.Email.ToUpper())))
+                if (!(abpUsers.Any(user => user.UserName == input.UserName && user.Email.ToUpper() == input.Email.ToUpper())))
                 {
                     throw new Exception($"{input.UserName} or {input.Email} is not registered!");
                 }
 
                 var user = new User()
                 {
-                    FirstName        = input.FirstName,
-                    LastName         = input.LastName,
-                    Email            = input.Email,
-                    UserName         = input.UserName,
-                    Experience       = input.Experience,
-                    PhoneNumber      = input.PhoneNumber,
-                    RoleId           = input.RoleId,
-                    DepartmentId     = input.DepartmentId,
-                    SkillId          = input.SkillId,
-                    IsAvailable      = input.IsAvailable,
-                    ProfilePhoto     = input.ProfilePhoto
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    UserName = input.UserName,
+                    Experience = input.Experience,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
+                    SkillId = input.SkillId,
+                    IsAvailable = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
                 };
 
                 var createdUser = await _userRepository.CreateAsync(user);
@@ -165,7 +167,7 @@ namespace SkillMatrixManagement.Services
             }
         }
 
-       public async Task<ServiceResponse> DeleteAsync(Guid id)
+        public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
             try
             {
@@ -293,7 +295,7 @@ namespace SkillMatrixManagement.Services
 
             // checking for user exist in the db or not
             var users = await _userRepository.GetAllAsync();
-            var user  = users.Where(u => u.Email.ToUpper() == userNameOrEmail.ToUpper()).FirstOrDefault();
+            var user = users.Where(u => u.Email.ToUpper() == userNameOrEmail.ToUpper()).FirstOrDefault();
 
             if (user == null)
             {
@@ -302,11 +304,11 @@ namespace SkillMatrixManagement.Services
             }
 
             // performing lazy loading
-            if(user.DepartmentId != null)
+            if (user.DepartmentId != null)
             {
                 user.Department = await _departmentRepository.GetByIdAsync(user.DepartmentId ?? Guid.NewGuid());
 
-            } 
+            }
             else
             {
                 user.Department = null;
@@ -366,7 +368,7 @@ namespace SkillMatrixManagement.Services
                 var userDto = _mapper.Map<UserDto>(user);
                 return ServiceResponse<UserDto>.SuccessResult(userDto, 200, "User retrieved successfully.");
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
                 return ServiceResponse<UserDto>.Failure($"Failed to retrieve user: {ex.Message}", 500);
             }
@@ -582,7 +584,7 @@ namespace SkillMatrixManagement.Services
                     throw new UserFriendlyException("Role ID cannot be empty.");
                 }
 
-                if(input.UserName.Contains(' '))
+                if (input.UserName.Contains(' '))
                 {
                     throw new UserFriendlyException("UserName does not contains any space");
                 }
@@ -610,21 +612,21 @@ namespace SkillMatrixManagement.Services
                 }
 
 
-                user.FirstName   = input.FirstName;
-                user.LastName    = input.LastName;
-                user.Email       = input.Email; // for now it is not updateable by frontend
-                user.UserName    = input.UserName; // for now it is not updateable by frontend
+                user.FirstName = input.FirstName;
+                user.LastName = input.LastName;
+                user.Email = input.Email; // for now it is not updateable by frontend
+                user.UserName = input.UserName; // for now it is not updateable by frontend
                 user.PhoneNumber = input.PhoneNumber;
-                user.Experience  = input.Experience;
-                user.RoleId      = input.RoleId;
+                user.Experience = input.Experience;
+                user.RoleId = input.RoleId;
 
                 // optional fields
-                user.DepartmentId   = input.DepartmentId;
+                user.DepartmentId = input.DepartmentId;
                 //user.InternalRoleId = input.InternalRoleId;
-                user.SkillId        = input.SkillId;
-                user.ProfilePhoto   = input.ProfilePhoto;
+                user.SkillId = input.SkillId;
+                user.ProfilePhoto = input.ProfilePhoto;
 
-                user.IsAvailable = input.IsAvailable; // default false
+                //user.IsAvailable = input.IsAvailable; // default false
 
                 await _userRepository.UpdateAsync(user);
                 return ServiceResponse.SuccessResult(200, "User updated successfully.");
@@ -638,12 +640,12 @@ namespace SkillMatrixManagement.Services
         public async Task<ServiceResponse<string[]>> GetUserNameAndEmailByUserNameOrEmail(string userNameOrEmail)
         {
             var user = await _identityUserRepository.FindByNormalizedEmailAsync(userNameOrEmail.ToUpper());
-            if(user == null)
-            {   
+            if (user == null)
+            {
                 user = await _identityUserRepository.FindByNormalizedUserNameAsync(userNameOrEmail.ToUpper());
                 if (user == null) return ServiceResponse<string[]>.Failure("User not found", 404);
             }
-            return ServiceResponse<string[]>.SuccessResult(new string[] {user.UserName, user.Email}, 200);
+            return ServiceResponse<string[]>.SuccessResult(new string[] { user.UserName, user.Email }, 200);
         }
 
         public async Task<ServiceResponse<UserDto>> CreateOrUpdateUserAsync(CreateUserDto input)
@@ -683,7 +685,7 @@ namespace SkillMatrixManagement.Services
                 var abpUserbyUserName = abpUsers.Where(u => u.UserName == input.UserName).FirstOrDefault() ?? throw new Exception($"Something went wrong! The {input.UserName} is not registered.");
 
                 var query = await _userRepository.WithDetailsAsync();
-                var existingUser = await query.FirstOrDefaultAsync(u => (u.Email.ToUpper() == input.Email.ToUpper() || u.UserName == input.UserName)  && !u.IsDeleted);
+                var existingUser = await query.FirstOrDefaultAsync(u => (u.Email.ToUpper() == input.Email.ToUpper() || u.UserName == input.UserName) && !u.IsDeleted);
 
 
                 if (existingUser != null)
@@ -691,8 +693,8 @@ namespace SkillMatrixManagement.Services
                     if (await query.AnyAsync(user => (user.UserName == input.UserName) && user.Id != existingUser.Id && !user.IsDeleted))
                     {
                         throw new Exception($"{input.UserName} already exist");
-                    } 
-                    
+                    }
+
                     if (await query.AnyAsync(user => (user.Email.ToLower() == input.Email.ToLower()) && user.Id != existingUser.Id && !user.IsDeleted))
                     {
                         throw new Exception($"{input.Email} already exist");
@@ -710,18 +712,18 @@ namespace SkillMatrixManagement.Services
 
                 var user = new User()
                 {
-                    FirstName        = input.FirstName,
-                    LastName         = input.LastName,
-                    Email            = input.Email,
-                    UserName         = input.UserName,
-                    Experience       = input.Experience,
-                    PhoneNumber      = input.PhoneNumber,
-                    RoleId           = input.RoleId,
-                    DepartmentId     = input.DepartmentId,
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    Email = input.Email,
+                    UserName = input.UserName,
+                    Experience = input.Experience,
+                    PhoneNumber = input.PhoneNumber,
+                    RoleId = input.RoleId,
+                    DepartmentId = input.DepartmentId,
                     //InternalRoleId   = input.InternalRoleId,
-                    SkillId          = input.SkillId,
-                    IsAvailable      = input.IsAvailable,
-                    ProfilePhoto     = input.ProfilePhoto
+                    SkillId = input.SkillId,
+                    //IsAvailable      = input.IsAvailable,
+                    ProfilePhoto = input.ProfilePhoto
                 };
 
                 var createdUser = await _userRepository.CreateAsync(user);
@@ -738,7 +740,7 @@ namespace SkillMatrixManagement.Services
         {
             // Generate a secure random password
             var password = PasswordGenerator.GenerateRandomPassword(10);
-            
+
             // Create a new user
             var user = new IdentityUser(
                 GuidGenerator.Create(),
@@ -746,36 +748,165 @@ namespace SkillMatrixManagement.Services
                 input.Email,
                 CurrentTenant.Id
             );
-            
+
             // Set additional properties if needed
-            
+
             // Create user
             var result = await _identityUserManager.CreateAsync(user, password);
-            
+
             if (!result.Succeeded)
             {
                 throw new Exception($"Could not create user: {string.Join(", ", result.Errors)}");
             }
-            
+
             // Assign roles if needed
-            
+
             // Send welcome email
             var resetPasswordLink = $"{GetAppUrl()}/reset-password?userId={user.Id}";
-            
+
             await _emailService.SendWelcomeEmailAsync(
                 input.Email,
                 input.UserName,
                 password,
                 resetPasswordLink
             );
-            
+
             return ObjectMapper.Map<IdentityUser, IdentityUserDto>(user);
         }
-        
+
         private string GetAppUrl()
         {
             // Get this from configuration or settings
             return "http://localhost:5173";
+        }
+
+        public async Task<ServiceResponse<UserProjectAssignibilityStatusDto>> GetUserAssignibilityStatusAsync(Guid userId)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("User not found", 404);
+                }
+                var userProjectAssignibilityStatusDto = _mapper.Map<UserProjectAssignibilityStatusDto>(user);
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(userProjectAssignibilityStatusDto, 200);
+            }
+            catch (Exception)
+            {
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("There is some problem while retrieving the user details", 400);
+            }
+        }
+
+        public async Task<ServiceResponse<UserProjectAssignibilityStatusDto>> AssignUserProjectPercentagesAsync(Guid userId, [Range(0, 100)] int assignibilityPercentage, [Range(0, 100)] int billablePercentage)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("User not found", 404);
+                }
+
+                if (assignibilityPercentage < 0 || billablePercentage < 0) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
+                if ((user.AssignibilityPerncentage + assignibilityPercentage) > 100 || (user.AssignibilityPerncentage + assignibilityPercentage) < 0)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility percentage cannot exceed 100 or less than 0", 400);
+                }
+                user.AssignibilityPerncentage += assignibilityPercentage;
+                if (user.AssignibilityPerncentage == 100) user.IsAvailable = ProjectStatusEnum.BUSY;
+
+                if ((user.BillablePerncentage + billablePercentage) > 100 || (user.BillablePerncentage + billablePercentage) < 0)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Billable percentage cannot exceed 100 or less than 0", 400);
+                }
+                user.BillablePerncentage += billablePercentage;
+                user.AvailabilityPerncentage = 100 - (user.BillablePerncentage);
+
+                await _userRepository.UpdateAsync(user);
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(_mapper.Map<UserProjectAssignibilityStatusDto>(user), 200, "User project percentages updated successfully.");
+            }
+            catch (Exception)
+            {
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Error while updating user project assignibility", 400);
+            }
+        }
+
+        public async Task<ServiceResponse<ICollection<UserProjectAssignibilityStatusDto>>> AssignUserListProjectPercentagesAsync(List<UserProjectAssignibilityDto> userProjectAssignibilityDto)
+        {
+            try
+            {
+                var updateUserDtos = new List<UserProjectAssignibilityStatusDto>();
+                foreach (var userUpdateStatuas in userProjectAssignibilityDto)
+                {
+                    var userUpdateServiceResponse = await AssignUserProjectPercentagesAsync(userUpdateStatuas.UserId, userUpdateStatuas.AssignibilityPercentage, userUpdateStatuas.BillablePercentage);
+                    if (!userUpdateServiceResponse.Success)
+                    {
+                        return ServiceResponse<ICollection<UserProjectAssignibilityStatusDto>>.Failure(userUpdateServiceResponse.ErrorMessage ?? "Error while updating the project status please try again later", 400);
+                    }
+                    if (userUpdateServiceResponse.Data == null) continue;
+                    updateUserDtos.Add(userUpdateServiceResponse.Data);
+                }
+                return ServiceResponse<ICollection<UserProjectAssignibilityStatusDto>>.SuccessResult(updateUserDtos, 200);
+            }
+            catch (Exception)
+            {
+                return ServiceResponse<ICollection<UserProjectAssignibilityStatusDto>>.Failure("Error while updating the project status please try again later", 400);
+            }
+        }
+
+        public async Task<ServiceResponse<UserProjectAssignibilityStatusDto>> RemoveAssignibilityAsync(Guid userId, [Range(0, 100)] int assignibilityPercentage, [Range(0, 100)] int billablePercentage)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("User not found", 404);
+                }
+                if (assignibilityPercentage < 0 || billablePercentage < 0) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
+                if (assignibilityPercentage > 100 || billablePercentage > 100) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be greater than 100", 400);
+
+                if ((user.AssignibilityPerncentage - assignibilityPercentage) < 0 || (user.BillablePerncentage - billablePercentage) < 0)
+                {
+                    return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
+                }
+                user.AssignibilityPerncentage -= assignibilityPercentage;
+                if (user.AssignibilityPerncentage == 0) user.IsAvailable = ProjectStatusEnum.AVAILABLE;
+                if (user.AssignibilityPerncentage < 100 && user.AssignibilityPerncentage > 0) user.IsAvailable = ProjectStatusEnum.STABLE;
+
+                user.BillablePerncentage -= billablePercentage;
+                user.AvailabilityPerncentage = 100 - (user.BillablePerncentage);
+                await _userRepository.UpdateAsync(user);
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(_mapper.Map<UserProjectAssignibilityStatusDto>(user), 200, "User project percentages updated successfully.");
+            }
+            catch (Exception)
+            {
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Error while updating user please try again later!", 400);
+            }
+        }
+
+        public async Task<ServiceResponse<UserProjectAssignibilityStatusDto>> RemoveAssignibilityBulkAsync(List<UserProjectAssignibilityRemoveDto> userProjectAssignibilityRemoveDtos)
+        {
+            try
+            {
+                var updateUserDtos = new List<UserProjectAssignibilityStatusDto>();
+                foreach (var userUpdateStatuas in userProjectAssignibilityRemoveDtos)
+                {
+                    var userUpdateServiceResponse = await RemoveAssignibilityAsync(userUpdateStatuas.UserId, userUpdateStatuas.AssignibilityPercentage, userUpdateStatuas.BillablePercentage);
+                    if (!userUpdateServiceResponse.Success)
+                    {
+                        return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure(userUpdateServiceResponse.ErrorMessage ?? "Error while updating the project status please try again later", 400);
+                    }
+                    if (userUpdateServiceResponse.Data == null) continue;
+                    updateUserDtos.Add(userUpdateServiceResponse.Data);
+                }
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(_mapper.Map<UserProjectAssignibilityStatusDto>(updateUserDtos), 200);
+            }
+            catch (Exception)
+            {
+                return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Error while updating the project status please try again later", 400);
+            }
         }
     }
 }

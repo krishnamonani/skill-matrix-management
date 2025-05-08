@@ -22,6 +22,12 @@ namespace SkillMatrixManagement.Models
         //[ForeignKey("UserId")]
         //public Guid CreatedBy { get; set; }   
         public virtual User Creator { get; set; }
+
+        public DateTime ProjectStartDate { get; set; }
+        public DateTime ProjectEndDate { get; set; }
+
+        public int AssignibilityPercentage { get; set; } = 0;
+        public int BillablePercentage { get; set; } = 0;
     }
 
 }

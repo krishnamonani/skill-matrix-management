@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkillMatrixManagement.EntityFrameworkCore;
@@ -13,9 +14,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
 {
     [DbContext(typeof(SkillMatrixManagementApplicationDbContext))]
-    partial class SkillMatrixManagementApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506121614_AddUserProjectPercentages")]
+    partial class AddUserProjectPercentages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1259,12 +1262,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AssignibilityPercentage")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("BillablePercentage")
-                        .HasColumnType("integer");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -1320,14 +1317,6 @@ namespace SkillMatrixManagement.Migrations.SkillMatrixManagementApplicationDb
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignibilityPercentage");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("AssignibilityPercentage"), "HASH");
-
-                    b.HasIndex("BillablePercentage");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("BillablePercentage"), "HASH");
 
                     b.HasIndex("ConcurrencyStamp");
 
