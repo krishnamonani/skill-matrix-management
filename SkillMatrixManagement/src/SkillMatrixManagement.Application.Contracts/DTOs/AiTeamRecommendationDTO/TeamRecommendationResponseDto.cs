@@ -11,6 +11,7 @@ namespace SkillMatrixManagement.DTOs.AiTeamRecommendationDTO
       public Guid Id { get; set; }
       public string Name { get; set; }
       public string Role { get; set; }
+      public int AvailabilityPercentage { get; set; }
       public string ProjectStatus { get; set; }
       public string Justification { get; set; }
     }
