@@ -177,9 +177,9 @@ namespace SkillMatrixManagement.Repositories
                     SkillName = user.Skill?.Name,  // Include Skill Name
                     IsAvailable = user.IsAvailable,
                     ProfilePhoto = user.ProfilePhoto,
-                    AssignibilityPerncentage = user.AssignibilityPerncentage,
-                    BillablePerncentage = user.BillablePerncentage,
-                    AvailabilityPerncentage = user.AvailabilityPerncentage
+                    AssignibilityPerncentage = user.AssignibilityPercentage,
+                    BillablePerncentage = user.BillablePercentage,
+                    AvailabilityPerncentage = user.AvailabilityPercentage
                 };
 
                 // Create the assignment DTO

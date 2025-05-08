@@ -99,9 +99,9 @@ namespace SkillMatrixManagement.Services
                         }
                         
                         // Reset the user's percentages
-                        userEntity.AssignibilityPerncentage = 0;
+                        userEntity.AssignibilityPercentage = 0;
                         userEntity.BillablePercentage = 0;
-                        userEntity.AvailabilityPerncentage = 100;
+                        userEntity.AvailabilityPercentage = 100;
                         
                         // Use the correct enum value for IsAvailable
                         userEntity.IsAvailable = SkillMatrixManagement.Constants.ProjectStatusEnum.AVAILABLE;
