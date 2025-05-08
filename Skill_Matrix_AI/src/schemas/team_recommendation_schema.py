@@ -1,7 +1,6 @@
+
 from pydantic import BaseModel
 from typing import List
-
-
 
 class Employee(BaseModel):
     Id: str
@@ -14,7 +13,10 @@ class Employee(BaseModel):
     Designation: str
     Skills: List[str]
     Proficiencies: List[str]
-    ProjectStatus: str
+    ProjectStatus: str  
+    AssignibilityPercentage: int
+    BillablePercentage: int
+    AvailabilityPercentage: int  
 
 class TeamRecommendationRequest(BaseModel):
     Description: str
