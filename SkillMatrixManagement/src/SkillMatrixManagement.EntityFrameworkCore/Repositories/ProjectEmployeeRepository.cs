@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
+using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.EntityFrameworkCore;
 using SkillMatrixManagement.Models;
 using Volo.Abp;
@@ -133,25 +135,70 @@ namespace SkillMatrixManagement.Repositories
         }
 
         // Get all employees assigned to a specific project
-        public async Task<List<User>> GetByProjectIdAsync(Guid projectId)
+        public async Task<List<AssingedUserProjectDTO>> GetByProjectIdAsync(Guid projectId)
         {
             if (projectId == Guid.Empty)
                 throw new ArgumentException("Project ID cannot be empty", nameof(projectId));
 
             var dbContext = await _dbContextProvider.GetDbContextAsync();
-            var ProjectEmployeeList= await dbContext.Set<ProjectEmployee>()
+
+            // Fetch the project employee list
+            var projectEmployeeList = await dbContext.Set<ProjectEmployee>()
                 .Where(pe => pe.ProjectId == projectId && !pe.IsDeleted)
                 .ToListAsync();
 
-            var userList = new List<User>();
-            var users = await _userRepository.GetAllAsync();
-            foreach(var pr in ProjectEmployeeList)
+            var result = new List<AssingedUserProjectDTO>();
+
+            foreach (var pr in projectEmployeeList)
             {
-                userList.Add(users.Where(user => user.Id == pr.UserId).FirstOrDefault() ?? new User());
+                // Fetch user details for each project employee
+                var user = await dbContext.Set<User>()
+                    .Include(u => u.Role) // Optionally include Role, Department, and Skill if needed
+                    .Include(u => u.Department)
+                    .Include(u => u.Skill)
+                    .FirstOrDefaultAsync(u => u.Id == pr.UserId);
+
+                if (user == null) continue;
+
+                // Create User DTO
+                var userDto = new CustomUserResponseDTO
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    Experience = user.Experience,
+                    PhoneNumber = user.PhoneNumber,
+                    RoleId = user.RoleId,
+                    DepartmentId = user.DepartmentId,
+                    DepartmentName = user.Department?.Name,  // Include Department Name
+                    SkillId = user.SkillId,
+                    SkillName = user.Skill?.Name,  // Include Skill Name
+                    IsAvailable = user.IsAvailable,
+                    ProfilePhoto = user.ProfilePhoto,
+                    AssignibilityPerncentage = user.AssignibilityPercentage,
+                    BillablePerncentage = user.BillablePercentage,
+                    AvailabilityPerncentage = user.AvailabilityPercentage
+                };
+
+                // Create the assignment DTO
+                var dto = new AssingedUserProjectDTO
+                {
+                    UserResponseData = userDto,  // Assign the user data
+                    AssignabilityPercentage = pr.AssignibilityPercentage,
+                    BillablePercentage = pr.BillablePercentage,
+                    StartDate = pr.ProjectStartDate,
+                    EndDate = pr.ProjectEndDate
+                };
+
+                // Add to the result list
+                result.Add(dto);
             }
 
-            return userList;
+            return result;
         }
+
 
         // Get all projects assigned to a specific user
         public async Task<List<ProjectEmployee>> GetByUserIdAsync(Guid userId)

@@ -20,6 +20,12 @@ namespace SkillMatrixManagement.DTOs.ProjectEmployeeDTO
         //public Guid CreatedBy { get; set; }
         public UserDto? Creator { get; set; } // Optional inclusion of Creator details
 
+        public DateTime ProjectStartDate { get; set; }
+        public DateTime ProjectEndDate { get; set; }
+
+        public int AssignibilityPercentage { get; set; }
+        public int BillablePercentage { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }

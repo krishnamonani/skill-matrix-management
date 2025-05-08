@@ -7,6 +7,7 @@ using ClosedXML.Excel;
 using SkillMatrixManagement.DTOs.SkillGapDTO;
 using SkillMatrixManagement.DTOs.UserDTO;
 using SkillMatrixManagement.DTOs.XlsxDTO;
+using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
 using Volo.Abp.Application.Services;
 
@@ -49,21 +50,28 @@ namespace SkillMatrixManagement.Services
                 }
                 var employees = response.Data;
 
-                // Create a list of employee-project pairs
-                var employeeProjectPairs = new List<(UserDto Employee, string Project)>();
+                // Create a list of employee-project pairs with additional ProjectEmployee fields
+                var employeeProjectPairs = new List<(UserDto Employee, string Project, DateTime? ProjectStartDate, DateTime? ProjectEndDate, int AssignibilityPercentage, int BillablePercentage)>();
                 foreach (var employee in employees)
                 {
-                    var projects = await GetEmployeeProjectNamesByUserIdAsync(employee.Id);
-                    if (projects?.ProjectNames != null && projects.ProjectNames.Any())
+                    var projectDetails = await GetEmployeeProjectDetailsByUserIdAsync(employee.Id);
+                    if (projectDetails?.ProjectDetails != null && projectDetails.ProjectDetails.Any())
                     {
-                        foreach (var projectName in projects.ProjectNames)
+                        foreach (var detail in projectDetails.ProjectDetails)
                         {
-                            employeeProjectPairs.Add((employee, projectName));
+                            employeeProjectPairs.Add((
+                                employee,
+                                detail.ProjectName,
+                                detail.ProjectStartDate,
+                                detail.ProjectEndDate,
+                                detail.AssignibilityPercentage,
+                                detail.BillablePercentage
+                            ));
                         }
                     }
                     else
                     {
-                        employeeProjectPairs.Add((employee, "N/A"));
+                        employeeProjectPairs.Add((employee, "N/A", null, null, 0, 0));
                     }
                 }
 
@@ -81,13 +89,23 @@ namespace SkillMatrixManagement.Services
                 worksheet.Cell(1, 8).Value = "Department";
                 worksheet.Cell(1, 9).Value = "Skills";
                 worksheet.Cell(1, 10).Value = "Project";
-                worksheet.Cell(1, 11).Value = "Availability";
+                worksheet.Cell(1, 11).Value = "Project Start Date";
+                worksheet.Cell(1, 12).Value = "Project End Date";
+                worksheet.Cell(1, 13).Value = "Assignibility Percentage";
+                worksheet.Cell(1, 14).Value = "Billable Percentage";
+                worksheet.Cell(1, 15).Value = "Availability Percentage";
+                worksheet.Cell(1, 16).Value = "Availability";
 
                 // Data
                 for (int i = 0; i < employeeProjectPairs.Count; i++)
                 {
-                    var (employee, projectName) = employeeProjectPairs[i];
+                    var (employee, projectName, projectStartDate, projectEndDate, assignibilityPercentage, billablePercentage) = employeeProjectPairs[i];
                     var skills = await GetEmployeeSkillByUserIdAsync(employee.Id);
+                    var availabilityPercentage = await _userService.GetUserAssignibilityStatusAsync(employee.Id);
+                    if (availabilityPercentage == null || availabilityPercentage.Data == null)
+                    {
+                        throw new Exception("Failed to retrieve availability percentage");
+                    }
 
                     worksheet.Cell(i + 2, 1).Value = employee.FirstName;
                     worksheet.Cell(i + 2, 2).Value = employee.LastName;
@@ -99,7 +117,12 @@ namespace SkillMatrixManagement.Services
                     worksheet.Cell(i + 2, 8).Value = employee.Department?.Name ?? "N/A";
                     worksheet.Cell(i + 2, 9).Value = skills?.Skills != null ? string.Join(", ", skills.Skills) : "N/A";
                     worksheet.Cell(i + 2, 10).Value = projectName;
-                    worksheet.Cell(i + 2, 11).Value = employee.IsAvailable.ToString();
+                    worksheet.Cell(i + 2, 11).Value = projectStartDate.HasValue ? projectStartDate.Value.ToString("yyyy-MM-dd") : "N/A";
+                    worksheet.Cell(i + 2, 12).Value = projectEndDate.HasValue ? projectEndDate.Value.ToString("yyyy-MM-dd") : "N/A";
+                    worksheet.Cell(i + 2, 13).Value = projectName == "N/A" ? "N/A" : assignibilityPercentage.ToString();
+                    worksheet.Cell(i + 2, 14).Value = projectName == "N/A" ? "N/A" : billablePercentage.ToString();
+                    worksheet.Cell(i + 2, 15).Value = availabilityPercentage.Data.AvailabilityPercentage;
+                    worksheet.Cell(i + 2, 16).Value = employee.IsAvailable.ToString();
                 }
 
                 // Auto-adjust columns
@@ -277,13 +300,49 @@ namespace SkillMatrixManagement.Services
             }
         }
 
-        // Helper methods (unchanged)
+        // Helper methods
+        private async Task<EmployeeProjectDto> GetEmployeeProjectDetailsByUserIdAsync(Guid userId)
+        {
+            try
+            {
+                var projectEmployees = (await _projectEmployeeRepository.GetAllAsync())
+                    .Where(pe => pe.UserId == userId && !pe.IsDeleted)
+                    .ToList();
+                var projects = await _projectRepository.GetAllAsync();
+
+                var projectDetails = new List<ProjectDetail>();
+                foreach (var pe in projectEmployees)
+                {
+                    if (pe.ProjectId == Guid.Empty) continue;
+                    var project = projects.FirstOrDefault(p => p.Id == pe.ProjectId && !p.IsDeleted);
+                    if (project == null) continue;
+                    projectDetails.Add(new ProjectDetail
+                    {
+                        ProjectName = project.ProjectName,
+                        ProjectStartDate = pe.ProjectStartDate,
+                        ProjectEndDate = pe.ProjectEndDate,
+                        AssignibilityPercentage = pe.AssignibilityPercentage,
+                        BillablePercentage = pe.BillablePercentage
+                    });
+                }
+
+                return new EmployeeProjectDto
+                {
+                    ProjectDetails = projectDetails
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         private async Task<EmployeeProjectDto> GetEmployeeProjectNamesByUserIdAsync(Guid userId)
         {
             try
             {
                 var filteredProjectIdsByUserId = (await _projectEmployeeRepository.GetAllAsync())
-                    .Where(project => project.UserId == userId)
+                    .Where(project => project.UserId == userId && !project.IsDeleted)
                     .Select(project => project.ProjectId)
                     .ToList();
                 var projects = await _projectRepository.GetAllAsync();
@@ -292,14 +351,14 @@ namespace SkillMatrixManagement.Services
                 foreach (var id in filteredProjectIdsByUserId)
                 {
                     if (id == Guid.Empty) continue;
-                    var project = projects.FirstOrDefault(p => p.Id == id);
+                    var project = projects.FirstOrDefault(p => p.Id == id && !p.IsDeleted);
                     if (project == null) continue;
                     projectNames.Add(project.ProjectName);
                 }
 
-                return new EmployeeProjectDto()
+                return new EmployeeProjectDto
                 {
-                    ProjectNames = projectNames,
+                    ProjectNames = projectNames
                 };
             }
             catch (Exception ex)
@@ -325,9 +384,9 @@ namespace SkillMatrixManagement.Services
                     .Select(u => u.CoreSkillName)
                     .ToList();
 
-                var employeeSkillDto = new EmployeeSkillDto()
+                var employeeSkillDto = new EmployeeSkillDto
                 {
-                    Skills = employeeSkills,
+                    Skills = employeeSkills
                 };
                 return employeeSkillDto;
             }
@@ -342,7 +401,7 @@ namespace SkillMatrixManagement.Services
             try
             {
                 var employeeIdsWithParticularProject = (await _projectEmployeeRepository.GetAllAsync())
-                    .Where(project => project.ProjectId == projectId)
+                    .Where(project => project.ProjectId == projectId && !project.IsDeleted)
                     .Select(project => project.UserId)
                     .ToList();
 
@@ -353,5 +412,21 @@ namespace SkillMatrixManagement.Services
                 return null;
             }
         }
+    }
+
+    // DTO to hold project details including additional fields
+    public class EmployeeProjectDto
+    {
+        public List<string> ProjectNames { get; set; }
+        public List<ProjectDetail> ProjectDetails { get; set; }
+    }
+
+    public class ProjectDetail
+    {
+        public string ProjectName { get; set; }
+        public DateTime ProjectStartDate { get; set; }
+        public DateTime ProjectEndDate { get; set; }
+        public int AssignibilityPercentage { get; set; }
+        public int BillablePercentage { get; set; }
     }
 }
