@@ -293,47 +293,62 @@ namespace SkillMatrixManagement.Services
         }
 
 
-        public async Task<ServiceResponse<List<Guid>>> AssignEmployeesToProjectAsync(Guid projectId, List<Guid> employeeIds)
+        public async Task<ServiceResponse<List<BulkProjectAssignDTO>>> AssignEmployeesToProjectAsync(List<BulkProjectAssignDTO> ProjectEmployeeDetails)
         {
-            var project = await _projectRepository.GetAsync(projectId);
-            if (project == null) throw new BusinessException("Project not found");
-
-            using (var uow = _unitOfWorkManager.Begin())
+            if (!ProjectEmployeeDetails.Any() == null)
             {
-                try
+                return ServiceResponse<List<BulkProjectAssignDTO>>.Failure("Data Can't be null", 400);
+            }
+            foreach (var ProjectEmployeeDetail in ProjectEmployeeDetails)
+            {
+                var project = await _projectRepository.GetByIdAsync(ProjectEmployeeDetail.ProjectId);
+                if (project == null) throw new BusinessException("Project not found");
+
+                using (var uow = _unitOfWorkManager.Begin())
                 {
-                    // Get all existing assignments for the project
-                    var existingAssignments = await _projectEmployeeRepository.GetAllAsync();
-                    existingAssignments = existingAssignments.FindAll(p => p.ProjectId == projectId && !p.IsDeleted);
-
-                    // Employees to add: those in employeeIds but not in existing assignments
-                    var employeesToAdd = employeeIds
-                        .Where(eId => !existingAssignments.Any(pe => pe.UserId == eId))
-                        .ToList();
-
-                    // Add new assignments
-                    foreach (var employeeId in employeesToAdd)
+                    try
                     {
-                        var existing = await _projectEmployeeRepository.IsExistTheUserIdProjectIdAsync(employeeId, projectId);
+                        // Get all existing assignments for the project
+                        var existingAssignments = await _projectEmployeeRepository.GetAllAsync();
+                        //existingAssignments = existingAssignments.FindAll(p => p.ProjectId == ProjectEmployeeDetail.ProjectId && !p.IsDeleted);
+
+                        // Employees to add: those in employeeIds but not in existing assignments
+                        //var employeesToAdd = ProjectEmployeeDetail.EmployeeId
+                        //    .Where(eId => !existingAssignments.Any(pe => pe.UserId == eId))
+                        //    .ToList();
+
+                        // Add new assignments
+                        var existing = await _projectEmployeeRepository.IsExistTheUserIdProjectIdAsync(ProjectEmployeeDetail.EmployeeId, ProjectEmployeeDetail.ProjectId);
                         if (!existing)
                         {
                             var projectEmployee = new ProjectEmployee
                             {
-                                ProjectId = projectId,
-                                UserId = employeeId,
+                                ProjectId = ProjectEmployeeDetail.ProjectId,
+                                UserId = ProjectEmployeeDetail.EmployeeId,
+                                AssignibilityPercentage= ProjectEmployeeDetail.AssignabilityPercentage,
+                                BillablePercentage = ProjectEmployeeDetail.AssignabilityPercentage,
+                                ProjectStartDate=ProjectEmployeeDetail.StartDate,
+                                ProjectEndDate = ProjectEmployeeDetail.EndDate,
+
+
                             };
                             await _projectEmployeeRepository.CreateAsync(projectEmployee);
                         }
-                    }
+                       
 
-                    await uow.CompleteAsync();
-                    return ServiceResponse<List<Guid>>.SuccessResult(employeesToAdd, 200);
+                        await uow.CompleteAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new BusinessException("Failed to assign employees to project", ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    throw new BusinessException("Failed to assign employees to project", ex.Message);
-                }
+
             }
+            return ServiceResponse<List<BulkProjectAssignDTO>>.SuccessResult(ProjectEmployeeDetails, 200);
+
+
+
         }
 
         public async Task<ServiceResponse<bool>> RemoveEmployeeFromProjectAsync(Guid projectId, Guid employeeId)
@@ -370,7 +385,7 @@ namespace SkillMatrixManagement.Services
 
 
 
-        public async Task<ServiceResponse<List<UserDto>>> GetByProjectIdAsync(Guid projectId)
+        public async Task<ServiceResponse<List<AssingedUserProjectDTO>>> GetByProjectIdAsync(Guid projectId)
         {
             try
             {
@@ -378,16 +393,16 @@ namespace SkillMatrixManagement.Services
 
 
                 var EmployeeList = await _projectEmployeeRepository.GetByProjectIdAsync(projectId);
-                var employeeListDto = _mapper.Map<List<UserDto>>(EmployeeList);
+                //var employeeListDto = _mapper.Map<List<UserDto>>(EmployeeList);
                 if (EmployeeList == null)
                 {
-                    return ServiceResponse<List<UserDto>>.Failure("No one is assigned to this project", 400);
+                    return ServiceResponse<List<AssingedUserProjectDTO>>.Failure("No one is assigned to this project", 400);
                 }
-                return ServiceResponse<List<UserDto>>.SuccessResult(employeeListDto, 201);
+                return ServiceResponse<List<AssingedUserProjectDTO>>.SuccessResult(EmployeeList, 201);
             }
             catch (Exception ex)
             {
-                return ServiceResponse<List<UserDto>>.Failure(ex.Message, 400);
+                return ServiceResponse<List<AssingedUserProjectDTO>>.Failure(ex.Message, 400);
 
             }
         }

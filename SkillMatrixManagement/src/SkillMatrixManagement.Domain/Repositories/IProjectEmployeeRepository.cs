@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SkillMatrixManagement.DTOs.ProjectEmployeeDTO;
 using SkillMatrixManagement.Models;
 using Volo.Abp.Domain.Repositories;
 
@@ -23,7 +24,7 @@ namespace SkillMatrixManagement.Repositories
         Task RestoreProjectEmployeeAsync(Guid projectEmployeeId); // Restore a soft-deleted project employee
 
         // Custom Methods
-        Task<List<User>> GetByProjectIdAsync(Guid projectId);// Get all employees for a specific project
+        Task<List<AssingedUserProjectDTO>> GetByProjectIdAsync(Guid projectId);// Get all employees for a specific project
         Task<List<ProjectEmployee>> GetByUserIdAsync(Guid userId); // Get all projects assigned to a specific user
 
         Task<ProjectEmployee> GetPagedListAsync(int skipCount, int maxResultCount, bool includeDeleted = false); // Pagination & Filtering
