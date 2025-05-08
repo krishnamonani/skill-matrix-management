@@ -18,13 +18,15 @@ namespace SkillMatrixManagement.Services
     public class AppProjectEmployeeService : ApplicationService, IProjectEmployeeService
     {
         private readonly IProjectEmployeeRepository _projectEmployeeRepository;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IProjectRepository _projectRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper, IProjectRepository projectRepository, IUnitOfWorkManager unitOfWorkManager)
+        public AppProjectEmployeeService(IProjectEmployeeRepository projectEmployeeRepository, IMapper mapper, IProjectRepository projectRepository, IUnitOfWorkManager unitOfWorkManager, IUserService userService)
         {
             _projectEmployeeRepository = projectEmployeeRepository;
+            _userService = userService;
             _mapper = mapper;
             _projectRepository = projectRepository;
             _unitOfWorkManager = unitOfWorkManager;
@@ -380,6 +382,44 @@ namespace SkillMatrixManagement.Services
                 {
                     throw new BusinessException("Failed to remove employee from project", ex.Message);
                 }
+            }
+        }
+
+        public async Task<ServiceResponse<List<UserProjectAssignibilityStatusDto>>> GetUserProjectAssignibilityStatusDtoAsync(Guid userId)
+        {
+            try
+            {
+                var projectEmployee = await _projectEmployeeRepository.GetAllAsync();
+                var availabilityPercentage = await _userService.GetUserAssignibilityStatusAsync(userId);
+                if (availabilityPercentage == null || availabilityPercentage.Data == null)
+                {
+                    throw new Exception("Failed to retrieve availability percentage");
+                }
+                var projectEmployeeData = projectEmployee
+                    .Where(pe => pe.UserId == userId && !pe.IsDeleted).ToList();
+                if (projectEmployeeData == null)
+                {
+                    return ServiceResponse<List<UserProjectAssignibilityStatusDto>>.Failure("User is not assigned to this project", 404);
+                }
+
+                var statusDtos = new List<UserProjectAssignibilityStatusDto>();
+                foreach (var pe in projectEmployeeData)
+                {
+                    var statusDto = new UserProjectAssignibilityStatusDto
+                    {
+                        Id = userId,
+                        AssignibilityPercentage = pe.AssignibilityPercentage,
+                        BillablePercentage = pe.BillablePercentage,
+                        AvailabilityPercentage = availabilityPercentage.Data.AvailabilityPercentage
+                    };
+                    statusDtos.Add(statusDto);
+                }
+
+                return ServiceResponse<List<UserProjectAssignibilityStatusDto>>.SuccessResult(statusDtos, 200);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<List<UserProjectAssignibilityStatusDto>>.Failure(ex.Message, 400);
             }
         }
 
