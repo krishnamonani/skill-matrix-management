@@ -49,6 +49,24 @@ namespace SkillMatrixManagement.Services
                 }
                 var employees = response.Data;
 
+                // Create a list of employee-project pairs
+                var employeeProjectPairs = new List<(UserDto Employee, string Project)>();
+                foreach (var employee in employees)
+                {
+                    var projects = await GetEmployeeProjectNamesByUserIdAsync(employee.Id);
+                    if (projects?.ProjectNames != null && projects.ProjectNames.Any())
+                    {
+                        foreach (var projectName in projects.ProjectNames)
+                        {
+                            employeeProjectPairs.Add((employee, projectName));
+                        }
+                    }
+                    else
+                    {
+                        employeeProjectPairs.Add((employee, "N/A"));
+                    }
+                }
+
                 using var workbook = new XLWorkbook();
                 var worksheet = workbook.Worksheets.Add("All Employees");
 
@@ -62,15 +80,14 @@ namespace SkillMatrixManagement.Services
                 worksheet.Cell(1, 7).Value = "Role";
                 worksheet.Cell(1, 8).Value = "Department";
                 worksheet.Cell(1, 9).Value = "Skills";
-                worksheet.Cell(1, 10).Value = "Projects";
+                worksheet.Cell(1, 10).Value = "Project";
                 worksheet.Cell(1, 11).Value = "Availability";
 
                 // Data
-                for (int i = 0; i < employees.Count; i++)
+                for (int i = 0; i < employeeProjectPairs.Count; i++)
                 {
-                    var employee = employees[i];
+                    var (employee, projectName) = employeeProjectPairs[i];
                     var skills = await GetEmployeeSkillByUserIdAsync(employee.Id);
-                    var projects = await GetEmployeeProjectNamesByUserIdAsync(employee.Id);
 
                     worksheet.Cell(i + 2, 1).Value = employee.FirstName;
                     worksheet.Cell(i + 2, 2).Value = employee.LastName;
@@ -81,7 +98,7 @@ namespace SkillMatrixManagement.Services
                     worksheet.Cell(i + 2, 7).Value = employee.Role?.Name.ToString() ?? "N/A";
                     worksheet.Cell(i + 2, 8).Value = employee.Department?.Name ?? "N/A";
                     worksheet.Cell(i + 2, 9).Value = skills?.Skills != null ? string.Join(", ", skills.Skills) : "N/A";
-                    worksheet.Cell(i + 2, 10).Value = projects?.ProjectNames != null ? string.Join(", ", projects.ProjectNames) : "N/A";
+                    worksheet.Cell(i + 2, 10).Value = projectName;
                     worksheet.Cell(i + 2, 11).Value = employee.IsAvailable.ToString();
                 }
 
@@ -123,6 +140,25 @@ namespace SkillMatrixManagement.Services
                 }
                 var projectEmployees = response.Data.Where(e => employeeIds.Contains(e.Id)).ToList();
 
+                // Create a list of employee-project pairs (one project per row)
+                var employeeProjectPairs = new List<(UserDto Employee, string Project)>();
+                foreach (var employee in projectEmployees)
+                {
+                    var projects = await GetEmployeeProjectNamesByUserIdAsync(employee.Id);
+                    var projectNames = projects?.ProjectNames?.Where(p => p == project.ProjectName).ToList();
+                    if (projectNames != null && projectNames.Any())
+                    {
+                        foreach (var projectName in projectNames)
+                        {
+                            employeeProjectPairs.Add((employee, projectName));
+                        }
+                    }
+                    else
+                    {
+                        employeeProjectPairs.Add((employee, project.ProjectName));
+                    }
+                }
+
                 using var workbook = new XLWorkbook();
                 var worksheet = workbook.Worksheets.Add($"{project.ProjectName} Employees");
 
@@ -136,12 +172,13 @@ namespace SkillMatrixManagement.Services
                 worksheet.Cell(1, 7).Value = "Role";
                 worksheet.Cell(1, 8).Value = "Department";
                 worksheet.Cell(1, 9).Value = "Skills";
-                worksheet.Cell(1, 10).Value = "Availability";
+                worksheet.Cell(1, 10).Value = "Project";
+                worksheet.Cell(1, 11).Value = "Availability";
 
                 // Data
-                for (int i = 0; i < projectEmployees.Count; i++)
+                for (int i = 0; i < employeeProjectPairs.Count; i++)
                 {
-                    var employee = projectEmployees[i];
+                    var (employee, projectName) = employeeProjectPairs[i];
                     var skills = await GetEmployeeSkillByUserIdAsync(employee.Id);
 
                     worksheet.Cell(i + 2, 1).Value = employee.FirstName;
@@ -153,7 +190,8 @@ namespace SkillMatrixManagement.Services
                     worksheet.Cell(i + 2, 7).Value = employee.Role?.Name.ToString() ?? "N/A";
                     worksheet.Cell(i + 2, 8).Value = employee.Department?.Name ?? "N/A";
                     worksheet.Cell(i + 2, 9).Value = skills?.Skills != null ? string.Join(", ", skills.Skills) : "N/A";
-                    worksheet.Cell(i + 2, 10).Value = employee.IsAvailable.ToString();
+                    worksheet.Cell(i + 2, 10).Value = projectName;
+                    worksheet.Cell(i + 2, 11).Value = employee.IsAvailable.ToString();
                 }
 
                 // Auto-adjust columns
