@@ -3,6 +3,7 @@ using SkillMatrixManagement.DTOs.ProjectDTO;
 using SkillMatrixManagement.DTOs.Shared;
 using SkillMatrixManagement.Models;
 using SkillMatrixManagement.Repositories;
+using SkillMatrixManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,18 @@ namespace SkillMatrixManagement.Services
         private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
         private readonly IProjectEmployeeRepository _projectEmployeeRepositry;
+        private readonly ProjectStatusService _projectStatusService;
 
-        public AppProjectService(IProjectRepository projectRepository, IMapper mapper, IProjectEmployeeRepository projectEmployeeRepositry)
+        public AppProjectService(
+            IProjectRepository projectRepository, 
+            IMapper mapper, 
+            IProjectEmployeeRepository projectEmployeeRepositry,
+            ProjectStatusService projectStatusService)
         {
             _projectRepository = projectRepository;
             _mapper = mapper;
             _projectEmployeeRepositry = projectEmployeeRepositry;
+            _projectStatusService = projectStatusService;
         }
 
         public async Task<ServiceResponse<ProjectDto>> CreateAsync(CreateProjectDto input)
@@ -127,14 +134,39 @@ namespace SkillMatrixManagement.Services
                     return ServiceResponse.Failure("Project not found.", 404);
                 }
 
+                // Check if status is changing to Completed or On Hold
+                bool statusChanged = !string.IsNullOrEmpty(input.Status) && 
+                                    project.Status != input.Status && 
+                                    (input.Status == ProjectConstants.Status.Completed || 
+                                     input.Status == ProjectConstants.Status.OnHold);
+                
                 _mapper.Map(input, project);
                 await _projectRepository.UpdateAsync(project);
+                
+                // If status changed to Completed or On Hold, release developers
+                if (statusChanged)
+                {
+                    await _projectStatusService.ReleaseAllAssignedUsersFromProjectAsync(id);
+                }
 
                 return ServiceResponse.SuccessResult(204, "Project updated successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResponse.Failure($"Error updating project: {ex.Message}", 500);
+            }
+        }
+
+        public async Task<ServiceResponse> UpdateProjectStatusAsync(Guid id, UpdateProjectStatusDto input)
+        {
+            try
+            {
+                await _projectStatusService.UpdateProjectStatusAsync(id, input.Status);
+                return ServiceResponse.SuccessResult(204, $"Project status updated to {input.Status} successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse.Failure($"Error updating project status: {ex.Message}", 500);
             }
         }
 

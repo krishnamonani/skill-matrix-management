@@ -2,6 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SkillMatrixManagement.Localization;
 using SkillMatrixManagement.MultiTenancy;
+using SkillMatrixManagement.BackgroundJobs;
+using SkillMatrixManagement.Services;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
@@ -23,6 +26,7 @@ using System.ComponentModel.Design.Serialization;
 using Volo.Abp.TextTemplating;
 using Volo.Abp.TextTemplating.Razor;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp;
 
 namespace SkillMatrixManagement;
 
@@ -65,6 +69,11 @@ public class SkillMatrixManagementDomainModule : AbpModule
         context.Services.AddTransient<IDataSeedContributor, RoleDepartmentSeedingService>();
         context.Services.AddTransient<IDataSeedContributor, DepartmentSkillSeedingService>();
 
+        // Register ProjectStatusService
+        context.Services.AddTransient<ProjectStatusService>();
+
+        // Register background worker
+        context.Services.AddTransient<ExpiredProjectsJob>();
 
         Configure<AbpLocalizationOptions>(options =>
         {
@@ -98,11 +107,15 @@ public class SkillMatrixManagementDomainModule : AbpModule
             options.DefaultRenderingEngine = "Razor";
         });
 
-    
-
 #if DEBUG
         // Comment out this line to enable real email sending in development mode
         // context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
+    }
+
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    {
+        // Start background workers
+        context.AddBackgroundWorkerAsync<ExpiredProjectsJobScheduler>();
     }
 }

@@ -21,5 +21,6 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse> RestoreProjectAsync(Guid id);
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<ProjectLookupDto>>> GetLookupAsync();
+        Task<ServiceResponse> UpdateProjectStatusAsync(Guid id, UpdateProjectStatusDto input);
     }
 }

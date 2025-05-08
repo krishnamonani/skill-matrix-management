@@ -19,11 +19,15 @@ namespace SkillMatrixManagement.Repositories
         Task PermanentDeleteAsync(Guid projectId); // Hard delete
 
         // Soft Delete & Restore
-        Task    SoftDeleteAsync(Guid projectId); // Soft delete a project
+        Task SoftDeleteAsync(Guid projectId); // Soft delete a project
         Task RestoreProjectAsync(Guid projectId); // Restore a soft-deleted project
+
+        // Project Status Management
+        Task UpdateProjectStatusAsync(Guid projectId, string status);
 
         // Custom Methods
         Task<List<Project>> GetDelayedProjectsAsync(); // Get delayed projects
         Task<List<Project>> GetOngoingProjectsAsync(); // Get ongoing projects
+        Task<List<Project>> GetExpiredProjectsAsync(); // Get expired projects
     }
 }
