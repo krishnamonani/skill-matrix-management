@@ -23,5 +23,6 @@ namespace SkillMatrixManagement.Services
         Task<ServiceResponse<int>> CountAsync(bool includeDeleted = false);
         Task<ServiceResponse<List<UserLookupDto>>> GetLookupAsync();
         Task<IdentityUserDto> CreateEmployeeAsync(CreateEmployeeDto input);
+        Task<ServiceResponse<UserProjectAssignibilityStatusDto>> GetUserAssignibilityStatusAsync(Guid userId);
     }
 }

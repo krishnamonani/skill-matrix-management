@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,5 +21,8 @@ namespace SkillMatrixManagement.DTOs.AiTeamRecommendationDTO
         public List<string> Skills { get; set; }
         public List<string> Proficiencies { get; set; }
         public string ProjectStatus { get; set; } // A = 2, S = 1, B = 0
+        public int AssignibilityPerncentage { get; set; } = 0;
+        public int BillablePerncentage { get; set; } = 0;
+        public int AvailabilityPerncentage { get; set; } = 100;
     }
 }

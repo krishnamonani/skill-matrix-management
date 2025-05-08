@@ -27,6 +27,7 @@ namespace SkillMatrixManagement.AiServices
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly ISkillRepository _skillRepository;
         private readonly IEmployeeSkillRepository _employeeSkillRepository;
         private readonly IDepartmentRepository _departmentRepository;
@@ -37,6 +38,7 @@ namespace SkillMatrixManagement.AiServices
 
         public AppAiRecommendationService(IHttpClientFactory httpClientFactory, 
                                           IUserRepository userRepository,
+                                          IUserService userService,
                                           ISkillRepository skillRepository, 
                                           IEmployeeSkillRepository employeeSkillRepository, 
                                           IDepartmentRepository departmentRepository,
@@ -45,6 +47,7 @@ namespace SkillMatrixManagement.AiServices
             _httpClientFactory = httpClientFactory;
             _skillRepository = skillRepository;
             _userRepository = userRepository;
+            _userService = userService;
             _employeeSkillRepository = employeeSkillRepository;
             _departmentRepository = departmentRepository;
             SKILL_RECOMMENDATION_END_POINT = configuration["AiServices:SkillRecommendationEndPoint"] ?? throw new ArgumentNullException(nameof(configuration), "Recommendation end point is not configured in appsettings.json");
@@ -304,6 +307,9 @@ namespace SkillMatrixManagement.AiServices
                 var skillList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.CoreSkillName).ToList();
                 var proficiencyList = employeeSkills.Where(eskill => eskill.UserId == user.Id).Select(s => s.SelfAssessedProficiency.ToString()).ToList();
 
+                var userAssignibilityStatus = await _userService.GetUserAssignibilityStatusAsync(user.Id);
+                if(userAssignibilityStatus.Success ==  false || userAssignibilityStatus.Data == null) continue;
+
                 if (skillList.Count != proficiencyList.Count) continue;
 
                 employeeDetailsList.Add(
@@ -319,7 +325,10 @@ namespace SkillMatrixManagement.AiServices
                            Designation = skillName,
                            Skills = skillList,
                            Proficiencies = proficiencyList,
-                           ProjectStatus = user.IsAvailable.ToString()
+                           ProjectStatus = user.IsAvailable.ToString(),
+                           AssignibilityPerncentage = userAssignibilityStatus.Data.AssignibilityPerncentage,
+                           BillablePerncentage = userAssignibilityStatus.Data.BillablePerncentage,
+                           AvailabilityPerncentage = userAssignibilityStatus.Data.AvailabilityPerncentage
                        }
                     );
             }
