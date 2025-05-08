@@ -326,9 +326,9 @@ namespace SkillMatrixManagement.AiServices
                            Skills = skillList,
                            Proficiencies = proficiencyList,
                            ProjectStatus = user.IsAvailable.ToString(),
-                           AssignibilityPerncentage = userAssignibilityStatus.Data.AssignibilityPerncentage,
-                           BillablePerncentage = userAssignibilityStatus.Data.BillablePerncentage,
-                           AvailabilityPerncentage = userAssignibilityStatus.Data.AvailabilityPerncentage
+                           AssignibilityPerncentage = userAssignibilityStatus.Data.AssignibilityPercentage,
+                           BillablePerncentage = userAssignibilityStatus.Data.BillablePercentage,
+                           AvailabilityPerncentage = userAssignibilityStatus.Data.AvailabilityPercentage
                        }
                     );
             }

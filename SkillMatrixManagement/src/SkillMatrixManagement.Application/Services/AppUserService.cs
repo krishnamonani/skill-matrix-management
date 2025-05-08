@@ -809,19 +809,19 @@ namespace SkillMatrixManagement.Services
                 }
 
                 if (assignibilityPercentage < 0 || billablePercentage < 0) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
-                if ((user.AssignibilityPerncentage + assignibilityPercentage) > 100 || (user.AssignibilityPerncentage + assignibilityPercentage) < 0)
+                if ((user.AssignibilityPercentage + assignibilityPercentage) > 100 || (user.AssignibilityPercentage + assignibilityPercentage) < 0)
                 {
                     return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility percentage cannot exceed 100 or less than 0", 400);
                 }
-                user.AssignibilityPerncentage += assignibilityPercentage;
-                if (user.AssignibilityPerncentage == 100) user.IsAvailable = ProjectStatusEnum.BUSY;
+                user.AssignibilityPercentage += assignibilityPercentage;
+                if (user.AssignibilityPercentage == 100) user.IsAvailable = ProjectStatusEnum.BUSY;
 
-                if ((user.BillablePerncentage + billablePercentage) > 100 || (user.BillablePerncentage + billablePercentage) < 0)
+                if ((user.BillablePercentage + billablePercentage) > 100 || (user.BillablePercentage + billablePercentage) < 0)
                 {
                     return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Billable percentage cannot exceed 100 or less than 0", 400);
                 }
-                user.BillablePerncentage += billablePercentage;
-                user.AvailabilityPerncentage = 100 - (user.BillablePerncentage);
+                user.BillablePercentage += billablePercentage;
+                user.AvailabilityPercentage = 100 - (user.BillablePercentage);
 
                 await _userRepository.UpdateAsync(user);
                 return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(_mapper.Map<UserProjectAssignibilityStatusDto>(user), 200, "User project percentages updated successfully.");
@@ -867,16 +867,16 @@ namespace SkillMatrixManagement.Services
                 if (assignibilityPercentage < 0 || billablePercentage < 0) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
                 if (assignibilityPercentage > 100 || billablePercentage > 100) return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be greater than 100", 400);
 
-                if ((user.AssignibilityPerncentage - assignibilityPercentage) < 0 || (user.BillablePerncentage - billablePercentage) < 0)
+                if ((user.AssignibilityPercentage - assignibilityPercentage) < 0 || (user.BillablePercentage - billablePercentage) < 0)
                 {
                     return ServiceResponse<UserProjectAssignibilityStatusDto>.Failure("Assignibility and Billable percentage cannot be less than 0", 400);
                 }
-                user.AssignibilityPerncentage -= assignibilityPercentage;
-                if (user.AssignibilityPerncentage == 0) user.IsAvailable = ProjectStatusEnum.AVAILABLE;
-                if (user.AssignibilityPerncentage < 100 && user.AssignibilityPerncentage > 0) user.IsAvailable = ProjectStatusEnum.STABLE;
+                user.AssignibilityPercentage -= assignibilityPercentage;
+                if (user.AssignibilityPercentage == 0) user.IsAvailable = ProjectStatusEnum.AVAILABLE;
+                if (user.AssignibilityPercentage < 100 && user.AssignibilityPercentage > 0) user.IsAvailable = ProjectStatusEnum.STABLE;
 
-                user.BillablePerncentage -= billablePercentage;
-                user.AvailabilityPerncentage = 100 - (user.BillablePerncentage);
+                user.BillablePercentage -= billablePercentage;
+                user.AvailabilityPercentage = 100 - (user.BillablePercentage);
                 await _userRepository.UpdateAsync(user);
                 return ServiceResponse<UserProjectAssignibilityStatusDto>.SuccessResult(_mapper.Map<UserProjectAssignibilityStatusDto>(user), 200, "User project percentages updated successfully.");
             }
